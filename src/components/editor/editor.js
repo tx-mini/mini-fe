@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
 

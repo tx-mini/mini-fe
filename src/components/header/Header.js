@@ -1,8 +1,11 @@
-import React, { Component } from 'react'
-const Header = () =>{
-    return (<div>
-        <img/>
+import React from 'react'
+import './header.css'
 
-    </div>)
+const Header = () =>{
+    return (
+        <div className="header-bar">
+            header
+        </div>
+    )
 }
 export default Header
