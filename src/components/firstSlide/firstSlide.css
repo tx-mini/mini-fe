@@ -45,7 +45,13 @@
   margin-left: 15%;
 }
 .final-item {
-  margin-left: 35%;
+  padding-left: 35%;
+}
+.final-item:hover {
+  font-weight: bold;
+}
+.active {
+  font-weight: bold;
 }
 .show {
   display: inline-block;
