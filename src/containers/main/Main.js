@@ -5,10 +5,12 @@ import Editor from '../../components/editor/Editor'
 export default class Main extends Component {
   render() {
     return (
-      <div>
+      <div className="main">
         <Header/>
-        <FirstSlide/>
-        <Editor/>
+        <div className="content">
+          <FirstSlide/>
+          <Editor/>
+        </div>
       </div>
     )
   }
