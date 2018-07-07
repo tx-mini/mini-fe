@@ -1,7 +1,23 @@
+@import url('//at.alicdn.com/t/font_737695_9pa8whgpm1l.css');
 .header-bar {
   display: flex;
   display: -webkit-flex;
-  background: #666;
-  color: #fff;
-  padding: 10px;
+  background: #D7D7D7;
+  padding: 10px 30px;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+}
+.logo-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+.logo-title {
+  margin: 0 10px;
+  font-size: 1.6rem;
 }
