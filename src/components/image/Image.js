@@ -6,6 +6,11 @@ import './Image.css';
 import recognize from './recognize';
 
 class Image extends React.Component {
+    state = {
+        top: this.props.top,
+        left: this.props.left
+    }
+
     // 鼠标按下坐标，单位为 px
     mouseStart = {
         x: 0,
@@ -85,11 +90,11 @@ class Image extends React.Component {
         this.hasMouseDown = false;
 
         const { canvas } = this;
+        const { onCancel, key } = this.props;
         const { offsetLeft, offsetTop, width, height } = canvas;
 
         if (!this.hasMouseMoved) {
-            const context = canvas.getContext('2d');
-            context.clearRect(0, 0, width, height);
+            onCancel({ key });
             return;
         }
 
@@ -152,7 +157,7 @@ class Image extends React.Component {
     }
 
     handleRecognize = async (e) => {
-        const { src, onData } = this.props;
+        const { src, onData, key } = this.props;
         const img = document.createElement('img');
         img.src = src;
         await new Promise((resolve) => {
@@ -171,7 +176,6 @@ class Image extends React.Component {
 
         context.drawImage(img, -(x[0] * width), -(y[0] * height), width, height);
 
-        // downloadFile('ship.png', newCanvas.toDataURL('image/png'));
         const blob = await new Promise((resolve) => {
             newCanvas.toBlob((blob) => {
                 resolve(blob);
@@ -179,7 +183,10 @@ class Image extends React.Component {
         });
 
         const result = JSON.parse(await recognize(blob));
-        onData(result.data.items);
+        onData({
+            result: result.data.items,
+            key,
+        });
     }
 
     render() {
@@ -217,13 +224,16 @@ class Image extends React.Component {
 
 Image.propTypes = {
     src: PropTypes.string,
-    left: PropTypes.number,
-    top: PropTypes.number,
-    onData: PropTypes.func
+    key: PropTypes.string,
+    onData: PropTypes.func,
+    onCancel: PropTypes.func,
 };
 
 Image.defaultProps = {
-    onData: () => {}
+    src: '',
+    key: '',
+    onData: () => {},
+    onCancel: () => {}
 };
 
 export default Image;
