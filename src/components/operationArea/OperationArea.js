@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button } from "antd";
+import { Button, Modal, Checkbox } from "antd";
 import Editor from "../editor/Editor";
+const CheckboxGroup = Checkbox.Group;
 export default class OperationArea extends Component {
   static defaultProps = {
     category: "计算机网络",
@@ -20,7 +21,11 @@ export default class OperationArea extends Component {
   };
   delete = id => e => {
     const { deleteFn } = this.props;
-    deleteFn(id);
+    Modal.confirm({
+      content: "是否决定删除此条笔记",
+
+      onOk: () => deleteFn(id)
+    });
   };
   select = id => e => {
     this.setState({ currentSelect: id });
