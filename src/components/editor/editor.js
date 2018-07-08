@@ -2,6 +2,7 @@ import React from "react";
 import BraftEditor from "braft-editor";
 import "braft-editor/dist/braft.css";
 import "./editor.less";
+import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 message.config({
   duration: 1.5
@@ -59,7 +60,20 @@ export default class Editor extends React.Component {
     return importantSum;
   };
 
-  output = () => {};
+  output = () => {
+    // html2pdf(document.getElementsByClassName("BraftEditor-content")[0]);
+    const element = document.getElementsByClassName("BraftEditor-content")[0];
+    const opt = {
+      margin: 1,
+      filename: `${Date.now()}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+    };
+    html2pdf()
+      .from(element)
+      .set(opt)
+      .save();
+  };
   render() {
     const { initialContent, name, contentId } = this.props;
     const editorProps = {
@@ -69,13 +83,24 @@ export default class Editor extends React.Component {
       onChange: this.handleChange,
       onRawChange: this.handleRawChange,
       contentId,
+      media: {
+        externalMedias: { image: true }
+      },
+      imageControls: {
+        floatLeft: false,
+        floatRight: false,
+        alignLeft: false,
+        alignCenter: false,
+        alignRight: false,
+        link: false,
+        size: false
+      },
       excludeControls: [
         "emoji",
         "superscript",
         "subscript",
         "remove-styles",
         "text-color",
-        "media",
         "link",
         "list_ol",
         "list_ul",
@@ -126,10 +151,10 @@ export default class Editor extends React.Component {
   }
 
   handleChange = content => {
-    //console.log(content);
+    console.log(content);
   };
 
   handleRawChange = rawContent => {
-    //  console.log(rawContent);
+    console.log(rawContent);
   };
 }

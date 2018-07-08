@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./operationArea.less";
 import { Button, Modal, Checkbox } from "antd";
 import Editor from "../editor/Editor";
+
 const CheckboxGroup = Checkbox.Group;
 export default class OperationArea extends Component {
   static defaultProps = {
