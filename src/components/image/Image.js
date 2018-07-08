@@ -158,6 +158,7 @@ class Image extends React.Component {
 
     handleRecognize = async (e) => {
         const { src, onData, key } = this.props;
+        const selectArea = { ...this.selectArea };
         const img = document.createElement('img');
         img.src = src;
         await new Promise((resolve) => {
@@ -182,9 +183,10 @@ class Image extends React.Component {
             });
         });
 
-        const result = JSON.parse(await recognize(blob));
+        const result = await recognize(blob);
         onData({
-            result: result.data.items,
+            result: result,
+            selectArea,
             key,
         });
     }
