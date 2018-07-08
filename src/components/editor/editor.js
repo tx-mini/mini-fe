@@ -8,6 +8,9 @@ message.config({
   duration: 1.5
 });
 export default class Editor extends React.Component {
+  state = {
+    lastContentId: null
+  };
   save = () => {
     const { contentId } = this.props;
     console.log("save");
@@ -22,12 +25,17 @@ export default class Editor extends React.Component {
     clearInterval(this.timer);
   };
 
-  getDerivedStateFromProps = nextProps => {
+  static getDerivedStateFromProps = (nextProps, prevState) => {
     // 如果contentid变了就重新开始定时器
-    const { contentId } = this.props;
-    if (nextProps.contentId !== contentId) {
+    const { lastContentId } = prevState;
+    if (nextProps.contentId !== lastContentId) {
       clearInterval(this.timer);
       this.timer = setInterval(this.save, 10 * 60 * 1000);
+      return {
+        lastContentId: nextProps.contentId
+      };
+    } else {
+      return null;
     }
   };
   // 画重点
