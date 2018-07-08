@@ -9,9 +9,27 @@ message.config({
 });
 export default class Editor extends React.Component {
   save = () => {
-    console.log("save", this.getImportantnce());
+    const { contentId } = this.props;
+    console.log("save");
   };
 
+  timer = null; // 定时保存
+
+  componentDidMount = () => {
+    this.timer = setInterval(this.save, 10 * 60 * 1000);
+  };
+  componentWillUnmount = () => {
+    clearInterval(this.timer);
+  };
+
+  getDerivedStateFromProps = nextProps => {
+    // 如果contentid变了就重新开始定时器
+    const { contentId } = this.props;
+    if (nextProps.contentId !== contentId) {
+      clearInterval(this.timer);
+      this.timer = setInterval(this.save, 10 * 60 * 1000);
+    }
+  };
   // 画重点
   mark = () => {
     //  重点标示 blocks对应项的 inlineStyleRanges 的对应项的style为	#C0392B
