@@ -59,7 +59,9 @@ export default class OperationArea extends Component {
                 {item.name}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
-              <span onClick={this.delete(item.id)}>删除icon</span>
+              <span onClick={this.delete(item.id)}>
+                <i className="iconfont icon-shanchu"></i>
+              </span>
             </div>
           ))}
 
