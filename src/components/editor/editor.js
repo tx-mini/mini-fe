@@ -1,6 +1,7 @@
 import React from "react";
-import BraftEditor from "braft-editor";
-import "braft-editor/dist/braft.css";
+import BraftEditor from "../../lib/draft/braft.js";
+import "../../lib/draft/braft.css";
+
 import "./editor.less";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
@@ -17,9 +18,10 @@ export default class Editor extends React.Component {
   };
 
   timer = null; // 定时保存
-
+  gg = null;
   componentDidMount = () => {
-    this.timer = setInterval(this.save, 10 * 60 * 1000);
+    console.log(this);
+    this.timer = setInterval(this.save, 10 * 1000);
   };
   componentWillUnmount = () => {
     clearInterval(this.timer);
@@ -28,7 +30,9 @@ export default class Editor extends React.Component {
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 如果contentid变了就重新开始定时器
     const { lastContentId } = prevState;
+    console.log(nextProps.contentId, lastContentId, this);
     if (nextProps.contentId !== lastContentId) {
+      console.log(this.timer);
       clearInterval(this.timer);
       this.timer = setInterval(this.save, 10 * 60 * 1000);
       return {
@@ -100,6 +104,7 @@ export default class Editor extends React.Component {
       .set(opt)
       .save();
   };
+
   render() {
     const { initialContent, name, contentId } = this.props;
     const editorProps = {
@@ -118,8 +123,9 @@ export default class Editor extends React.Component {
         alignLeft: false,
         alignCenter: false,
         alignRight: false,
-        link: false,
+        link: true,
         size: false
+        // custom: [<ComponentA />, <ComponentB />]
       },
       excludeControls: [
         "emoji",
