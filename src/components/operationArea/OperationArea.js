@@ -5,6 +5,7 @@ import Editor from "../editor/Editor";
 
 export default class OperationArea extends Component {
   // demo props
+  // 切换的时候传一个新的key
   static defaultProps = {
     category: "计算机网络",
     classList: [
@@ -18,7 +19,9 @@ export default class OperationArea extends Component {
 
   state = {
     currentSelect: 0,
-    isIntegrating: false
+    isIntegrating: false,
+    isCheckedAll: true,
+    checkedList: {} // 当前被选中的
   };
   delete = id => e => {
     const { deleteFn } = this.props;
@@ -33,17 +36,52 @@ export default class OperationArea extends Component {
       this.setState({ currentSelect: id });
     }
   };
+  componentDidMount = () => {
+    const { classList } = this.props;
+    const props = classList.reduce((obj, item) => {
+      obj[item.id] = true;
+      return obj;
+    }, {});
+    this.setState({ checkedList: props });
+  };
 
+  checkAll = e => {
+    const isAllChecked = e.target.checked;
+    // console.log(isAllChecked, this.state.checkedList);
+    this.setState(preState => {
+      const o = Object.keys(preState.checkedList).reduce((obj, item) => {
+        obj[item] = isAllChecked;
+        return obj;
+      }, {});
+      return { isCheckedAll: isAllChecked, checkedList: o };
+    });
+  };
   integrate = () => {
     this.setState({ isIntegrating: true });
   };
   cancalInterate = () => {
     this.setState({ isIntegrating: false });
   };
+  handleIntegrate = () => {
+    console.log(this.state.checkedList);
+  };
   getNoteDate = () => {};
+  handleCheckBox = id => e => {
+    this.setState(preState => ({
+      checkedList: {
+        ...preState.checkedList,
+        [id]: e.target.checked
+      }
+    }));
+  };
   render() {
     const { category, classList } = this.props;
-    const { currentSelect, isIntegrating } = this.state;
+    const {
+      currentSelect,
+      isIntegrating,
+      isCheckedAll,
+      checkedList
+    } = this.state;
     return (
       <div className="operation-container">
         <div className="left-container">
@@ -53,6 +91,8 @@ export default class OperationArea extends Component {
             <div className="item" key={item.id} onClick={this.select(item.id)}>
               {/* todo checkbox受控 */}
               <Checkbox
+                onChange={this.handleCheckBox(item.id)}
+                checked={!!checkedList[item.id]}
                 style={{ visibility: isIntegrating ? "visible" : "hidden" }}
               />
               <span className={item.id === currentSelect ? "selected" : ""}>
@@ -67,9 +107,13 @@ export default class OperationArea extends Component {
 
           {isIntegrating ? (
             <React.Fragment>
-              <Checkbox>全选</Checkbox>
+              <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
+                全选
+              </Checkbox>
               <div className="button-list">
-                <Button type="primary">确定</Button>
+                <Button type="primary" onClick={this.handleIntegrate}>
+                  确定
+                </Button>
                 <Button onClick={this.cancalInterate}>取消</Button>
               </div>
             </React.Fragment>
