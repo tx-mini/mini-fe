@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox } from "antd";
+import { Button, Modal, Checkbox, Icon } from "antd";
 import Editor from "../editor/Editor";
 
 export default class OperationArea extends Component {
   // demo props
   // 切换的时候传一个新的key
   static defaultProps = {
-    category: "计算机网络",
-    classList: [
-      { name: "7.7计算机网络", time: Date.now(), id: 0 },
-      { name: "7.9计算机网络", time: Date.now(), id: 1 }
-    ],
+    // category: "计算机网络",
+    // classList: [
+
+    //   { name: "7.17计算机网络", time: Date.now(), id: 0 },
+    //   { name: "7.9计算机网络", time: Date.now(), id: 1 }
+    // ],
     deleteFn: id => {
       console.log(id);
     }
@@ -82,6 +83,7 @@ export default class OperationArea extends Component {
       isCheckedAll,
       checkedList
     } = this.state;
+    console.log(classList, 111);
     return (
       <div className="operation-container">
         <div className="left-container">
@@ -89,27 +91,29 @@ export default class OperationArea extends Component {
 
           {classList.map(item => (
             <div className="item" key={item.id} onClick={this.select(item.id)}>
-              {/* todo checkbox受控 */}
               <Checkbox
                 onChange={this.handleCheckBox(item.id)}
                 checked={!!checkedList[item.id]}
                 style={{ visibility: isIntegrating ? "visible" : "hidden" }}
               />
+              {item.important ? <Icon type="star-o" /> : null}
               <span className={item.id === currentSelect ? "selected" : ""}>
                 {item.name}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
               <span onClick={this.delete(item.id)}>
-                <i className="iconfont icon-shanchu"></i>
+                <i className="iconfont icon-shanchu" />
               </span>
             </div>
           ))}
 
           {isIntegrating ? (
             <React.Fragment>
-              <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
-                全选
-              </Checkbox>
+              <div className="check-all">
+                <Checkbox checked={isCheckedAll} onChange={this.checkAll} />
+                <span>全选</span>
+              </div>
+
               <div className="button-list">
                 <Button type="primary" onClick={this.handleIntegrate}>
                   确定
@@ -128,7 +132,7 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
-          initialContent={`<div>${Math.random()}</div>`}
+          // initialContent={`<div>${Math.random()}</div>`}
           contentId={classList[currentSelect].id}
           name={classList[currentSelect].name}
         />

@@ -15,6 +15,7 @@ export default class Editor extends React.Component {
   };
   save = () => {
     const { contentId } = this.props;
+    message.info("保存成功");
     console.log("save");
   };
 
@@ -196,10 +197,10 @@ export default class Editor extends React.Component {
   };
 
   handleChange = content => {
-    console.log(content);
+    //  console.log(content);
   };
 
   handleRawChange = rawContent => {
-    console.log(rawContent);
+    //  console.log(rawContent);
   };
 }
