@@ -104,9 +104,12 @@ export default class Editor extends React.Component {
       .save();
   };
   imgFn = img => {
-    console.log(img.src, 1111);
     // 挂载图片
-    this.setState({ imgSrc: img.src, imageVisible: true });
+    this.setState({ imgSrc: img.src });
+  };
+  handleImageClose = () => {
+    // 卸载图片
+    this.setState({ imgSrc: "" });
   };
   render = () => {
     const { initialContent, name, contentId } = this.props;
@@ -161,7 +164,7 @@ export default class Editor extends React.Component {
       ],
       onSave: () => this.save()
     };
-    const { imgSrc, imageVisible } = this.state;
+    const { imgSrc } = this.state;
     return (
       <div className="editor-container">
         <div className="header">
@@ -181,7 +184,13 @@ export default class Editor extends React.Component {
           ref={instance => (this.editorInstance = instance)}
           {...editorProps}
         />
-        {imageVisible ? <Image src={imgSrc} key={imgSrc} /> : null}
+        {imgSrc.length > 0 ? (
+          <Image
+            src={imgSrc}
+            key={imgSrc}
+            onImageClose={this.handleImageClose}
+          />
+        ) : null}
       </div>
     );
   };
