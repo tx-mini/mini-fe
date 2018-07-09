@@ -7,25 +7,29 @@
   .left-container {
     display: flex;
     flex-direction: column;
-  }
-  .selected {
-    color: @hover;
-  }
-  .category {
-    background-color: @bgcolor;
-    width: @width;
-    height: @height;
-    text-align: center;
-    line-height: @height;
-  }
-  .item {
-    width: @width;
-    height: @height;
-    text-align: center;
-    line-height: @height;
-    cursor: pointer;
-    &:hover {
+    .category {
       background-color: @bgcolor;
+      width: @width;
+      height: @height;
+      text-align: center;
+      line-height: @height;
+    }
+    .item {
+      width: @width;
+      height: @height;
+      text-align: center;
+      line-height: @height;
+      cursor: pointer;
+      &:hover {
+        background-color: @bgcolor;
+        color: @hover;
+      }
+    }
+    .button-list {
+      display: flex;
+      justify-content: space-around;
+    }
+    .selected {
       color: @hover;
     }
   }
