@@ -20,7 +20,7 @@ export default class Editor extends React.Component {
   timer = null; // 定时保存
 
   componentDidMount = () => {
-    this.timer = setInterval(this.save, 10 * 1000);
+    this.timer = setInterval(this.save, 10 * 60 * 1000);
   };
   componentWillUnmount = () => {
     clearInterval(this.timer);
@@ -31,6 +31,7 @@ export default class Editor extends React.Component {
     const { lastContentId } = prevState;
 
     if (nextProps.contentId !== lastContentId) {
+      console.log("xxx");
       clearInterval(this.timer);
       this.timer = setInterval(this.save, 10 * 60 * 1000);
       return {
