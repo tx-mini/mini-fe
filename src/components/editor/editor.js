@@ -1,8 +1,8 @@
 import React from "react";
 import BraftEditor from "../../lib/draft/braft.js";
 import "../../lib/draft/braft.css";
-
 import "./editor.less";
+import Image from "../image/Image";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 message.config({
@@ -10,7 +10,8 @@ message.config({
 });
 export default class Editor extends React.Component {
   state = {
-    lastContentId: null
+    lastContentId: null,
+    imgSrc: ""
   };
   save = () => {
     const { contentId } = this.props;
@@ -31,7 +32,6 @@ export default class Editor extends React.Component {
     const { lastContentId } = prevState;
 
     if (nextProps.contentId !== lastContentId) {
-      console.log("xxx");
       clearInterval(this.timer);
       this.timer = setInterval(this.save, 10 * 60 * 1000);
       return {
@@ -105,6 +105,8 @@ export default class Editor extends React.Component {
   };
   imgFn = img => {
     console.log(img.src, 1111);
+    // 挂载图片
+    this.setState({ imgSrc: img.src, imageVisible: true });
   };
   render = () => {
     const { initialContent, name, contentId } = this.props;
@@ -124,7 +126,7 @@ export default class Editor extends React.Component {
         alignLeft: false,
         alignCenter: false,
         alignRight: false,
-        link: true,
+        link: false,
         size: false,
         custom: { fn: this.imgFn }
       },
@@ -159,7 +161,7 @@ export default class Editor extends React.Component {
       ],
       onSave: () => this.save()
     };
-
+    const { imgSrc, imageVisible } = this.state;
     return (
       <div className="editor-container">
         <div className="header">
@@ -179,6 +181,7 @@ export default class Editor extends React.Component {
           ref={instance => (this.editorInstance = instance)}
           {...editorProps}
         />
+        {imageVisible ? <Image src={imgSrc} key={imgSrc} /> : null}
       </div>
     );
   };
