@@ -20,9 +20,15 @@
       text-align: center;
       line-height: @height;
       cursor: pointer;
+      .icon-shanchu {
+        visibility: hidden;
+      }
       &:hover {
         background-color: @bgcolor;
         color: @hover;
+        .icon-shanchu {
+          visibility: visible;
+        }
       }
     }
     .button-list {
