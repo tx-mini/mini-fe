@@ -3,6 +3,26 @@
 .header-bar{
     .flex;
     background: @basic-color;
-    color: @white;
-    padding: 10px;
+    padding: 10px 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo{
+    .flex;
+    align-items: center;
+}
+.logo-img{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+.logo-title{
+    margin: 0 10px;
+    font-size: @font-size + 0.2;
+}
+.exit{
+    font-size: @font-size - 0.2;
+    &:hover{
+        text-decoration: underline;
+    }
 }

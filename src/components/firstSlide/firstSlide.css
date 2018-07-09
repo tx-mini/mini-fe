@@ -1,0 +1,65 @@
+@import url('//at.alicdn.com/t/font_737695_st0ncn86h5m.css');
+.first-slide {
+  display: flex;
+  display: -webkit-flex;
+  width: 15%;
+  flex-direction: column;
+  background: #fff;
+  float: left;
+  height: 100%;
+  min-width: 200px;
+  border-right: 1px #eee solid;
+  min-height: 600px;
+}
+.new-note {
+  padding: 10px;
+  background: #949494;
+  color: #fff;
+  font-size: 1.6rem;
+}
+.new-note:hover {
+  background: #666;
+}
+.add-icon {
+  margin-right: 10px;
+}
+.slide-content {
+  padding: 10px;
+}
+.class-note {
+  margin-bottom: 5px;
+}
+.slide-item {
+  padding: 5px 0;
+}
+.slide-item:hover {
+  font-weight: bold;
+}
+.show-icon {
+  margin-right: 8px;
+}
+.item-icon {
+  font-size: 2rem;
+}
+.item-title {
+  font-size: 1.4rem;
+}
+.sub-item {
+  margin-left: 15%;
+}
+.final-item {
+  padding-left: 35%;
+}
+.final-item:hover {
+  font-weight: bold;
+}
+.active {
+  font-weight: bold;
+}
+.show {
+  display: inline-block;
+  width: 100%;
+}
+.hide {
+  display: none;
+}

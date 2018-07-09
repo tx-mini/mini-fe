@@ -1,0 +1,29 @@
+@import url('//at.alicdn.com/t/font_737695_st0ncn86h5m.css');
+.header-bar {
+  display: flex;
+  display: -webkit-flex;
+  background: #D7D7D7;
+  padding: 10px 30px;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+}
+.logo-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+.logo-title {
+  margin: 0 10px;
+  font-size: 1.6rem;
+}
+.exit {
+  font-size: 1.2rem;
+}
+.exit:hover {
+  text-decoration: underline;
+}
