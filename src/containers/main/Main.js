@@ -39,19 +39,11 @@ export default class Main extends Component {
       brushList: [
         {
             id: "shdjd",
-            value: "大三第一学期",
-            childrens: [
-                {
-                    id: "sjdkd",
-                    value: "计算机网络"
-                }
-            ]
+            value: "计算机网络"
         },
         {
             id: "kkaaa",
-            value: "大三第二学期",
-            childrens: [
-            ]
+            value: ""
         }
       ],
       classList: [
@@ -64,6 +56,25 @@ export default class Main extends Component {
   }
   componentDidMount() {
     //获取目录数据
+    let that = this;
+    fetch('http://yapi.demo.qunar.com/mock/13512/getCategories', {
+      method: 'get'
+    }).then((res) => {
+      if(res.ok){
+        res.json().then(function(result){
+          console.log(result);
+          if(!result.code){
+            let data = result.result;
+            that.setState({
+              classDir: data.classDir,
+              brushList: data.brushList
+            })
+          }
+        })
+      }
+    }).catch((res) => {
+      console.log(res)
+    })
   }
   SelectItem(data){
     console.log(data);
