@@ -5,7 +5,7 @@ import OperationArea from '../../components/operationArea/OperationArea'
 export default class Main extends Component {
   render() {
     return (
-      <div>
+      <div className="main">
         <Header/>
         <FirstSlide/>
         <OperationArea/>
