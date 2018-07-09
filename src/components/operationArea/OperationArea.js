@@ -3,8 +3,8 @@ import "./operationArea.less";
 import { Button, Modal, Checkbox } from "antd";
 import Editor from "../editor/Editor";
 
-const CheckboxGroup = Checkbox.Group;
 export default class OperationArea extends Component {
+  // demo props
   static defaultProps = {
     category: "计算机网络",
     classList: [
@@ -29,7 +29,9 @@ export default class OperationArea extends Component {
     });
   };
   select = id => e => {
-    this.setState({ currentSelect: id });
+    if (id !== this.state.id) {
+      this.setState({ currentSelect: id });
+    }
   };
 
   integrate = () => {
@@ -46,21 +48,35 @@ export default class OperationArea extends Component {
       <div className="operation-container">
         <div className="left-container">
           <div className="category">{category}</div>
+
           {classList.map(item => (
             <div className="item" key={item.id} onClick={this.select(item.id)}>
+              {/* todo checkbox受控 */}
+              <Checkbox
+                style={{ visibility: isIntegrating ? "visible" : "hidden" }}
+              />
               <span className={item.id === currentSelect ? "selected" : ""}>
                 {item.name}
+                {/* {new Date(item.time).toDateString()} */}
               </span>
               <span onClick={this.delete(item.id)}>删除icon</span>
             </div>
           ))}
+
           {isIntegrating ? (
-            <div>
-              <Button type="primary">确定</Button>
-              <Button onClick={this.cancalInterate}>取消</Button>
-            </div>
+            <React.Fragment>
+              <Checkbox>全选</Checkbox>
+              <div className="button-list">
+                <Button type="primary">确定</Button>
+                <Button onClick={this.cancalInterate}>取消</Button>
+              </div>
+            </React.Fragment>
           ) : (
-            <Button type="primary" onClick={this.integrate}>
+            <Button
+              type="primary"
+              style={{ width: "40%", marginLeft: "17px" }}
+              onClick={this.integrate}
+            >
               重点整合
             </Button>
           )}
