@@ -28,7 +28,29 @@ export default class Main extends Component {
                 {
                     id: "ss",
                     value: "概率论"
+                },
+                {
+                  id: "other",
+                  value: "其他"
+              }
+            ]
+        }
+      ],
+      brushList: [
+        {
+            id: "shdjd",
+            value: "大三第一学期",
+            childrens: [
+                {
+                    id: "sjdkd",
+                    value: "计算机网络"
                 }
+            ]
+        },
+        {
+            id: "kkaaa",
+            value: "大三第二学期",
+            childrens: [
             ]
         }
       ],
@@ -36,7 +58,8 @@ export default class Main extends Component {
         { name: "7.7计算机网络", time: Date.now(), id: 0 },
         { name: "7.9计算机网络", time: Date.now(), id: 1 }
       ],
-      category: "计算机网络"
+      category: "计算机网络",
+      newNote: false
     };
   }
   componentDidMount() {
@@ -47,14 +70,17 @@ export default class Main extends Component {
   }
   createNote(){
     console.log("新建")
+    this.setState({
+      newNote: true
+    })
   }
   render() {
-    const {classDir, category, classList} = this.state;
+    const {classDir, category, classList, newNote, brushList} = this.state;
     return (
       <div className="main">
         <Header/>
-        <FirstSlide classDir={classDir} SelectItem={this.SelectItem.bind(this)} createNote={this.createNote.bind(this)}/>
-        <OperationArea category={category} classList={classList}/>
+        <FirstSlide brushList={brushList} classDir={classDir} SelectItem={this.SelectItem.bind(this)} createNote={this.createNote.bind(this)}/>
+        <OperationArea category={category} classList={classList} newNote={newNote}/>
       </div>
     )
   }
