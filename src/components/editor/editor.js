@@ -2,7 +2,7 @@ import React from "react";
 import BraftEditor from "../../lib/draft/braft.js";
 import "../../lib/draft/braft.css";
 import "./editor.less";
-import Image from "../image/Image";
+import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 message.config({
