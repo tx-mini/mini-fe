@@ -121,8 +121,9 @@ export default class Editor extends React.Component {
     // 将识别结果插入到图片的后面
     // results是数组，为识别的结果 每一项是字符串
     // 将识别出来的结果插入到富文本图片节点的后面
-    const content = this.editorInstance.getContent("raw");
-
+    //console.log(results);
+    const content = this.editorInstance.getRawContent();
+    console.log(this.editorInstance.getRawContent());
     const newContent = JSON.parse(JSON.stringify(content));
 
     for (let i = 0; i < newContent.blocks.length; i++) {
@@ -130,7 +131,7 @@ export default class Editor extends React.Component {
         const oldBefore = newContent.blocks.slice(0, i + 1);
         const oldNext = newContent.blocks.slice(i + 1);
         const insert = [];
-        results.forEach(text => {
+        results.result.forEach(text => {
           let obj = {
             data: {},
             depth: 0,
@@ -207,9 +208,8 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          <span className="name" contentEditable={true}>
-            {name}
-          </span>
+          {/* contentEditable={true} */}
+          <span className="name">{name}</span>
           <div>
             <Button
               type="primary"
