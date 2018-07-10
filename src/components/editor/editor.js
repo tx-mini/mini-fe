@@ -145,17 +145,19 @@ export default class Editor extends React.Component {
           };
           insert.push(obj);
         });
+        console.log(insert);
         newContent.blocks = [...oldBefore, ...insert, ...oldNext];
         break;
       }
     }
+    console.log(newContent);
     this.editorInstance.setContent(newContent, "raw");
   };
   render = () => {
     const { initialContent, name, contentId } = this.props;
     const editorProps = {
       height: 500,
-      contentFormat: "html",
+      contentFormat: "raw",
       initialContent,
       onChange: this.handleChange,
       onRawChange: this.handleRawChange,
@@ -242,6 +244,6 @@ export default class Editor extends React.Component {
   };
 
   handleRawChange = rawContent => {
-    console.log(rawContent);
+    //console.log(JSON.stringify(rawContent));
   };
 }

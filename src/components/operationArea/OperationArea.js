@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./operationArea.less";
 import { Button, Modal, Checkbox, Icon } from "antd";
 import Editor from "../editor/Editor";
-
+import { getNoteContent } from "../../api/save";
 export default class OperationArea extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +15,7 @@ export default class OperationArea extends Component {
       currentSelect: 0,
       isIntegrating: false,
       isCheckedAll: true,
+      content: {},
       checkedList: initialCheckedList // 当前被选中的
     };
   }
@@ -40,10 +41,13 @@ export default class OperationArea extends Component {
       onOk: () => deleteFn(id)
     });
   };
-  select = id => e => {
+  select = id => async e => {
     if (id !== this.state.id) {
       this.setState({ currentSelect: id });
     }
+    const content = await getNoteContent(id);
+    //   console.log(JSON.parse(content));
+    this.setState({ content: JSON.parse(content) });
   };
 
   checkAll = e => {
@@ -81,9 +85,10 @@ export default class OperationArea extends Component {
       currentSelect,
       isIntegrating,
       isCheckedAll,
-      checkedList
+      checkedList,
+      content
     } = this.state;
-    console.log(classList, 111);
+    console.log(content, 2222);
     return (
       <div className="operation-container">
         <div className="left-container">
@@ -96,9 +101,9 @@ export default class OperationArea extends Component {
                 checked={!!checkedList[item.id]}
                 style={{ visibility: isIntegrating ? "visible" : "hidden" }}
               />
-              {item.important ? <Icon type="star-o" /> : null}
+              {item.isKeyNote ? <Icon type="star-o" /> : null}
               <span className={item.id === currentSelect ? "selected" : ""}>
-                {item.name}
+                {item.title}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
               <span onClick={this.delete(item.id)}>
@@ -132,9 +137,8 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
-          initialContent={`${classList[currentSelect] &&
-            classList[currentSelect].id}`}
-          contentId={classList[currentSelect] && classList[currentSelect].id}
+          initialContent={content}
+          contentId={currentSelect}
           name={classList[currentSelect] && classList[currentSelect].name}
         />
       </div>

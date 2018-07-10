@@ -25,15 +25,15 @@ export default class Main extends Component {
       classList: noteList
     });
   }
-  SelectItem(data, type) {
+  SelectItem = (data, type) => {
     console.log(data);
-  }
-  createNote() {
+  };
+  createNote = () => {
     console.log("新建");
     this.setState({
       newNote: true
     });
-  }
+  };
   render() {
     const { classDir, category, classList, newNote, brushList } = this.state;
     return (
@@ -42,8 +42,8 @@ export default class Main extends Component {
         <FirstSlide
           brushList={brushList}
           classDir={classDir}
-          SelectItem={this.SelectItem.bind(this)}
-          createNote={this.createNote.bind(this)}
+          SelectItem={this.SelectItem}
+          createNote={this.createNote}
         />
         <OperationArea
           category={category}
