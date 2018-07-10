@@ -6128,7 +6128,7 @@ var Image = function (_React$Component) {
             imageControls.custom ? _react2.default.createElement(
               'a',
               { onClick: this.custom },
-              '\u56FE\u7247\u8BC6\u522B'
+              imageControls.custom.name
             ) : null,
             imageControls.remove ? _react2.default.createElement(
               'a',

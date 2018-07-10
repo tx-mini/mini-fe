@@ -132,7 +132,7 @@ export default class Editor extends React.Component {
         alignRight: false,
         link: false,
         size: false,
-        custom: { fn: this.imgFn }
+        custom: { fn: this.imgFn, name: "识别" }
       },
       excludeControls: [
         "emoji",
@@ -201,6 +201,6 @@ export default class Editor extends React.Component {
   };
 
   handleRawChange = rawContent => {
-    //  console.log(rawContent);
+    console.log(rawContent);
   };
 }
