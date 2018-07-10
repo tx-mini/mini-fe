@@ -7,8 +7,9 @@ import recognize from "./recognize";
 
 class Image extends React.Component {
   state = {
-    top: this.props.top,
-    left: this.props.left
+    top: 0,
+    left: 0,
+    showButton: false,
   };
 
   // 鼠标按下坐标，单位为 px
@@ -34,6 +35,8 @@ class Image extends React.Component {
 
   handleResize = () => {
     const { canvas, img } = this;
+
+    if (!img) { return; }
 
     const {
       offsetLeft: left,
@@ -90,11 +93,11 @@ class Image extends React.Component {
     this.hasMouseDown = false;
 
     const { canvas } = this;
-    const { onCancel, key } = this.props;
+    const { onImageClose, key } = this.props;
     const { offsetLeft, offsetTop, width, height } = canvas;
 
     if (!this.hasMouseMoved) {
-      onCancel({ key });
+      onImageClose({ key });
       return;
     }
 
@@ -119,6 +122,11 @@ class Image extends React.Component {
       context.clearRect(0, 0, width, height);
     }
 
+    this.setState({
+      top: clientY,
+      left: clientX,
+      showButton: true
+    })
     this.hasMouseMoved = false;
   };
 
@@ -188,14 +196,25 @@ class Image extends React.Component {
 
     const result = await recognize(blob);
     onData({
-      result: result,
+      result: result.map(item => item.itemstring),
       selectArea,
       key
     });
   };
 
+  handleReselect = () => {
+    const { canvas } = this;
+    const { width, height } = canvas;
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, width, height);
+    this.setState({
+      showButton: false
+    });
+  }
+
   render() {
     const { src } = this.props;
+    const { top, left, showButton } = this.state;
 
     return (
       <div
@@ -207,6 +226,7 @@ class Image extends React.Component {
         <img
           className="image-image"
           src={src}
+          alt="框选识别区域"
           ref={ele => {
             this.img = ele;
           }}
@@ -217,14 +237,16 @@ class Image extends React.Component {
             this.canvas = ele;
           }}
         />
+          
         <div
-          className="image-button"
-          onClick={this.handleRecognize}
+          className={`image-button ${showButton ? '' : 'hide-button'}`}
           onMouseDown={e => e.stopPropagation()}
           onMouseMove={e => e.stopPropagation()}
           onMouseUp={e => e.stopPropagation()}
+          style={{ top, left }}
         >
-          开始识别
+          <div onClick={this.handleReselect}>重选</div>
+          <div onClick={this.handleRecognize}>提交</div>
         </div>
       </div>
     );
@@ -235,14 +257,14 @@ Image.propTypes = {
   src: PropTypes.string,
   key: PropTypes.string,
   onData: PropTypes.func,
-  onCancel: PropTypes.func
+  onImageClose: PropTypes.func
 };
 
 Image.defaultProps = {
   src: "",
   key: "",
   onData: () => {},
-  onCancel: () => {}
+  onImageClose: () => {}
 };
 
 export default Image;
