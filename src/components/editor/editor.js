@@ -42,6 +42,10 @@ export default class Editor extends React.Component {
       return null;
     }
   };
+
+  // 记录当前的img的key
+  currentKey = null;
+
   // 画重点
   mark = () => {
     //  重点标示 blocks对应项的 inlineStyleRanges 的对应项的style为	#C0392B
@@ -104,13 +108,47 @@ export default class Editor extends React.Component {
       .set(opt)
       .save();
   };
-  imgFn = img => {
+  imgFn = (img, key) => {
     // 挂载图片
+    this.currentKey = key;
     this.setState({ imgSrc: img.src });
   };
   handleImageClose = () => {
     // 卸载图片
     this.setState({ imgSrc: "" });
+  };
+  insertRecognizeResult = results => {
+    // 将识别结果插入到图片的后面
+    // results是数组，为识别的结果 每一项是字符串
+    // 将识别出来的结果插入到富文本图片节点的后面
+    const content = this.editorInstance.getContent("raw");
+
+    const newContent = JSON.parse(JSON.stringify(content));
+
+    for (let i = 0; i < newContent.blocks.length; i++) {
+      if (newContent.blocks[i] === this.currentKey) {
+        const oldBefore = newContent.blocks.slice(0, i + 1);
+        const oldNext = newContent.blocks.slice(i + 1);
+        const insert = [];
+        results.forEach(text => {
+          let obj = {
+            data: {},
+            depth: 0,
+            entityRanges: [],
+            inlineStyleRanges: [],
+            type: "unstyled",
+            key: Math.random()
+              .toString(36)
+              .slice(2, 7),
+            text
+          };
+          insert.push(obj);
+        });
+        newContent.blocks = [...oldBefore, ...insert, ...oldNext];
+        break;
+      }
+    }
+    this.editorInstance.setContent(newContent, "raw");
   };
   render = () => {
     const { initialContent, name, contentId } = this.props;
@@ -169,7 +207,9 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          <span className="name">{name}</span>
+          <span className="name" contentEditable={true}>
+            {name}
+          </span>
           <div>
             <Button
               type="primary"
@@ -190,6 +230,7 @@ export default class Editor extends React.Component {
             src={imgSrc}
             key={imgSrc}
             onImageClose={this.handleImageClose}
+            onData={this.insertRecognizeResult}
           />
         ) : null}
       </div>

@@ -1808,17 +1808,17 @@ exports.default = {
     }
   },
   imageControls: {
-    floatLeft: true,
-    floatRight: true,
-    alignLeft: true,
-    alignCenter: true,
-    alignRight: true,
-    link: true,
-    size: true,
-    remove: true,
+    floatLeft: false,
+    floatRight: false,
+    alignLeft: false,
+    alignCenter: false,
+    alignRight: false,
+    link: false,
+    size: false,
+    remove: false,
     custom: {
-      fn: function fn(img) {
-        console.log(img);
+      fn: function fn(img, key) {
+        console.log(img, key);
       }
     }
   },
@@ -5839,7 +5839,7 @@ var Image = function (_React$Component) {
       tempWidth: null,
       tempHeight: null
     }, _this.custom = function () {
-      _this.props.imageControls.custom.fn(_this.imageElement);
+      _this.props.imageControls.custom.fn(_this.imageElement, _this.props.block._map._root.entries[0][1]);
     }, _this.handleDragStart = function (event) {
 
       window.__BRAFT_DRAGING__IMAGE__ = {
@@ -6125,11 +6125,11 @@ var Image = function (_React$Component) {
               { className: link ? 'active' : '', onClick: this.toggleLinkEditor },
               '\uE91A'
             ) : null,
-            imageControls.custom ? _react2.default.createElement(
+            _react2.default.createElement(
               'a',
               { onClick: this.custom },
-              imageControls.custom.name
-            ) : null,
+              '\u8BC6\u522B'
+            ),
             imageControls.remove ? _react2.default.createElement(
               'a',
               { onClick: this.removeImage },
