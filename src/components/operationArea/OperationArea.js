@@ -4,6 +4,20 @@ import { Button, Modal, Checkbox, Icon } from "antd";
 import Editor from "../editor/Editor";
 
 export default class OperationArea extends Component {
+  constructor(props) {
+    super(props);
+    const { classList } = this.props;
+    const initialCheckedList = classList.reduce((obj, item) => {
+      obj[item.id] = true;
+      return obj;
+    }, {});
+    this.state = {
+      currentSelect: 0,
+      isIntegrating: false,
+      isCheckedAll: true,
+      checkedList: initialCheckedList // 当前被选中的
+    };
+  }
   // demo props
   // 切换的时候传一个新的key
   static defaultProps = {
@@ -18,12 +32,6 @@ export default class OperationArea extends Component {
     }
   };
 
-  state = {
-    currentSelect: 0,
-    isIntegrating: false,
-    isCheckedAll: true,
-    checkedList: {} // 当前被选中的
-  };
   delete = id => e => {
     const { deleteFn } = this.props;
     Modal.confirm({
@@ -36,14 +44,6 @@ export default class OperationArea extends Component {
     if (id !== this.state.id) {
       this.setState({ currentSelect: id });
     }
-  };
-  componentDidMount = () => {
-    const { classList } = this.props;
-    const props = classList.reduce((obj, item) => {
-      obj[item.id] = true;
-      return obj;
-    }, {});
-    this.setState({ checkedList: props });
   };
 
   checkAll = e => {
@@ -132,7 +132,7 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
-          // initialContent={`<div>${Math.random()}</div>`}
+          initialContent={`${classList[currentSelect].id}`}
           contentId={classList[currentSelect].id}
           name={classList[currentSelect].name}
         />
