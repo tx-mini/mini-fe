@@ -132,9 +132,10 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
-          initialContent={`${classList[currentSelect].id}`}
-          contentId={classList[currentSelect].id}
-          name={classList[currentSelect].name}
+          initialContent={`${classList[currentSelect] &&
+            classList[currentSelect].id}`}
+          contentId={classList[currentSelect] && classList[currentSelect].id}
+          name={classList[currentSelect] && classList[currentSelect].name}
         />
       </div>
     );
