@@ -121,8 +121,6 @@ class FirstSlide extends React.Component {
                             ))
                         }
                     </div>
-                </div>
-                <div className="slide-content">
                     <div className="class-note">
                         <div className="slide-item" onClick={() => this.setState({showDrush: !showDrush})}>
                             <i className={["iconfont show-icon", showDrush? "icon-shouqi": "icon-zhankai"].join(" ")} ></i>
@@ -132,30 +130,10 @@ class FirstSlide extends React.Component {
                         {
                             brushList.map((item, index) => (
                                 <div className={showDrush? "show": "hide"} key={index}>
-                                    
-                                    { item.childrens.length === 0? 
-                                        <div className="slide-item sub-item" onClick={this.selectItem.bind(this, "", index, item, "brush")}>
-                                            <i className="iconfont icon-wenben show-icon item-icon"></i>
-                                            <span className={["item-title", curBParentIndex === index? "active" : ""].join(" ")}>{item.value}</span>
-                                        </div>
-                                        :
-                                        <div>
-                                            <div className="slide-item sub-item" onClick={this.toggleShow.bind(this, index, "brush")}>
-                                                <i className={["iconfont show-icon", showBChild[index]? "icon-shouqi": "icon-zhankai"].join(" ")} ></i>
-                                                <i className="iconfont icon-wenjianjia show-icon item-icon"></i>
-                                                <span className="item-title">{item.value}</span>
-                                            </div>
-                                            {
-                                                item.childrens.map((data, i) => (
-                                                    <div className={["slide-item final-item", showBChild[index]? "show": "hide"].join(" ")} onClick={this.selectItem.bind(this, i, index, data, "brush")} key={i}>
-                                                        <i className="iconfont icon-wenben show-icon item-icon"></i>
-                                                        <span className={["item-title", curBIndex === i && curBParentIndex === index? "active" : ""].join(" ")}>{data.value}</span>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                        
-                                    }
+                                    <div className="slide-item sub-item" onClick={this.selectItem.bind(this, "", index, item, "brush")}>
+                                        <i className="iconfont icon-wenben show-icon item-icon"></i>
+                                        <span className={["item-title", curBParentIndex === index? "active" : ""].join(" ")}>{item.value}</span>
+                                    </div>
                                 </div>
                             ))
                         }
