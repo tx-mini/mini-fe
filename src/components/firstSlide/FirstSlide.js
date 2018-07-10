@@ -61,7 +61,7 @@ class FirstSlide extends React.Component {
         let curCParentIndex;
         let curBIndex;
         let curBParentIndex;
-        if(type === "class"){
+        if(!type){
             curCIndex = i;
             curCParentIndex = index;
             curBIndex = "";
@@ -80,14 +80,14 @@ class FirstSlide extends React.Component {
             curBParentIndex: curBParentIndex
         })
         //传递选中的data
-        this.props.SelectItem(data);
+        this.props.SelectItem(data, type);
     }
     createNote(){
         //新建笔记
         this.props.createNote();
     }
     render(){
-        const {classDir, brushList, showClass, showCChild, showBChild, curCIndex, curCParentIndex, showDrush, curBIndex, curBParentIndex} = this.state;
+        const {classDir, brushList, showClass, showCChild, curCIndex, curCParentIndex, showDrush, curBParentIndex} = this.state;
         return(
             <div className="first-slide">
                 <div className="new-note" onClick={this.createNote.bind(this)}>
@@ -111,7 +111,7 @@ class FirstSlide extends React.Component {
                                     </div>
                                     {
                                         item.childrens.map((data, i) => (
-                                            <div className={["slide-item final-item", showCChild[index]? "show": "hide"].join(" ")} onClick={this.selectItem.bind(this, i, index, data, "class")} key={i}>
+                                            <div className={["slide-item final-item", showCChild[index]? "show": "hide"].join(" ")} onClick={this.selectItem.bind(this, i, index, data, false)} key={i}>
                                                 <i className="iconfont icon-wenben show-icon item-icon"></i>
                                                 <span className={["item-title", curCIndex === i && curCParentIndex === index? "active" : ""].join(" ")}>{data.value}</span>
                                             </div>
@@ -130,7 +130,7 @@ class FirstSlide extends React.Component {
                         {
                             brushList.map((item, index) => (
                                 <div className={showDrush? "show": "hide"} key={index}>
-                                    <div className="slide-item sub-item" onClick={this.selectItem.bind(this, "", index, item, "brush")}>
+                                    <div className="slide-item sub-item" onClick={this.selectItem.bind(this, "", index, item, true)}>
                                         <i className="iconfont icon-wenben show-icon item-icon"></i>
                                         <span className={["item-title", curBParentIndex === index? "active" : ""].join(" ")}>{item.value}</span>
                                     </div>
