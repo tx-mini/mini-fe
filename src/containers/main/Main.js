@@ -11,7 +11,8 @@ export default class Main extends Component {
       brushList: [],
       classList: [],
       category: "计算机网络",
-      newNote: false
+      newNote: false,
+      isBrush: false
     };
   }
   async componentDidMount() {
@@ -24,7 +25,7 @@ export default class Main extends Component {
       classList: noteList
     })
   }
-  SelectItem(data){
+  SelectItem(data, type){
     console.log(data);
   }
   createNote(){
