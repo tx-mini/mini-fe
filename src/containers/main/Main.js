@@ -25,8 +25,13 @@ export default class Main extends Component {
       classList: noteList
     })
   }
-  SelectItem(data, type){
-    console.log(data);
+  async SelectItem(data, type){
+    console.log(data, type);
+    const noteList = await getNoteList(data.id);
+    this.setState({
+      classList: noteList,
+      isBrush: type
+    })
   }
   createNote(){
     console.log("新建")
@@ -35,12 +40,12 @@ export default class Main extends Component {
     })
   }
   render() {
-    const {classDir, category, classList, newNote, brushList} = this.state;
+    const {classDir, category, classList, newNote, brushList, isBrush} = this.state;
     return (
       <div className="main">
         <Header/>
         <FirstSlide brushList={brushList} classDir={classDir} SelectItem={this.SelectItem.bind(this)} createNote={this.createNote.bind(this)}/>
-        <OperationArea category={category} classList={classList} newNote={newNote}/>
+        <OperationArea category={category} classList={classList} newNote={newNote} isBrush={isBrush}/>
       </div>
     )
   }
