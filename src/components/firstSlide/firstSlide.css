@@ -46,6 +46,7 @@
 }
 .item-title {
   font-size: 1.4rem;
+  margin-top: 2px;
 }
 .sub-item {
   margin-left: 15%;
