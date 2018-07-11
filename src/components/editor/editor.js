@@ -16,8 +16,6 @@ export default class Editor extends React.Component {
   };
   save = () => {
     // 调用 更新/添加 笔记接口
-    const { contentId } = this.props;
-    console.log("save");
   };
 
   timer = null; // 定时保存
@@ -64,7 +62,7 @@ export default class Editor extends React.Component {
     }
   };
 
-  // //测试获取该页重点笔记
+  //测试获取该页重点笔记
   // getImportantnce = () => {
   //   const content = this.editorInstance.getContent("raw");
 
@@ -105,8 +103,10 @@ export default class Editor extends React.Component {
       .set(opt)
       .save();
   };
-  imgFn = img => {
+  imgFn = (img, key) => {
     // 挂载图片
+
+    this.currentKey = key;
     this.setState({ imgSrc: img.src });
   };
   handleImageClose = () => {
@@ -117,37 +117,40 @@ export default class Editor extends React.Component {
     // 将识别结果插入到图片的后面
     // results是数组，为识别的结果 每一项是字符串
     // 将识别出来的结果插入到富文本图片节点的后面
-    //console.log(results);
+    console.log(results);
     const content = this.editorInstance.getRawContent();
-    console.log(this.editorInstance.getRawContent());
-    const newContent = JSON.parse(JSON.stringify(content));
 
-    for (let i = 0; i < newContent.blocks.length; i++) {
-      if (newContent.blocks[i] === this.currentKey) {
-        const oldBefore = newContent.blocks.slice(0, i + 1);
-        const oldNext = newContent.blocks.slice(i + 1);
-        const insert = [];
-        results.result.forEach(text => {
-          let obj = {
-            data: {},
-            depth: 0,
-            entityRanges: [],
-            inlineStyleRanges: [],
-            type: "unstyled",
-            key: Math.random()
-              .toString(36)
-              .slice(2, 7),
-            text
-          };
-          insert.push(obj);
-        });
-        console.log(insert);
-        newContent.blocks = [...oldBefore, ...insert, ...oldNext];
-        break;
+    const newContent = JSON.parse(JSON.stringify(content));
+    if (results.result.length > 0) {
+      for (let i = 0; i < newContent.blocks.length; i++) {
+        if (newContent.blocks[i].key === this.currentKey) {
+          const oldBefore = newContent.blocks.slice(0, i + 1);
+          const oldNext = newContent.blocks.slice(i + 1);
+          const insert = [];
+          results.result.forEach(text => {
+            let obj = {
+              data: {},
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+              type: "unstyled",
+              key: Math.random()
+                .toString(36)
+                .slice(2, 7),
+              text
+            };
+            insert.push(obj);
+          });
+          console.log(insert);
+          newContent.blocks = [...oldBefore, ...insert, ...oldNext];
+          break;
+        }
       }
+      this.editorInstance.setContent(newContent, "raw");
+      this.setState({ imgFn: "" });
+    } else {
+      message.error("无法识别请重试");
     }
-    console.log(newContent);
-    this.editorInstance.setContent(newContent, "raw");
   };
   render = () => {
     const { initialContent, name, contentId } = this.props;
@@ -227,6 +230,7 @@ export default class Editor extends React.Component {
             src={imgSrc}
             key={imgSrc}
             onImageClose={this.handleImageClose}
+            onData={this.insertRecognizeResult}
           />
         ) : null}
       </div>
@@ -234,10 +238,10 @@ export default class Editor extends React.Component {
   };
 
   handleChange = content => {
-    console.log(content);
+    //   console.log(content);
   };
 
   handleRawChange = rawContent => {
-    //console.log(JSON.stringify(rawContent));
+    console.log(rawContent);
   };
 }
