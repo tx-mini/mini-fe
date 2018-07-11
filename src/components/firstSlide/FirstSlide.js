@@ -138,7 +138,7 @@ class FirstSlide extends React.Component {
                   <div
                     className={[
                       "slide-item final-item",
-                      showCChild[index] ? "show" : "hide"
+                      (curCParentIndex === index || showCChild[index]) ? "show" : "hide"
                     ].join(" ")}
                     onClick={this.selectItem.bind(this, i, index, data, false)}
                     key={i}
