@@ -1,24 +1,32 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox } from "antd";
+import { Button, Modal, Checkbox, Icon } from "antd";
 import Editor from "../editor/Editor";
 import { getNoteContent } from "../../api/save";
 export default class OperationArea extends Component {
-  constructor(props) {
-    super(props);
-    const { classList } = this.props;
-    const initialCheckedList = classList.reduce((obj, item) => {
-      obj[item.id] = true;
-      return obj;
-    }, {});
-    this.state = {
-      currentSelect: 0,
-      isIntegrating: false,
-      isCheckedAll: true,
-      content: {},
-      checkedList: initialCheckedList // 当前被选中的
-    };
-  }
+  state = {
+    currentSelect: 0,
+    isIntegrating: false,
+    isCheckedAll: true,
+    content: {},
+    checkedList: {} // 当前被选中的
+  };
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    // 处理整合选中相关的逻辑
+    const { classList } = nextProps;
+    if (!prevState.isIntegrating) {
+      const initialCheckedList = classList.reduce((obj, item) => {
+        obj[item.id] = true;
+        return obj;
+      }, {});
+      return {
+        //  currentSelect: classList[0] && classList[0].id,
+        checkedList: initialCheckedList // 当前被选中的
+      };
+    } else {
+      return null;
+    }
+  };
   // demo props
   // 切换的时候传一个新的key
   static defaultProps = {
@@ -41,11 +49,10 @@ export default class OperationArea extends Component {
   };
   select = id => async e => {
     if (id !== this.state.id) {
-      this.setState({ currentSelect: id });
+      const content = await getNoteContent(id);
+      //   console.log(JSON.parse(content));
+      this.setState({ currentSelect: id, content: JSON.parse(content) });
     }
-    const content = await getNoteContent(id);
-    //   console.log(JSON.parse(content));
-    this.setState({ content: JSON.parse(content) });
   };
 
   checkAll = e => {
@@ -70,6 +77,7 @@ export default class OperationArea extends Component {
   };
   getNoteDate = () => {};
   handleCheckBox = id => e => {
+    e.stopPropagation();
     this.setState(preState => ({
       checkedList: {
         ...preState.checkedList,
@@ -94,13 +102,19 @@ export default class OperationArea extends Component {
           {classList.map(item => (
             <div className="item" key={item.id} onClick={this.select(item.id)}>
               {/* todo checkbox受控 */}
-              <Checkbox
-                onChange={this.handleCheckBox(item.id)}
-                checked={!!checkedList[item.id]}
-                style={{ visibility: isIntegrating ? "visible" : "hidden" }}
-              />
+              <span onClick={e => e.stopPropagation()}>
+                <Checkbox
+                  onChange={this.handleCheckBox(item.id)}
+                  checked={!!checkedList[item.id]}
+                  style={{ visibility: isIntegrating ? "visible" : "hidden" }}
+                />
+              </span>
               {item.isKeyNote ? <Icon type="star-o" /> : null}
-              <span className={item.id === currentSelect ? "selected" : ""}>
+              <span
+                className={
+                  item.id === currentSelect ? "selected content" : "content"
+                }
+              >
                 {item.title}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
