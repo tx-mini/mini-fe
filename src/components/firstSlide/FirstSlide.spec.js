@@ -34,7 +34,7 @@ describe('FirstSlide 组件测试', () => {
 
     it('学期展开检测', () => {
       root.find('.class-note').at(0).childAt(1).childAt(0).simulate('click');
-      expect(root.find('.class-note').at(0).childAt(1).childAt(1).hasClass('hide')).toBeTruthy();
+      expect(root.find('.class-note').at(0).childAt(1).childAt(1).hasClass('show')).toBeTruthy();
     })
   })
 
