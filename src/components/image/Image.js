@@ -55,6 +55,13 @@ class Image extends React.Component {
     canvas.width = width;
   };
 
+  handleKeyDown = (e) => {
+    if (e.keyCode === 27) {
+      const { onImageClose } = this.props;
+      onImageClose();
+    };
+  }
+
   handleMouseDown = e => {
     const { canvas } = this;
     const { clientX, clientY } = e;
@@ -224,6 +231,8 @@ class Image extends React.Component {
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}
         onMouseUp={this.handleMouseUp}
+        onKeyDown={this.handleKeyDown}
+        tabIndex="0"
       >
         <img
           className="image-image"
