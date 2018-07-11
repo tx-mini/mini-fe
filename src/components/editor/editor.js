@@ -15,7 +15,6 @@ export default class Editor extends React.Component {
   };
   save = () => {
     const { contentId } = this.props;
-    message.info("保存成功");
     console.log("save");
   };
 
@@ -42,10 +41,6 @@ export default class Editor extends React.Component {
       return null;
     }
   };
-
-  // 记录当前的img的key
-  currentKey = null;
-
   // 画重点
   mark = () => {
     //  重点标示 blocks对应项的 inlineStyleRanges 的对应项的style为	#C0392B
@@ -108,9 +103,8 @@ export default class Editor extends React.Component {
       .set(opt)
       .save();
   };
-  imgFn = (img, key) => {
+  imgFn = img => {
     // 挂载图片
-    this.currentKey = key;
     this.setState({ imgSrc: img.src });
   };
   handleImageClose = () => {
@@ -173,7 +167,7 @@ export default class Editor extends React.Component {
         alignRight: false,
         link: false,
         size: false,
-        custom: { fn: this.imgFn, name: "识别" }
+        custom: { fn: this.imgFn }
       },
       excludeControls: [
         "emoji",
@@ -210,7 +204,6 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          {/* contentEditable={true} */}
           <span className="name">{name}</span>
           <div>
             <Button
@@ -232,7 +225,6 @@ export default class Editor extends React.Component {
             src={imgSrc}
             key={imgSrc}
             onImageClose={this.handleImageClose}
-            onData={this.insertRecognizeResult}
           />
         ) : null}
       </div>
@@ -240,7 +232,7 @@ export default class Editor extends React.Component {
   };
 
   handleChange = content => {
-    //  console.log(content);
+    console.log(content);
   };
 
   handleRawChange = rawContent => {

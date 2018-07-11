@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox, Icon } from "antd";
+import { Button, Modal, Checkbox } from "antd";
 import Editor from "../editor/Editor";
 import { getNoteContent } from "../../api/save";
 export default class OperationArea extends Component {
@@ -22,17 +22,15 @@ export default class OperationArea extends Component {
   // demo props
   // 切换的时候传一个新的key
   static defaultProps = {
-    // category: "计算机网络",
-    // classList: [
-
-    //   { name: "7.17计算机网络", time: Date.now(), id: 0 },
-    //   { name: "7.9计算机网络", time: Date.now(), id: 1 }
-    // ],
+    category: "计算机网络",
+    classList: [
+      { name: "7.7计算机网络", time: Date.now(), id: 0 },
+      { name: "7.9计算机网络", time: Date.now(), id: 1 }
+    ],
     deleteFn: id => {
       console.log(id);
     }
   };
-
   delete = id => e => {
     const { deleteFn } = this.props;
     Modal.confirm({
@@ -88,7 +86,6 @@ export default class OperationArea extends Component {
       checkedList,
       content
     } = this.state;
-    console.log(content, 2222);
     return (
       <div className="operation-container">
         <div className="left-container">
@@ -96,6 +93,7 @@ export default class OperationArea extends Component {
 
           {classList.map(item => (
             <div className="item" key={item.id} onClick={this.select(item.id)}>
+              {/* todo checkbox受控 */}
               <Checkbox
                 onChange={this.handleCheckBox(item.id)}
                 checked={!!checkedList[item.id]}
@@ -114,11 +112,9 @@ export default class OperationArea extends Component {
 
           {isIntegrating ? (
             <React.Fragment>
-              <div className="check-all">
-                <Checkbox checked={isCheckedAll} onChange={this.checkAll} />
-                <span>全选</span>
-              </div>
-
+              <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
+                全选
+              </Checkbox>
               <div className="button-list">
                 <Button type="primary" onClick={this.handleIntegrate}>
                   确定

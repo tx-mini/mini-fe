@@ -1,4 +1,4 @@
-@import url('//at.alicdn.com/t/font_737695_st0ncn86h5m.css');
+@import url('//at.alicdn.com/t/font_737695_b4agkvayxwl.css');
 .first-slide {
   display: flex;
   display: -webkit-flex;
@@ -31,6 +31,9 @@
 }
 .slide-item {
   padding: 5px 0;
+  display: flex;
+  display: -webkit-flex;
+  align-items: flex-start;
 }
 .slide-item:hover {
   font-weight: bold;
@@ -48,7 +51,7 @@
   margin-left: 15%;
 }
 .final-item {
-  padding-left: 35%;
+  padding-left: 28%;
 }
 .final-item:hover {
   font-weight: bold;
@@ -58,6 +61,11 @@
 }
 .show {
   display: inline-block;
+  width: 100%;
+}
+.final-show {
+  display: flex;
+  display: -webkit-flex;
   width: 100%;
 }
 .hide {

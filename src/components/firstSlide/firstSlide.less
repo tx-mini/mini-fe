@@ -1,65 +1,84 @@
-@import url('../../assets/variable.less');
+@import url("../../assets/variable.less");
+.first-slide {
+  .flex;
+  width: 15%;
+  flex-direction: column;
+  background: @white;
+  float: left;
+  height: 100%;
+  min-width: 200px;
+  border-right: 1px @border-color solid;
+  min-height: 600px;
+}
 
-.first-slide{
-    .flex;
-    width: 15%;
-    flex-direction: column;
-    background: @white;
-    float: left;
-    height: 100%;
-    min-width: 200px;
-    border-right: 1px @border-color solid;
-    min-height: 600px;
+.new-note {
+  padding: 10px;
+  background: @new-note-color;
+  color: @white;
+  font-size: @font-size + 0.2;
+  &:hover {
+    background: @emphy-color;
+  }
 }
-.new-note{
-    padding: 10px;
-    background: @new-note-color;
-    color: @white;
-    font-size: @font-size + 0.2;
-    &:hover{
-        background: @emphy-color;
-    }
+
+.add-icon {
+  margin-right: 10px;
 }
-.add-icon{
-    margin-right: 10px;
+
+.slide-content {
+  padding: 10px;
 }
-.slide-content{
-    padding: 10px;
+
+.class-note {
+  margin-bottom: 5px;
 }
-.class-note{
-    margin-bottom: 5px;
-}
-.slide-item{
-    padding: 5px 0;
-    &:hover{
-        font-weight: bold;
-    }
-}
-.show-icon{
-    margin-right: 8px;
-}
-.item-icon{
-    font-size: @font-size + 0.6;
-}
-.item-title{
-    font-size: @font-size;
-}
-.sub-item{
-    margin-left: 15%;
-}
-.final-item{
-    padding-left: 35%;
-    &:hover{
-        font-weight: bold;
-    }
-}
-.active{
+
+.slide-item {
+  padding: 5px 0;
+  .flex;
+  align-items: flex-start;
+  &:hover {
     font-weight: bold;
+  }
 }
-.show{
-    display: inline-block;
-    width: 100%;
+
+.show-icon {
+  margin-right: 8px;
 }
-.hide{
-    display: none;
+
+.item-icon {
+  font-size: @font-size + 0.6;
+}
+
+.item-title {
+  font-size: @font-size;
+}
+
+.sub-item {
+  margin-left: 15%;
+}
+
+.final-item {
+  padding-left: 28%;
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+.active {
+  font-weight: bold;
+}
+
+.show {
+  display: inline-block;
+  width: 100%;
+}
+
+.final-show {
+  .flex;
+  width: 100%;
+}
+
+.hide {
+  display: none;
 }

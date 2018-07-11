@@ -25,17 +25,33 @@ export default class Main extends Component {
       classList: noteList
     });
   }
-  SelectItem = (data, type) => {
-    console.log(data);
+  SelectItem = async (data, type) => {
+    let noteList = [];
+    if (!type) {
+      noteList = await getNoteList(data.id);
+    } else {
+      noteList.push(data);
+    }
+    this.setState({ classList: noteList, isBrush: type });
   };
   createNote = () => {
-    console.log("新建");
-    this.setState({
-      newNote: true
-    });
+    let initList = [
+      {
+        id: "",
+        value: "新建笔记"
+      }
+    ];
+    this.setState({ newNote: true, classList: initList });
   };
   render() {
-    const { classDir, category, classList, newNote, brushList } = this.state;
+    const {
+      classDir,
+      category,
+      classList,
+      newNote,
+      brushList,
+      isBrush
+    } = this.state;
     return (
       <div className="main">
         <Header />
@@ -49,6 +65,7 @@ export default class Main extends Component {
           category={category}
           classList={classList}
           newNote={newNote}
+          isBrush={isBrush}
         />
       </div>
     );
