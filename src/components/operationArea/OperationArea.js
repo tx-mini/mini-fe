@@ -9,6 +9,7 @@ export default class OperationArea extends Component {
     isIntegrating: false,
     isCheckedAll: true,
     content: {},
+    currentNoteName: "", // 当前选中的笔记征文题目
     checkedList: {} // 当前被选中的
   };
   static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -42,11 +43,15 @@ export default class OperationArea extends Component {
       }
     });
   };
-  select = id => async e => {
+  select = ({ id, title }) => async e => {
     if (id !== this.state.id) {
       const content = await getNoteContent(id);
       //   console.log(JSON.parse(content));
-      this.setState({ currentSelect: id, content: JSON.parse(content) });
+      this.setState({
+        currentSelect: id,
+        content: JSON.parse(content),
+        currentNoteName: title
+      });
     }
   };
 
@@ -87,7 +92,8 @@ export default class OperationArea extends Component {
       isIntegrating,
       isCheckedAll,
       checkedList,
-      content
+      content,
+      currentNoteName
     } = this.state;
     return (
       <div className="operation-container">
@@ -95,7 +101,11 @@ export default class OperationArea extends Component {
           <div className="category">{category}</div>
 
           {classList.map(item => (
-            <div className="item" key={item.id} onClick={this.select(item.id)}>
+            <div
+              className="item"
+              key={item.id}
+              onClick={this.select({ id: item.id, title: item.title })}
+            >
               {/* todo checkbox受控 */}
               <span onClick={e => e.stopPropagation()}>
                 <Checkbox
@@ -144,7 +154,7 @@ export default class OperationArea extends Component {
         <Editor
           initialContent={content}
           contentId={currentSelect}
-          name={classList[currentSelect] && classList[currentSelect].name}
+          name={currentNoteName}
         />
       </div>
     );

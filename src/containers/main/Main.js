@@ -10,11 +10,15 @@ export default class Main extends Component {
       classDir: [],
       brushList: [],
       classList: [],
-      category: "计算机网络",
+      category: "",
       newNote: false,
       isBrush: false
     };
   }
+  setCategory = category => {
+    console.log(category);
+    this.setState({ category });
+  };
   async componentDidMount() {
     //获取目录数据
     const categories = await getCategories();
@@ -60,6 +64,7 @@ export default class Main extends Component {
           classDir={classDir}
           SelectItem={this.SelectItem}
           createNote={this.createNote}
+          setCategory={this.setCategory}
         />
         <OperationArea
           category={category}

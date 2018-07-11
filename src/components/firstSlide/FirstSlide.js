@@ -71,6 +71,8 @@ class FirstSlide extends React.Component {
       curBIndex = i;
       curBParentIndex = index;
     }
+
+    this.props.setCategory(data.value);
     this.setState({
       curCIndex: curCIndex,
       curCParentIndex: curCParentIndex,
