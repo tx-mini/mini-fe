@@ -22,4 +22,8 @@ export function getNoteContent(contentId) {
     .then(res => res.data.result);
 }
 
-// /getNoteContent
+export function removeNote(id) {
+  return axios
+    .get(`http://yapi.demo.qunar.com/mock/13512/removeNote/${id}`)
+    .then(res => res.data);
+}

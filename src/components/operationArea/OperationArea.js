@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox, Icon } from "antd";
+import { Button, Modal, Checkbox, Icon, message } from "antd";
 import Editor from "../editor/Editor";
-import { getNoteContent } from "../../api/save";
+import { getNoteContent, removeNote } from "../../api/save";
 export default class OperationArea extends Component {
   state = {
     currentSelect: 0,
@@ -27,24 +27,19 @@ export default class OperationArea extends Component {
       return null;
     }
   };
-  // demo props
-  // 切换的时候传一个新的key
-  static defaultProps = {
-    category: "计算机网络",
-    classList: [
-      { name: "7.7计算机网络", time: Date.now(), id: 0 },
-      { name: "7.9计算机网络", time: Date.now(), id: 1 }
-    ],
-    deleteFn: id => {
-      console.log(id);
-    }
-  };
+
   delete = id => e => {
-    const { deleteFn } = this.props;
     Modal.confirm({
       content: "是否决定删除此条笔记",
 
-      onOk: () => deleteFn(id)
+      onOk: async () => {
+        const { code, result } = removeNote(id);
+        if (code === 0) {
+          message.info("删除笔记成功");
+        } else {
+          message.info(result.message);
+        }
+      }
     });
   };
   select = id => async e => {
