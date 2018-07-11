@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./operationArea.less";
 import { Button, Modal, Checkbox, Icon, message } from "antd";
 import Editor from "../editor/Editor";
+import { filterSomeImportantnce } from "../editor/utils//index";
 import { getNoteContent, removeNote } from "../../api/save";
 export default class OperationArea extends Component {
   state = {
@@ -12,6 +13,7 @@ export default class OperationArea extends Component {
     currentNoteName: "", // 当前选中的笔记征文题目
     checkedList: {} // 当前被选中的
   };
+  // props newNote true
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 处理整合选中相关的逻辑
     const { classList } = nextProps;
@@ -72,8 +74,15 @@ export default class OperationArea extends Component {
   cancalInterate = () => {
     this.setState({ isIntegrating: false });
   };
-  handleIntegrate = () => {
-    console.log(this.state.checkedList);
+  handleIntegrate = async () => {
+    const temp = [];
+    for (let [id, status] of Object.entries(this.state.checkedList)) {
+      if (status) {
+        temp.push(id);
+      }
+    }
+    const final = await filterSomeImportantnce(temp);
+    console.log(final); // 整合 raw 发给后台
   };
   getNoteDate = () => {};
   handleCheckBox = id => e => {
@@ -86,7 +95,7 @@ export default class OperationArea extends Component {
     }));
   };
   render() {
-    const { category, classList } = this.props;
+    const { category, classList, newNote } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -99,62 +108,68 @@ export default class OperationArea extends Component {
       <div className="operation-container">
         <div className="left-container">
           <div className="category">{category}</div>
-
-          {classList.map(item => (
-            <div
-              className="item"
-              key={item.id}
-              onClick={this.select({ id: item.id, title: item.title })}
-            >
-              {/* todo checkbox受控 */}
-              <span onClick={e => e.stopPropagation()}>
-                <Checkbox
-                  onChange={this.handleCheckBox(item.id)}
-                  checked={!!checkedList[item.id]}
-                  style={{ visibility: isIntegrating ? "visible" : "hidden" }}
-                />
-              </span>
-              {item.isKeyNote ? <Icon type="star-o" /> : null}
-              <span
-                className={
-                  item.id === currentSelect ? "selected content" : "content"
-                }
-              >
-                {item.title}
-                {/* {new Date(item.time).toDateString()} */}
-              </span>
-              <span onClick={this.delete(item.id)}>
-                <i className="iconfont icon-shanchu" />
-              </span>
-            </div>
-          ))}
-
-          {isIntegrating ? (
+          {newNote
+            ? null
+            : classList.map(item => (
+                <div
+                  className="item"
+                  key={item.id}
+                  onClick={this.select({ id: item.id, title: item.title })}
+                >
+                  {/* todo checkbox受控 */}
+                  <span onClick={e => e.stopPropagation()}>
+                    <Checkbox
+                      onChange={this.handleCheckBox(item.id)}
+                      checked={!!checkedList[item.id]}
+                      style={{
+                        visibility: isIntegrating ? "visible" : "hidden"
+                      }}
+                    />
+                  </span>
+                  {item.isKeyNote ? <Icon type="star-o" /> : null}
+                  <span
+                    className={
+                      item.id === currentSelect ? "selected content" : "content"
+                    }
+                  >
+                    {item.title}
+                    {/* {new Date(item.time).toDateString()} */}
+                  </span>
+                  <span onClick={this.delete(item.id)}>
+                    <i className="iconfont icon-shanchu" />
+                  </span>
+                </div>
+              ))}
+          {newNote ? null : (
             <React.Fragment>
-              <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
-                全选
-              </Checkbox>
-              <div className="button-list">
-                <Button type="primary" onClick={this.handleIntegrate}>
-                  确定
+              {isIntegrating ? (
+                <React.Fragment>
+                  <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
+                    全选
+                  </Checkbox>
+                  <div className="button-list">
+                    <Button type="primary" onClick={this.handleIntegrate}>
+                      确定
+                    </Button>
+                    <Button onClick={this.cancalInterate}>取消</Button>
+                  </div>
+                </React.Fragment>
+              ) : (
+                <Button
+                  type="primary"
+                  style={{ width: "40%", marginLeft: "17px" }}
+                  onClick={this.integrate}
+                >
+                  重点整合
                 </Button>
-                <Button onClick={this.cancalInterate}>取消</Button>
-              </div>
+              )}
             </React.Fragment>
-          ) : (
-            <Button
-              type="primary"
-              style={{ width: "40%", marginLeft: "17px" }}
-              onClick={this.integrate}
-            >
-              重点整合
-            </Button>
           )}
         </div>
         <Editor
           initialContent={content}
           contentId={currentSelect}
-          name={currentNoteName}
+          name={newNote ? classList[0].value : currentNoteName}
         />
       </div>
     );
