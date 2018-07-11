@@ -1,48 +1,58 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox } from "antd";
+import { Button, Modal, Checkbox, Icon, message } from "antd";
 import Editor from "../editor/Editor";
-
+import { getNoteContent, removeNote } from "../../api/save";
 export default class OperationArea extends Component {
-  // demo props
-  // 切换的时候传一个新的key
-  static defaultProps = {
-    category: "计算机网络",
-    classList: [
-      { name: "7.7计算机网络", time: Date.now(), id: 0 },
-      { name: "7.9计算机网络", time: Date.now(), id: 1 }
-    ],
-    deleteFn: id => {
-      console.log(id);
-    }
-  };
-
   state = {
     currentSelect: 0,
     isIntegrating: false,
     isCheckedAll: true,
+    content: {},
+    currentNoteName: "", // 当前选中的笔记征文题目
     checkedList: {} // 当前被选中的
   };
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    // 处理整合选中相关的逻辑
+    const { classList } = nextProps;
+    if (!prevState.isIntegrating) {
+      const initialCheckedList = classList.reduce((obj, item) => {
+        obj[item.id] = true;
+        return obj;
+      }, {});
+      return {
+        //  currentSelect: classList[0] && classList[0].id,
+        checkedList: initialCheckedList // 当前被选中的
+      };
+    } else {
+      return null;
+    }
+  };
+
   delete = id => e => {
-    const { deleteFn } = this.props;
     Modal.confirm({
       content: "是否决定删除此条笔记",
 
-      onOk: () => deleteFn(id)
+      onOk: async () => {
+        const { code, result } = removeNote(id);
+        if (code === 0) {
+          message.info("删除笔记成功");
+        } else {
+          message.info(result.message);
+        }
+      }
     });
   };
-  select = id => e => {
+  select = ({ id, title }) => async e => {
     if (id !== this.state.id) {
-      this.setState({ currentSelect: id });
+      const content = await getNoteContent(id);
+      //   console.log(JSON.parse(content));
+      this.setState({
+        currentSelect: id,
+        content: JSON.parse(content),
+        currentNoteName: title
+      });
     }
-  };
-  componentDidMount = () => {
-    const { classList } = this.props;
-    const props = classList.reduce((obj, item) => {
-      obj[item.id] = true;
-      return obj;
-    }, {});
-    this.setState({ checkedList: props });
   };
 
   checkAll = e => {
@@ -67,6 +77,7 @@ export default class OperationArea extends Component {
   };
   getNoteDate = () => {};
   handleCheckBox = id => e => {
+    e.stopPropagation();
     this.setState(preState => ({
       checkedList: {
         ...preState.checkedList,
@@ -80,7 +91,9 @@ export default class OperationArea extends Component {
       currentSelect,
       isIntegrating,
       isCheckedAll,
-      checkedList
+      checkedList,
+      content,
+      currentNoteName
     } = this.state;
     return (
       <div className="operation-container">
@@ -88,19 +101,30 @@ export default class OperationArea extends Component {
           <div className="category">{category}</div>
 
           {classList.map(item => (
-            <div className="item" key={item.id} onClick={this.select(item.id)}>
+            <div
+              className="item"
+              key={item.id}
+              onClick={this.select({ id: item.id, title: item.title })}
+            >
               {/* todo checkbox受控 */}
-              <Checkbox
-                onChange={this.handleCheckBox(item.id)}
-                checked={!!checkedList[item.id]}
-                style={{ visibility: isIntegrating ? "visible" : "hidden" }}
-              />
-              <span className={item.id === currentSelect ? "selected" : ""}>
-                {item.name}
+              <span onClick={e => e.stopPropagation()}>
+                <Checkbox
+                  onChange={this.handleCheckBox(item.id)}
+                  checked={!!checkedList[item.id]}
+                  style={{ visibility: isIntegrating ? "visible" : "hidden" }}
+                />
+              </span>
+              {item.isKeyNote ? <Icon type="star-o" /> : null}
+              <span
+                className={
+                  item.id === currentSelect ? "selected content" : "content"
+                }
+              >
+                {item.title}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
               <span onClick={this.delete(item.id)}>
-                <i className="iconfont icon-shanchu"></i>
+                <i className="iconfont icon-shanchu" />
               </span>
             </div>
           ))}
@@ -128,9 +152,9 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
-          initialContent={`<div>${Math.random()}</div>`}
-          contentId={classList[currentSelect].id}
-          name={classList[currentSelect].name}
+          initialContent={content}
+          contentId={currentSelect}
+          name={currentNoteName}
         />
       </div>
     );

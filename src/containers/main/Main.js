@@ -1,8 +1,8 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Header from "../../components/header/Header";
 import FirstSlide from "../../components/firstSlide/FirstSlide";
 import OperationArea from "../../components/operationArea/OperationArea";
-import {getCategories, getNoteList} from "../../api/save";
+import { getCategories, getNoteList } from "../../api/save";
 export default class Main extends Component {
   constructor(props) {
     super(props);
@@ -10,35 +10,43 @@ export default class Main extends Component {
       classDir: [],
       brushList: [],
       classList: [],
-      category: "计算机网络",
+      category: "",
       newNote: false,
       isBrush: false
     };
   }
+  setCategory = category => {
+    console.log(category);
+    this.setState({ category });
+  };
   async componentDidMount() {
     //获取目录数据
     const categories = await getCategories();
     const noteList = await getNoteList(categories.classDir[0].id);
-    this.setState({classDir: categories.classDir, brushList: categories.brushList, classList: noteList});
+    this.setState({
+      classDir: categories.classDir,
+      brushList: categories.brushList,
+      classList: noteList
+    });
   }
-  SelectItem = async(data, type) => {
+  SelectItem = async (data, type) => {
     let noteList = [];
     if (!type) {
       noteList = await getNoteList(data.id);
     } else {
       noteList.push(data);
     }
-    this.setState({classList: noteList, isBrush: type})
-  }
+    this.setState({ classList: noteList, isBrush: type });
+  };
   createNote = () => {
     let initList = [
       {
-        id: '',
-        value: '新建笔记'
+        id: "",
+        value: "新建笔记"
       }
-    ]
-    this.setState({newNote: true, classList: initList});
-  }
+    ];
+    this.setState({ newNote: true, classList: initList });
+  };
   render() {
     const {
       classDir,
@@ -50,17 +58,20 @@ export default class Main extends Component {
     } = this.state;
     return (
       <div className="main">
-        <Header/>
+        <Header />
         <FirstSlide
           brushList={brushList}
           classDir={classDir}
           SelectItem={this.SelectItem}
-          createNote={this.createNote}/>
+          createNote={this.createNote}
+          setCategory={this.setCategory}
+        />
         <OperationArea
           category={category}
           classList={classList}
           newNote={newNote}
-          isBrush={isBrush}/>
+          isBrush={isBrush}
+        />
       </div>
     );
   }

@@ -5,6 +5,7 @@ import "./editor.less";
 import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
+import { getImportantnce } from "./utils/index";
 message.config({
   duration: 1.5
 });
@@ -14,6 +15,7 @@ export default class Editor extends React.Component {
     imgSrc: ""
   };
   save = () => {
+    // 调用 更新/添加 笔记接口
     const { contentId } = this.props;
     console.log("save");
   };
@@ -62,32 +64,32 @@ export default class Editor extends React.Component {
     }
   };
 
-  //测试获取该页重点笔记
-  getImportantnce = () => {
-    const content = this.editorInstance.getContent("raw");
+  // //测试获取该页重点笔记
+  // getImportantnce = () => {
+  //   const content = this.editorInstance.getContent("raw");
 
-    const tc = JSON.parse(JSON.stringify(content));
-    // 获取含有important的区间
-    // todo 把那一段的样式也保留下。。有点麻烦好像
-    const importantSum = [];
-    tc.blocks.forEach(block => {
-      const temp = [];
-      block.inlineStyleRanges.forEach(inlineStyle => {
-        // 一个区块的重点笔记在一个div里面
+  //   const tc = JSON.parse(JSON.stringify(content));
+  //   // 获取含有important的区间
+  //   // todo 把那一段的样式也保留下。。有点麻烦好像
+  //   const importantSum = [];
+  //   tc.blocks.forEach(block => {
+  //     const temp = [];
+  //     block.inlineStyleRanges.forEach(inlineStyle => {
+  //       // 一个区块的重点笔记在一个div里面
 
-        if (inlineStyle.style === "COLOR-C0392B") {
-          temp.push(
-            `<span>${block.text.substr(
-              inlineStyle.offset,
-              inlineStyle.length
-            )}</span>`
-          );
-        }
-      });
-      importantSum.push(temp.join(" "));
-    });
-    return importantSum;
-  };
+  //       if (inlineStyle.style === "COLOR-C0392B") {
+  //         temp.push(
+  //           `<span>${block.text.substr(
+  //             inlineStyle.offset,
+  //             inlineStyle.length
+  //           )}</span>`
+  //         );
+  //       }
+  //     });
+  //     importantSum.push(temp.join(" "));
+  //   });
+  //   return importantSum;
+  // };
 
   output = () => {
     // html2pdf(document.getElementsByClassName("BraftEditor-content")[0]);
@@ -111,11 +113,47 @@ export default class Editor extends React.Component {
     // 卸载图片
     this.setState({ imgSrc: "" });
   };
+  insertRecognizeResult = results => {
+    // 将识别结果插入到图片的后面
+    // results是数组，为识别的结果 每一项是字符串
+    // 将识别出来的结果插入到富文本图片节点的后面
+    //console.log(results);
+    const content = this.editorInstance.getRawContent();
+    console.log(this.editorInstance.getRawContent());
+    const newContent = JSON.parse(JSON.stringify(content));
+
+    for (let i = 0; i < newContent.blocks.length; i++) {
+      if (newContent.blocks[i] === this.currentKey) {
+        const oldBefore = newContent.blocks.slice(0, i + 1);
+        const oldNext = newContent.blocks.slice(i + 1);
+        const insert = [];
+        results.result.forEach(text => {
+          let obj = {
+            data: {},
+            depth: 0,
+            entityRanges: [],
+            inlineStyleRanges: [],
+            type: "unstyled",
+            key: Math.random()
+              .toString(36)
+              .slice(2, 7),
+            text
+          };
+          insert.push(obj);
+        });
+        console.log(insert);
+        newContent.blocks = [...oldBefore, ...insert, ...oldNext];
+        break;
+      }
+    }
+    console.log(newContent);
+    this.editorInstance.setContent(newContent, "raw");
+  };
   render = () => {
     const { initialContent, name, contentId } = this.props;
     const editorProps = {
       height: 500,
-      contentFormat: "html",
+      contentFormat: "raw",
       initialContent,
       onChange: this.handleChange,
       onRawChange: this.handleRawChange,
@@ -200,6 +238,6 @@ export default class Editor extends React.Component {
   };
 
   handleRawChange = rawContent => {
-    console.log(rawContent);
+    //console.log(JSON.stringify(rawContent));
   };
 }
