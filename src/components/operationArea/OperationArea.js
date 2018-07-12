@@ -145,7 +145,7 @@ export default class OperationArea extends Component {
             ) : (
               <Button
                 type="primary"
-                style={{ marginLeft: "17px" }}
+                style={{marginLeft: "17px" }}
                 onClick={this.integrate}
               >
                 重点整合

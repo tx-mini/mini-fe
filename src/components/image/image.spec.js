@@ -4,34 +4,14 @@ import { mount } from 'enzyme';
 import Image from './Image';
 jest.mock('./recognize');
 
-let selectArea = {};
-let canceled = true;
-
-function handleData(e) {
-    canceled = false;
-    selectArea = e.selectArea;
-}
-
-function handleCancel() {
-    canceled = true;
-}
-
 const root = mount(
-    <Image
-        src="success"
-        onData={handleData}
-        onCancel={handleCancel}
-    />,
+    <Image src="success"/>,
     { attachTo: global.document.getElementById('root') },
 );
 
-const mask = root.find('.image-mask');
-const image = root.find('.image-image');
-const canvas = root.find('.image-canvas');
-const button = root.find('.image-button');
-
+// mock window 对象的属性及事件
 let offsetWidth = 0;
-Object.defineProperty(image.instance(), 'offsetWidth', {
+Object.defineProperty(root.find('.image-image').instance(), 'offsetWidth', {
     get() {
         return offsetWidth;
     }
@@ -59,34 +39,75 @@ Object.defineProperty(global.Image.prototype, 'src', {
     },
 });
 
-describe('组件挂载', () => {
-    it('DOM 检测', () => {
-        expect(mask.children()).toHaveLength(3);
+describe('图片组件检测', () => {
+    describe('界面检测', () => {
+        it('节点数检测', () => {
+            expect(root.find('.image-mask').children()).toHaveLength(3);
+        });
+
+        it('resize 检测', () => {
+            offsetWidth = 100;
+            window.resizeTo(300, 300);
+            expect(root.find('.image-image').instance().offsetWidth + 'px')
+                .toEqual(root.find('.image-canvas').instance().style.width);
+        });
     });
 
-    it('resize 检测', () => {
-        offsetWidth = 100;
-        window.resizeTo(300, 300);
-        expect(image.instance().offsetWidth + 'px')
-            .toEqual(canvas.instance().style.width);
-    });
 
-    it('框选检测', (done) => {
-        button.simulate('click');
-        setTimeout(() => {
-            expect(selectArea.x).toEqual(expect.arrayContaining([0, 1]));
-            done();
-        }, 1000);
-    });
+    describe('框选功能检测', () => {
+        let selectArea = {};
+        let canceled = true;
+        root.setProps({
+            onData: (e) => {
+                canceled = false;
+                selectArea = e.selectArea;
+            },
+            onImageClose: () => {
+                canceled = true;
+            }
+        });
 
-    it('取消框选检测', () => {
-        mask.simulate('mouseDown', { clientX: 0, clientY: 0 });
-        mask.simulate('mouseMove', { clientX: 100, clientY: 100 });
-        mask.simulate('mouseUp', { clientX: 0, clientY: 0 });
-        expect(canceled = false);
+        describe('正常框选检测', () => {
+            it('框选后点击识别', (done) => {
+                root.find('.image-button').childAt(1).simulate('click');
+                setTimeout(() => {
+                    expect(selectArea.x).toEqual(expect.arrayContaining([0, 1]));
+                    done();
+                }, 100);
+            });
+        });
+        
+        describe('异常框选检测', () => {
+            it('鼠标移动后返回原点不关闭窗口', () => {
+                root.find('.image-mask').simulate('mouseDown', { clientX: 0, clientY: 0 });
+                root.find('.image-mask').simulate('mouseMove', { clientX: 100, clientY: 100 });
+                root.find('.image-mask').simulate('mouseUp', { clientX: 0, clientY: 0 });
+                expect(canceled = false);
+            });
 
-        mask.simulate('mouseDown', { clientX: 0, clientY: 0 });
-        mask.simulate('mouseUp', { clientX: 0, clientY: 0 });
-        expect(canceled = true);
+            it('原地点击鼠标关闭窗口', () => {
+                root.find('.image-mask').simulate('mouseDown', { clientX: 0, clientY: 0 });
+                root.find('.image-mask').simulate('mouseUp', { clientX: 0, clientY: 0 });
+                expect(canceled = true);
+            });
+
+            it('没有按下鼠标的情况下不产生影响', () => {
+                root.find('.image-mask').simulate('mouseMove', { clientX: 100, clientY: 100 });
+                expect(canceled = true);
+            });
+
+            it('点击重选不关闭窗口', () => {
+                root.find('.image-mask').simulate('mouseDown', { clientX: 0, clientY: 0 });
+                root.find('.image-mask').simulate('mouseMove', { clientX: 100, clientY: 100 });
+                root.find('.image-mask').simulate('mouseUp', { clientX: 0, clientY: 0 });
+                root.find('.image-button').childAt(0).simulate('click');
+                expect(canceled = false);
+            });
+
+            it('按下 esc 键关闭窗口', () => {
+                root.find('.image-mask').simulate('keyDown', { keyCode: 27 });
+                expect(canceled = true);
+            });
+        });
     });
 });

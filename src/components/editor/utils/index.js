@@ -1,7 +1,8 @@
+import { getNoteContent } from "../../../api/save";
 //测试获取该页重点笔记
-// 传入编辑器实例，返回该页的重点笔记raw
-export const getImportantnce = editorInstance => {
-  const content = teditorInstance.getContent("raw");
+// 传入笔记的raw，返回该页的重点笔记raw
+export const filterImportantnce = raw => {
+  const content = raw;
 
   const tc = JSON.parse(JSON.stringify(content));
   // 获取含有important的区间
@@ -14,14 +15,37 @@ export const getImportantnce = editorInstance => {
 
       if (inlineStyle.style === "COLOR-C0392B") {
         temp.push(
-          `<span>${block.text.substr(
-            inlineStyle.offset,
-            inlineStyle.length
-          )}</span>`
+          `${block.text.substr(inlineStyle.offset, inlineStyle.length)}  `
         );
       }
     });
     importantSum.push(temp.join(" "));
   });
-  return importantSum;
+  return importantSum; // 是一个数组，每一项是一段
+};
+// todo 生成每一个block
+export const filterSomeImportantnce = async ids => {
+  const p = await Promise.all(ids.map(id => getNoteContent(id)));
+  const finalKeyNote = p.reduce((pre, item) => {
+    pre.push(...filterImportantnce(JSON.parse(item)));
+    return pre;
+  }, []);
+  let contentObj = {
+    entityMap: {},
+    blocks: finalKeyNote.map(item => {
+      return {
+        // block
+        data: {},
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        type: "unstyled",
+        key: Math.random()
+          .toString(36)
+          .slice(2, 7),
+        text: item
+      };
+    })
+  };
+  return contentObj;
 };

@@ -70,6 +70,7 @@ export default class Main extends Component {
         <OperationArea
           category={category}
           classList={classList}
+          brushList={brushList}
           newNote={newNote}
           isBrush={isBrush}
         />
