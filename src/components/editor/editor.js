@@ -5,6 +5,7 @@ import "./editor.less";
 import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
+import ContentEditable from "react-contenteditable";
 import { getImportantnce } from "./utils/index";
 message.config({
   duration: 1.5
@@ -12,12 +13,14 @@ message.config({
 export default class Editor extends React.Component {
   state = {
     lastContentId: null,
-    imgSrc: ""
+    imgSrc: "",
+    tempName: ""
   };
   save = () => {
     // 调用 更新/添加 笔记接口
     const { contentId } = this.props;
-    console.log("save");
+    const { tempName } = this.state;
+    console.log("save", contentId, tempName);
   };
 
   timer = null; // 定时保存
@@ -28,21 +31,15 @@ export default class Editor extends React.Component {
   componentWillUnmount = () => {
     clearInterval(this.timer);
   };
-
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    // 如果contentid变了就重新开始定时器
-    const { lastContentId } = prevState;
-
-    if (nextProps.contentId !== lastContentId) {
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.contentId !== this.props.contentId) {
+      // 笔记切换了更新定时器
+      this.setState({ tempName: nextProps.name });
       clearInterval(this.timer);
       this.timer = setInterval(this.save, 10 * 60 * 1000);
-      return {
-        lastContentId: nextProps.contentId
-      };
-    } else {
-      return null;
     }
   };
+
   // 画重点
   mark = () => {
     //  重点标示 blocks对应项的 inlineStyleRanges 的对应项的style为	#C0392B
@@ -90,7 +87,9 @@ export default class Editor extends React.Component {
   //   });
   //   return importantSum;
   // };
-
+  handleTempNameChange = e => {
+    this.setState({ tempName: e.target.value });
+  };
   output = () => {
     // html2pdf(document.getElementsByClassName("BraftEditor-content")[0]);
     const element = document.getElementsByClassName("BraftEditor-content")[0];
@@ -141,7 +140,7 @@ export default class Editor extends React.Component {
           };
           insert.push(obj);
         });
-        console.log(insert);
+
         newContent.blocks = [...oldBefore, ...insert, ...oldNext];
         break;
       }
@@ -204,11 +203,18 @@ export default class Editor extends React.Component {
       ],
       onSave: () => this.save()
     };
-    const { imgSrc } = this.state;
+    const { imgSrc, tempName } = this.state;
     return (
       <div className="editor-container">
         <div className="header">
-          <span className="name">{name}</span>
+          <ContentEditable
+            html={tempName} // innerHTML of the editable div
+            disabled={false} // use true to disable edition
+            onChange={this.handleTempNameChange} // handle innerHTML change
+          />
+          {/* <span className="name">
+          {name}
+          </span> */}
           {isBrush ? null : (
             <div>
               <Button
