@@ -17,13 +17,13 @@ export default class OperationArea extends Component {
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 处理整合选中相关的逻辑
     const { classList } = nextProps;
-    if (!prevState.isIntegrating) {
+    const { isIntegrating } = prevState;
+    if (!isIntegrating) {
       const initialCheckedList = classList.reduce((obj, item) => {
         obj[item.id] = true;
         return obj;
       }, {});
       return {
-        //  currentSelect: classList[0] && classList[0].id,
         checkedList: initialCheckedList // 当前被选中的
       };
     } else {
@@ -32,6 +32,7 @@ export default class OperationArea extends Component {
   };
 
   delete = id => e => {
+    // 删除某条笔记，发id给后台
     Modal.confirm({
       content: "是否决定删除此条笔记",
 
@@ -58,8 +59,8 @@ export default class OperationArea extends Component {
   };
 
   checkAll = e => {
+    // 全选
     const isAllChecked = e.target.checked;
-    // console.log(isAllChecked, this.state.checkedList);
     this.setState(preState => {
       const o = Object.keys(preState.checkedList).reduce((obj, item) => {
         obj[item] = isAllChecked;
@@ -69,12 +70,15 @@ export default class OperationArea extends Component {
     });
   };
   integrate = () => {
+    // 点击整合按钮
     this.setState({ isIntegrating: true });
   };
   cancalInterate = () => {
+    // 取消整合
     this.setState({ isIntegrating: false });
   };
   handleIntegrate = async () => {
+    // 点击整合的确定，选中的笔记进行重点文字筛选然后发给后端生成新的重点笔记
     const temp = [];
     for (let [id, status] of Object.entries(this.state.checkedList)) {
       if (status) {
@@ -86,7 +90,7 @@ export default class OperationArea extends Component {
   };
   getNoteDate = () => {};
   handleCheckBox = id => e => {
-    e.stopPropagation();
+    // 处理多选框点击
     this.setState(preState => ({
       checkedList: {
         ...preState.checkedList,
@@ -95,7 +99,7 @@ export default class OperationArea extends Component {
     }));
   };
   render() {
-    const { category, classList, newNote } = this.props;
+    const { category, classList, newNote, isBrush, brushList } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -110,13 +114,12 @@ export default class OperationArea extends Component {
           <div className="category">{category}</div>
           {newNote
             ? null
-            : classList.map(item => (
+            : (isBrush ? brushList : classList).map(item => (
                 <div
                   className="item"
                   key={item.id}
                   onClick={this.select({ id: item.id, title: item.title })}
                 >
-                  {/* todo checkbox受控 */}
                   <span onClick={e => e.stopPropagation()}>
                     <Checkbox
                       onChange={this.handleCheckBox(item.id)}
@@ -135,6 +138,7 @@ export default class OperationArea extends Component {
                     {item.title}
                     {/* {new Date(item.time).toDateString()} */}
                   </span>
+
                   <span onClick={this.delete(item.id)}>
                     <i className="iconfont icon-shanchu" />
                   </span>
@@ -170,6 +174,7 @@ export default class OperationArea extends Component {
           initialContent={content}
           contentId={currentSelect}
           name={newNote ? classList[0].value : currentNoteName}
+          newNote={newNote}
         />
       </div>
     );

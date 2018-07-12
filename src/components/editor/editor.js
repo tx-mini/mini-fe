@@ -13,11 +13,13 @@ message.config({
 export default class Editor extends React.Component {
   state = {
     lastContentId: null,
-    imgSrc: ""
+    imgSrc: "",
+    lastNewNote: false,
+    tempName: ""
   };
   save = () => {
     // 调用 更新/添加 笔记接口
-    console.log(this.tempName, this.editorInstance.getRawContent());
+    console.log(this.state.tempName, this.editorInstance.getRawContent());
   };
 
   timer = null; // 定时保存
@@ -28,25 +30,22 @@ export default class Editor extends React.Component {
   componentWillUnmount = () => {
     clearInterval(this.timer);
   };
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.contentId !== this.props.contentId) {
+      // 切换笔记重置定时保存状态
 
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    // 如果contentid变了就重新开始定时器
-    const { lastContentId } = prevState;
-
-    if (nextProps.contentId !== lastContentId) {
+      this.setState({ tempName: nextProps.name });
       clearInterval(this.timer);
       this.timer = setInterval(this.save, 10 * 60 * 1000);
-      return {
-        lastContentId: nextProps.contentId
-      };
-    } else {
-      return null;
+    }
+    if (!this.props.newNote && nextProps.newNote) {
+      // 新建笔记把当前的笔记内容清空
+      this.editorInstance.setContent("", "html");
     }
   };
   // 画重点
   mark = () => {
     //  重点标示 blocks对应项的 inlineStyleRanges 的对应项的style为	#C0392B
-
     // api似乎反了
     if (!this.editorInstance.selectionCollapsed()) {
       this.editorInstance.toggleSelectionColor("#C0392B");
@@ -64,35 +63,8 @@ export default class Editor extends React.Component {
     }
   };
 
-  //测试获取该页重点笔记
-  // getImportantnce = () => {
-  //   const content = this.editorInstance.getContent("raw");
-
-  //   const tc = JSON.parse(JSON.stringify(content));
-  //   // 获取含有important的区间
-  //   // todo 把那一段的样式也保留下。。有点麻烦好像
-  //   const importantSum = [];
-  //   tc.blocks.forEach(block => {
-  //     const temp = [];
-  //     block.inlineStyleRanges.forEach(inlineStyle => {
-  //       // 一个区块的重点笔记在一个div里面
-
-  //       if (inlineStyle.style === "COLOR-C0392B") {
-  //         temp.push(
-  //           `<span>${block.text.substr(
-  //             inlineStyle.offset,
-  //             inlineStyle.length
-  //           )}</span>`
-  //         );
-  //       }
-  //     });
-  //     importantSum.push(temp.join(" "));
-  //   });
-  //   return importantSum;
-  // };
-
   output = () => {
-    // html2pdf(document.getElementsByClassName("BraftEditor-content")[0]);
+    // 导出pdf
     const element = document.getElementsByClassName("BraftEditor-content")[0];
     const opt = {
       margin: 1,
@@ -106,8 +78,7 @@ export default class Editor extends React.Component {
       .save();
   };
   imgFn = (img, key) => {
-    // 挂载图片
-
+    // 点击图片识别调用
     this.currentKey = key;
     this.setState({ imgSrc: img.src });
   };
@@ -115,10 +86,10 @@ export default class Editor extends React.Component {
     // 卸载图片
     this.setState({ imgSrc: "" });
   };
-  tempName = null; // 修改标题的临时名字
+
   handleEditableChange = e => {
-    //target.value
-    this.tempName = e.target.value;
+    // 处理编辑笔记正文标题
+    this.setState({ tempName: e.target.value });
   };
   insertRecognizeResult = results => {
     // 将识别结果插入到图片的后面
