@@ -114,7 +114,7 @@ export default class OperationArea extends Component {
                   style={{ visibility: isIntegrating ? "visible" : "hidden" }}
                 />
               </span>
-              {item.isKeyNote ? <Icon type="star-o" /> : null}
+              {item.isKeyNote ? <Icon type="star-o" className="star-icon" /> : <span className="star-icon"></span>}
               <span
                 className={
                   item.id === currentSelect ? "selected content" : "content"
@@ -129,27 +129,29 @@ export default class OperationArea extends Component {
             </div>
           ))}
 
-          {isIntegrating ? (
-            <React.Fragment>
-              <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
-                全选
-              </Checkbox>
-              <div className="button-list">
-                <Button type="primary" onClick={this.handleIntegrate}>
-                  确定
-                </Button>
-                <Button onClick={this.cancalInterate}>取消</Button>
-              </div>
-            </React.Fragment>
-          ) : (
-            <Button
-              type="primary"
-              style={{ width: "40%", marginLeft: "17px" }}
-              onClick={this.integrate}
-            >
-              重点整合
-            </Button>
-          )}
+          <div className="operation">
+            {isIntegrating ? (
+              <React.Fragment>
+                <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
+                  全选
+                </Checkbox>
+                <div className="button-list">
+                  <Button type="primary" onClick={this.handleIntegrate}>
+                    确定
+                  </Button>
+                  <Button onClick={this.cancalInterate}>取消</Button>
+                </div>
+              </React.Fragment>
+            ) : (
+              <Button
+                type="primary"
+                style={{ marginLeft: "17px" }}
+                onClick={this.integrate}
+              >
+                重点整合
+              </Button>
+            )}
+          </div>
         </div>
         <Editor
           initialContent={content}

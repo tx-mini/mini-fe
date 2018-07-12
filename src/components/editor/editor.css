@@ -1,0 +1,14 @@
+.editor-container {
+  width: 80%;
+  padding: 10px;
+}
+.editor-container .header {
+  margin: 15px 10px;
+}
+.editor-container .name {
+  font-size: 20px;
+}
+.editor-container .header {
+  display: flex;
+  justify-content: space-between;
+}

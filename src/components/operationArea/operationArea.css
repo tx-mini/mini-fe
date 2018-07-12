@@ -1,0 +1,58 @@
+@import url('//at.alicdn.com/t/font_737695_b4agkvayxwl.css');
+.operation-container {
+  display: flex;
+}
+.operation-container .left-container {
+  display: flex;
+  flex-direction: column;
+}
+.operation-container .left-container .category {
+  background-color: #efefef;
+  width: 210px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 50px;
+}
+.operation-container .left-container .item {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  width: 210px;
+  height: 50px;
+  align-items: center;
+  padding: 10px;
+  line-height: 50px;
+  cursor: pointer;
+}
+.operation-container .left-container .item .icon-shanchu {
+  visibility: hidden;
+}
+.operation-container .left-container .item .star-icon {
+  width: 20px;
+}
+.operation-container .left-container .item:hover {
+  background-color: #efefef;
+  font-weight: bold;
+}
+.operation-container .left-container .item:hover .icon-shanchu {
+  visibility: visible;
+}
+.operation-container .left-container .button-list {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+.operation-container .left-container .selected {
+  font-weight: bold;
+}
+.operation-container .left-container .content {
+  display: inline-block;
+  white-space: nowrap;
+  width: 80px;
+}
+.operation-container .left-container .operation {
+  padding: 10px;
+}
