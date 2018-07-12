@@ -5,7 +5,8 @@ import "./editor.less";
 import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
-import { getImportantnce } from "./utils/index";
+import ContentEditable from "react-contenteditable";
+
 message.config({
   duration: 1.5
 });
@@ -16,6 +17,7 @@ export default class Editor extends React.Component {
   };
   save = () => {
     // 调用 更新/添加 笔记接口
+    console.log(this.tempName, this.editorInstance.getRawContent());
   };
 
   timer = null; // 定时保存
@@ -113,6 +115,11 @@ export default class Editor extends React.Component {
     // 卸载图片
     this.setState({ imgSrc: "" });
   };
+  tempName = null; // 修改标题的临时名字
+  handleEditableChange = e => {
+    //target.value
+    this.tempName = e.target.value;
+  };
   insertRecognizeResult = results => {
     // 将识别结果插入到图片的后面
     // results是数组，为识别的结果 每一项是字符串
@@ -209,7 +216,13 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          <span className="name">{name}</span>
+          <span className="name">
+            <ContentEditable
+              html={name}
+              disabled={false}
+              onChange={this.handleEditableChange} // handle innerHTML change
+            />
+          </span>
           <div>
             <Button
               type="primary"
@@ -243,5 +256,6 @@ export default class Editor extends React.Component {
 
   handleRawChange = rawContent => {
     console.log(rawContent);
+    console.log(JSON.stringify(rawContent));
   };
 }
