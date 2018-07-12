@@ -37,6 +37,8 @@ export default class Main extends Component {
     } else {
       noteList.push(data);
     }
+    console.log(data)
+    console.log(noteList)
     this.setState({ classList: noteList, isBrush: type });
   };
   createNote = () => {
@@ -70,7 +72,6 @@ export default class Main extends Component {
         <OperationArea
           category={category}
           classList={classList}
-          brushList={brushList}
           newNote={newNote}
           isBrush={isBrush}
         />

@@ -86,7 +86,7 @@ export default class OperationArea extends Component {
     }));
   };
   render() {
-    const { category, classList } = this.props;
+    const { category, classList, isBrush } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -98,7 +98,7 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category">{category}</div>
+          <div className="category">{isBrush? "回收站": category}</div>
 
           {classList.map(item => (
             <div
@@ -120,38 +120,49 @@ export default class OperationArea extends Component {
                   item.id === currentSelect ? "selected content" : "content"
                 }
               >
-                {item.title}
+                {item.value || item.title}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
-              <span onClick={this.delete(item.id)}>
-                <i className="iconfont icon-shanchu" />
-              </span>
+              {
+                isBrush? 
+                <span>
+                  <i className="iconfont icon-shanchu icon-rollback" />
+                </span>
+                :
+                <span onClick={this.delete(item.id)}>
+                  <i className="iconfont icon-shanchu" />
+                </span>
+              }
             </div>
           ))}
 
-          <div className="operation">
-            {isIntegrating ? (
-              <React.Fragment>
-                <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
-                  全选
-                </Checkbox>
-                <div className="button-list">
-                  <Button type="primary" onClick={this.handleIntegrate}>
-                    确定
-                  </Button>
-                  <Button onClick={this.cancalInterate}>取消</Button>
-                </div>
-              </React.Fragment>
-            ) : (
-              <Button
-                type="primary"
-                style={{marginLeft: "17px" }}
-                onClick={this.integrate}
-              >
-                重点整合
-              </Button>
-            )}
-          </div>
+          {
+            isBrush? null :
+          
+            <div className="operation">
+              {isIntegrating ? (
+                <React.Fragment>
+                  <Checkbox checked={isCheckedAll} onChange={this.checkAll}>
+                    全选
+                  </Checkbox>
+                  <div className="button-list">
+                    <Button type="primary" onClick={this.handleIntegrate}>
+                      确定
+                    </Button>
+                    <Button onClick={this.cancalInterate}>取消</Button>
+                  </div>
+                </React.Fragment>
+              ) : (
+                <Button
+                  type="primary"
+                  style={{marginLeft: "17px" }}
+                  onClick={this.integrate}
+                >
+                  重点整合
+                </Button>
+              )}
+            </div>
+          }
         </div>
         <Editor
           initialContent={content}
