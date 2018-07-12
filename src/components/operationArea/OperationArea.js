@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox, Icon, message } from "antd";
+import { Button, Modal, Checkbox, Icon, message, Tooltip } from "antd";
 import Editor from "../editor/Editor";
 import { filterSomeImportantnce } from "../editor/utils//index";
 import { getNoteContent, removeNote } from "../../api/save";
@@ -135,8 +135,9 @@ export default class OperationArea extends Component {
                       item.id === currentSelect ? "selected content" : "content"
                     }
                   >
-                    {item.title}
-                    {/* {new Date(item.time).toDateString()} */}
+                    <Tooltip title={item.title || item.value}>
+                      <span>{(item.title || item.value).slice(0, 6)}</span>
+                    </Tooltip>
                   </span>
 
                   <span onClick={this.delete(item.id)}>
