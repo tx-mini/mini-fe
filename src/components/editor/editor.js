@@ -207,14 +207,17 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          <ContentEditable
-            html={tempName} // innerHTML of the editable div
-            disabled={false} // use true to disable edition
-            onChange={this.handleTempNameChange} // handle innerHTML change
-          />
-          {/* <span className="name">
-          {name}
-          </span> */}
+          {isBrush ? (
+            <span className="name">{name}</span>
+          ) : (
+            <ContentEditable
+              className="name"
+              html={tempName} // innerHTML of the editable div
+              disabled={false} // use true to disable edition
+              onChange={this.handleTempNameChange} // handle innerHTML change
+            />
+          )}
+
           {isBrush ? null : (
             <div>
               <Button
