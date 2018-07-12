@@ -98,7 +98,7 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category">{isBrush? "回收站": category}</div>
+          <div className="category">{isBrush ? "回收站" : category}</div>
 
           {classList.map(item => (
             <div
@@ -114,7 +114,11 @@ export default class OperationArea extends Component {
                   style={{ visibility: isIntegrating ? "visible" : "hidden" }}
                 />
               </span>
-              {item.isKeyNote ? <Icon type="star-o" className="star-icon" /> : <span className="star-icon"></span>}
+              {item.isKeyNote ? (
+                <Icon type="star-o" className="star-icon" />
+              ) : (
+                <span className="star-icon" />
+              )}
               <span
                 className={
                   item.id === currentSelect ? "selected content" : "content"
@@ -123,22 +127,19 @@ export default class OperationArea extends Component {
                 {item.value || item.title}
                 {/* {new Date(item.time).toDateString()} */}
               </span>
-              {
-                isBrush? 
+              {isBrush ? (
                 <span>
                   <i className="iconfont icon-shanchu icon-rollback" />
                 </span>
-                :
+              ) : (
                 <span onClick={this.delete(item.id)}>
                   <i className="iconfont icon-shanchu" />
                 </span>
-              }
+              )}
             </div>
           ))}
 
-          {
-            isBrush? null :
-          
+          {isBrush ? null : (
             <div className="operation">
               {isIntegrating ? (
                 <React.Fragment>
@@ -155,19 +156,20 @@ export default class OperationArea extends Component {
               ) : (
                 <Button
                   type="primary"
-                  style={{marginLeft: "17px" }}
+                  style={{ marginLeft: "17px" }}
                   onClick={this.integrate}
                 >
                   重点整合
                 </Button>
               )}
             </div>
-          }
+          )}
         </div>
         <Editor
           initialContent={content}
           contentId={currentSelect}
           name={currentNoteName}
+          isBrush={isBrush}
         />
       </div>
     );

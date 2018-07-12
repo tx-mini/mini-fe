@@ -146,11 +146,12 @@ export default class Editor extends React.Component {
         break;
       }
     }
-    console.log(newContent);
+
     this.editorInstance.setContent(newContent, "raw");
   };
   render = () => {
-    const { initialContent, name, contentId } = this.props;
+    const { initialContent, name, contentId, isBrush } = this.props;
+
     const editorProps = {
       height: 500,
       contentFormat: "raw",
@@ -161,6 +162,7 @@ export default class Editor extends React.Component {
       media: {
         externalMedias: { image: true }
       },
+      disabled: isBrush,
       imageControls: {
         floatLeft: false,
         floatRight: false,
@@ -207,16 +209,18 @@ export default class Editor extends React.Component {
       <div className="editor-container">
         <div className="header">
           <span className="name">{name}</span>
-          <div>
-            <Button
-              type="primary"
-              onClick={this.save}
-              style={{ marginRight: "10px" }}
-            >
-              保存
-            </Button>
-            <Button onClick={this.output}>导出PDF</Button>
-          </div>
+          {isBrush ? null : (
+            <div>
+              <Button
+                type="primary"
+                onClick={this.save}
+                style={{ marginRight: "10px" }}
+              >
+                保存
+              </Button>
+              <Button onClick={this.output}>导出PDF</Button>
+            </div>
+          )}
         </div>
         <BraftEditor
           ref={instance => (this.editorInstance = instance)}
