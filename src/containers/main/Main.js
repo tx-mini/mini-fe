@@ -26,7 +26,8 @@ export default class Main extends Component {
     this.setState({
       classDir: categories.classDir,
       brushList: categories.brushList,
-      classList: noteList
+      classList: noteList,
+      category: categories.classDir[0].value
     });
   }
   SelectItem = async (data, type) => {
