@@ -6,8 +6,7 @@ import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 import ContentEditable from "react-contenteditable";
-import { getImportantnce } from "./utils/index";
-import { save as xxx } from "../../api/save";
+
 message.config({
   duration: 1.5
 });

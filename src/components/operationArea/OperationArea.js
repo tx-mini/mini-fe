@@ -4,8 +4,8 @@ import { Button, Modal, Checkbox, Icon, message, Tooltip, Radio } from "antd";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import Editor from "../editor/Editor";
 import { formatTime } from "./util";
-import { getNoteContent, removeNote } from "../../api/save";
-
+import { getNoteContent, removeNote, createNote } from "../../api/save";
+import { filterSomeImportantnce } from "../editor/utils/index";
 const RadioGroup = Radio.Group;
 export default class OperationArea extends Component {
   state = {
@@ -23,7 +23,7 @@ export default class OperationArea extends Component {
     const { dataList } = nextProps;
     if (!prevState.isIntegrating) {
       const initialCheckedList = dataList.reduce((obj, item) => {
-        obj[item.id] = true;
+        obj[item.note_id] = true;
         return obj;
       }, {});
       return {
@@ -35,12 +35,12 @@ export default class OperationArea extends Component {
     }
   };
 
-  delete = id => e => {
+  delete = note_id => e => {
     Modal.confirm({
       content: "是否决定删除此条笔记",
 
       onOk: async () => {
-        const { code, result } = removeNote(id);
+        const { code, result } = removeNote(note_id);
         if (code === 0) {
           message.info("删除笔记成功");
         } else {
@@ -49,14 +49,15 @@ export default class OperationArea extends Component {
       }
     });
   };
-  select = ({ id, title }) => async e => {
-    if (id !== this.state.id) {
-      const content = await getNoteContent(id);
+  select = ({ note_id, name }) => async e => {
+    if (note_id !== this.state.note_id) {
+      const result = await getNoteContent(note_id);
       //   console.log(JSON.parse(content));
+      //  console.log(content);
       this.setState({
-        currentSelect: id,
-        content: JSON.parse(content),
-        currentNoteName: title
+        currentSelect: note_id,
+        content: JSON.parse(result.content),
+        currentNoteName: name
       });
     }
   };
@@ -85,16 +86,27 @@ export default class OperationArea extends Component {
   cancalInterate = () => {
     this.setState({ isIntegrating: false });
   };
-  handleIntegrate = () => {
-    console.log(this.state.checkedList);
+  handleIntegrate = async () => {
+    const { checkedList } = this.state;
+    const trueList = Object.keys(checkedList).filter(item => checkedList[item]); // 当前选中的整合的id的数组
+    // 查询真的内容
+    const importantContent = await filterSomeImportantnce(trueList);
+    const { status } = await createNote({
+      content: JSON.stringify(importantContent),
+      name: `整合笔记-${Date.now()}`
+    }); //book_id
+    if (status == 1) {
+      message.info("整合成功");
+      this.cancalInterate();
+    }
   };
   getNoteDate = () => {};
-  handleCheckBox = id => e => {
+  handleCheckBox = note_id => e => {
     e.stopPropagation();
     this.setState(preState => ({
       checkedList: {
         ...preState.checkedList,
-        [id]: e.target.checked
+        [note_id]: e.target.checked
       }
     }));
   };
@@ -127,17 +139,19 @@ export default class OperationArea extends Component {
           <div className="category">{isRubbish ? "回收站" : category}</div>
 
           {dataList.map(item => (
-            <ContextMenuTrigger id="xxxr">
+            <ContextMenuTrigger id="xxxr" key={item.note_id}>
               <div
                 className="item"
-                key={item.id}
-                onClick={this.select({ id: item.id, title: item.title })}
+                onClick={this.select({
+                  note_id: item.note_id,
+                  name: item.name
+                })}
               >
                 {/* todo checkbox受控 */}
                 <span onClick={this.stopPropagation}>
                   <Checkbox
-                    onChange={this.handleCheckBox(item.id)}
-                    checked={!!checkedList[item.id]}
+                    onChange={this.handleCheckBox(item.note_id)}
+                    checked={!!checkedList[item.note_id]}
                     style={{ visibility: isIntegrating ? "visible" : "hidden" }}
                   />
                 </span>
@@ -148,11 +162,13 @@ export default class OperationArea extends Component {
                 )}
                 <span
                   className={
-                    item.id === currentSelect ? "selected content" : "content"
+                    item.note_id === currentSelect
+                      ? "selected content"
+                      : "content"
                   }
                 >
                   <Tooltip title={item.value || item.name}>
-                    {(item.value || item.name).slice(0, 6)}
+                    {item.name.slice(0, 6)}
                   </Tooltip>
                 </span>
                 {isRubbish ? (
@@ -160,7 +176,7 @@ export default class OperationArea extends Component {
                     <i className="iconfont icon-shanchu icon-rollback" />
                   </span>
                 ) : (
-                  <span onClick={this.delete(item.id)}>
+                  <span onClick={this.delete(item.note_id)}>
                     <i className="iconfont icon-shanchu" />
                   </span>
                 )}
@@ -181,7 +197,9 @@ export default class OperationArea extends Component {
           >
             <RadioGroup onChange={this.onRadioChange} value={radioValue}>
               {dataList.map(item => (
-                <Radio value={item.value}>{item.value}</Radio>
+                <Radio value={item.name} key={item.note_id}>
+                  {item.name}
+                </Radio>
               ))}
             </RadioGroup>
           </Modal>

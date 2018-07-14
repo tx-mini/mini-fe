@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Redirect, HashRouter } from "react-router-dom";
 class App extends Component {
   render() {
     const openid = window.localStorage.getItem("openid");
-    const isLogin = openid;
+    const isLogin = true;
 
     return (
       <HashRouter>

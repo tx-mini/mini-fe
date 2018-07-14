@@ -1,6 +1,6 @@
 import React from "react";
 import "./firstSlide.less";
-import {TERM_KEY} from './constant'
+import { TERM_KEY } from "./constant";
 import { getNoteList } from "../../api/save";
 
 class FirstSlide extends React.Component {
@@ -64,8 +64,8 @@ class FirstSlide extends React.Component {
       curBIndex = i;
       curBParentIndex = index;
     }
-
-    this.props.setCategory(data.value);
+    console.log(data);
+    this.props.setCategory(data.name);
     this.setState({
       curCIndex: curCIndex,
       curCParentIndex: curCParentIndex,
@@ -80,14 +80,20 @@ class FirstSlide extends React.Component {
     this.props.createNote();
   }
   showRubbish = async () => {
-    const rubbishList = await getNoteList("1");
-    console.log(rubbishList)
-    this.setState({
-      showRubbish: true,
-      rubbish_list: rubbishList || []
-    })
-    this.props.showRubbish(rubbishList)
-  }
+    if (!this.state.showRubbish) {
+      const rubbishList = await getNoteList("1");
+      console.log(rubbishList);
+      this.setState({
+        showRubbish: true,
+        rubbish_list: rubbishList || []
+      });
+      this.props.showRubbish(rubbishList);
+    } else {
+      this.setState({
+        showRubbish: false
+      });
+    }
+  };
   render() {
     const {
       term_list,
@@ -100,7 +106,7 @@ class FirstSlide extends React.Component {
       showRubbish,
       curBParentIndex
     } = this.state;
-    console.log(showCChild)
+    //  console.log(showCChild);
     return (
       <div className="first-slide">
         <div className="new-note" onClick={this.createNote.bind(this)}>
@@ -141,8 +147,9 @@ class FirstSlide extends React.Component {
                   <div
                     className={[
                       "slide-item final-item",
-                      (showCChild[index]) ? "show" : "hide"
-                    , "hide-text"].join(" ")}
+                      showCChild[index] ? "show" : "hide",
+                      "hide-text"
+                    ].join(" ")}
                     onClick={this.selectItem.bind(this, i, index, data, false)}
                     key={i}
                   >
@@ -163,10 +170,7 @@ class FirstSlide extends React.Component {
             ))}
           </div>
           <div className="class-note">
-            <div
-              className="slide-item"
-              onClick={this.showRubbish}
-            >
+            <div className="slide-item" onClick={this.showRubbish}>
               <i
                 className={[
                   "iconfont show-icon",
@@ -189,7 +193,7 @@ class FirstSlide extends React.Component {
                       curBParentIndex === index ? "active" : ""
                     ].join(" ")}
                   >
-                    {item.value}
+                    {item.name}
                   </span>
                 </div>
               </div>

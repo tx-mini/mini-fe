@@ -13,12 +13,8 @@ export default class Main extends Component {
       classList: [],
       category: "",
       newNote: false,
-<<<<<<< HEAD
-      isBrush: false
-=======
       isRubbish: false,
       nick: ""
->>>>>>> 255d1275ed7a6ea8078bed0ce2f4b72821b4503d
     };
   }
   setCategory = category => {
@@ -29,19 +25,11 @@ export default class Main extends Component {
 
     // 这里改了。。。。。
     const listBook = await getListBook();
-    console.log(listBook)
+    console.log(listBook);
     //  const noteList = await getNoteList(listBook.classDir[0].id);
-<<<<<<< HEAD
-
-    this.setState({
-      subject_list: listBook.subject_list,
-      rubbish_list: listBook.rubbish_list
-=======
     // console.log(nick);
     this.setState({
-      term_list: listBook.term_list || [],
-      nick: this.props.nick || this.props.location.state.nick
->>>>>>> 255d1275ed7a6ea8078bed0ce2f4b72821b4503d
+      term_list: listBook.term_list || []
     });
   }
   logout = () => {
@@ -52,10 +40,15 @@ export default class Main extends Component {
   SelectItem = async (data, type) => {
     let noteList = [];
     if (!type) {
-      const [noteStarList = [], noteCostomList = []] = await Promise.all([getNoteList("0", data.book_id, "1"),getNoteList("0", data.book_id, "0")])
-      noteList = noteCostomList.concat(noteStarList);
+      const [noteStarList, noteCostomList] = await Promise.all([
+        getNoteList("0", data.book_id, "1"),
+        getNoteList("0", data.book_id, "0")
+      ]);
+
+      noteList = [...noteStarList, ...noteCostomList];
+
       this.setState({ classList: noteList, isRubbish: type });
-    } 
+    }
   };
   createNote = () => {
     let initList = [
@@ -66,11 +59,11 @@ export default class Main extends Component {
     ];
     this.setState({ newNote: true, classList: initList });
   };
-  showRubbish = (rubbishList) => {
+  showRubbish = rubbishList => {
     this.setState({
       classList: rubbishList || []
-    })
-  }
+    });
+  };
   render() {
     const {
       term_list,
@@ -78,8 +71,7 @@ export default class Main extends Component {
       classList,
       newNote,
       rubbish_list,
-      isBrush
-      nick
+      isRubbish
     } = this.state;
     return (
       <div className="main">

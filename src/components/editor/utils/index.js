@@ -27,7 +27,7 @@ export const filterImportantnce = raw => {
 export const filterSomeImportantnce = async ids => {
   const p = await Promise.all(ids.map(id => getNoteContent(id)));
   const finalKeyNote = p.reduce((pre, item) => {
-    pre.push(...filterImportantnce(JSON.parse(item)));
+    pre.push(...filterImportantnce(JSON.parse(item.content)));
     return pre;
   }, []);
   let contentObj = {
