@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./operationArea.less";
 import { Button, Modal, Checkbox, Icon, message, Tooltip } from "antd";
 import Editor from "../editor/Editor";
+import { formatTime } from "./util";
 import { getNoteContent, removeNote } from "../../api/save";
 export default class OperationArea extends Component {
   state = {
@@ -85,6 +86,9 @@ export default class OperationArea extends Component {
       }
     }));
   };
+  stopPropagation = e => {
+    e.stopPropagation();
+  };
   render() {
     const { category, classList, isBrush } = this.props;
     const {
@@ -107,7 +111,7 @@ export default class OperationArea extends Component {
               onClick={this.select({ id: item.id, title: item.title })}
             >
               {/* todo checkbox受控 */}
-              <span onClick={e => e.stopPropagation()}>
+              <span onClick={this.stopPropagation}>
                 <Checkbox
                   onChange={this.handleCheckBox(item.id)}
                   checked={!!checkedList[item.id]}
@@ -124,8 +128,9 @@ export default class OperationArea extends Component {
                   item.id === currentSelect ? "selected content" : "content"
                 }
               >
-                {item.value || item.title}
-                {/* {new Date(item.time).toDateString()} */}
+                <Tooltip title={item.value || item.title}>
+                  {(item.value || item.title).slice(0, 6)}
+                </Tooltip>
               </span>
               {isBrush ? (
                 <span>
@@ -136,6 +141,7 @@ export default class OperationArea extends Component {
                   <i className="iconfont icon-shanchu" />
                 </span>
               )}
+              <span className="time">{formatTime(Date.now())}</span>
             </div>
           ))}
 

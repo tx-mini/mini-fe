@@ -3,6 +3,7 @@ import Header from "../../components/header/Header";
 import FirstSlide from "../../components/firstSlide/FirstSlide";
 import OperationArea from "../../components/operationArea/OperationArea";
 import { getCategories, getNoteList } from "../../api/save";
+
 export default class Main extends Component {
   constructor(props) {
     super(props);
@@ -37,8 +38,8 @@ export default class Main extends Component {
     } else {
       noteList.push(data);
     }
-    console.log(data)
-    console.log(noteList)
+    console.log(data);
+    console.log(noteList);
     this.setState({ classList: noteList, isBrush: type });
   };
   createNote = () => {

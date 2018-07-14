@@ -27,3 +27,19 @@ export function removeNote(id) {
     .get(`http://yapi.demo.qunar.com/mock/13512/removeNote/${id}`)
     .then(res => res.data);
 }
+
+export function login(nick) {
+  // 告诉后台nick
+}
+
+export function save(id) {
+  return axios({
+    method: "post",
+    url: "/createNote",
+    data: {
+      openid: "111",
+      book_ref: "xxssdadadxx",
+      imp_mark: 0
+    }
+  });
+}
