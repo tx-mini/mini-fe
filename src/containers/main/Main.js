@@ -52,11 +52,10 @@ export default class Main extends Component {
   SelectItem = async (data, type) => {
     let noteList = [];
     if (!type) {
-      noteList = await getNoteList(data.id);
-    } else {
-      noteList.push(data);
-    }
-    this.setState({ classList: noteList, isRubbish: type });
+      const [noteStarList = [], noteCostomList = []] = await Promise.all([getNoteList("0", data.book_id, "1"),getNoteList("0", data.book_id, "0")])
+      noteList = noteCostomList.concat(noteStarList);
+      this.setState({ classList: noteList, isRubbish: type });
+    } 
   };
   createNote = () => {
     let initList = [
