@@ -14,7 +14,9 @@ export default class Login extends Component {
   };
   jump = ({ nick }) => {
     // 对后台使用nick换取openid
+    const openid = 111;
     message.info("登录成功...正在跳转");
+    window.localStorage.setItem({ openid });
     // login
     this.props.history.replace("/", { nick });
   };
