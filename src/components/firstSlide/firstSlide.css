@@ -1,4 +1,4 @@
-@import url('//at.alicdn.com/t/font_737695_b4agkvayxwl.css');
+@import url('//at.alicdn.com/t/font_737695_zeedmo3fl9.css');
 .first-slide {
   display: flex;
   display: -webkit-flex;
@@ -47,6 +47,9 @@
 .item-title {
   font-size: 1.4rem;
   margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sub-item {
   margin-left: 15%;
@@ -63,6 +66,11 @@
 .show {
   display: inline-block;
   width: 100%;
+}
+.hide-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .final-show {
   display: flex;
