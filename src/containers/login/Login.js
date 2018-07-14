@@ -12,13 +12,15 @@ export default class Login extends Component {
   toggle = () => {
     this.setState(pre => ({ photoVisible: !pre.photoVisible }));
   };
-  jump = ({ nick }) => {
+  jump = async ({ nick }) => {
     // 对后台使用nick换取openid
-    const openid = 111;
+    const { logo_url, nick_name, openid } = await login(nick);
     message.info("登录成功...正在跳转");
-    window.localStorage.setItem({ openid });
+    window.localStorage.setItem("openid", openid);
+    window.localStorage.setItem("logo_url", logo_url);
+    window.localStorage.setItem("nick_name", nick_name);
     // login
-    this.props.history.replace("/", { nick });
+    this.props.history.replace("/");
   };
   render() {
     const { photoVisible } = this.state;

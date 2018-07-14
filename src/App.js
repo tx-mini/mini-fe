@@ -5,24 +5,18 @@ import Share from "./containers/share/Share";
 import { BrowserRouter, Route, Redirect, HashRouter } from "react-router-dom";
 class App extends Component {
   render() {
-    // 请求后台检测是否登录
     const openid = window.localStorage.getItem("openid");
-    if (openid) {
-      //
-    }
-    const isLogin = true,
-      nick = "nick";
+    const isLogin = openid;
 
     return (
       <HashRouter>
         <div>
-          {/* main页判断当前是否登录，未登录 */}
           <Route
             exact
             path="/"
             render={props => {
               if (isLogin) {
-                return <Main nick={nick} />;
+                return <Main />;
               } else {
                 return (
                   <Redirect
@@ -41,8 +35,7 @@ class App extends Component {
                 return (
                   <Redirect
                     to={{
-                      pathname: "/",
-                      state: { nick }
+                      pathname: "/"
                     }}
                   />
                 );

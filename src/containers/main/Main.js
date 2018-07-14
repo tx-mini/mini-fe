@@ -13,8 +13,7 @@ export default class Main extends Component {
       classList: [],
       category: "",
       newNote: false,
-      isBrush: false,
-      nick: ""
+      isBrush: false
     };
   }
   setCategory = category => {
@@ -27,11 +26,10 @@ export default class Main extends Component {
     // 这里改了。。。。。
     const listBook = await getListBook();
     //  const noteList = await getNoteList(listBook.classDir[0].id);
-    console.log(nick);
+
     this.setState({
       subject_list: listBook.subject_list,
-      rubbish_list: listBook.rubbish_list,
-      nick: this.props.nick || this.props.location.state.nick
+      rubbish_list: listBook.rubbish_list
     });
   }
   logout = () => {
@@ -66,12 +64,11 @@ export default class Main extends Component {
       classList,
       newNote,
       rubbish_list,
-      isBrush,
-      nick
+      isBrush
     } = this.state;
     return (
       <div className="main">
-        <Header nick={nick} logout={this.logout} />
+        <Header logout={this.logout} />
         <FirstSlide
           rubbish_list={rubbish_list}
           subject_list={subject_list}

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Form } from "../../node_modules/antd";
 
 export function getListBook(openid) {
   // 暂时是123
@@ -39,4 +40,10 @@ export function save(id) {
 
 export function getShare(note_id) {
   return axios.get(`/mini/share/${note_id}`).then(res => res.data);
+}
+
+export function login(nick_name){
+  const form = new FormData()
+  form.append("nick_name",nick_name	)
+  return axios.post({method:"POST",url:"/mini/login",data:form})
 }
