@@ -51,11 +51,12 @@ export function login(nick_name) {
   return axios.post({ url: "/mini/login", data: form });
 }
 
-export function createNote({ book_id, name, content }) {
+export function createNote({ book_id, name, content, is_imp = 0 }) {
   const form = new FormData();
   form.append("openid", window.localStorage.getItem("openid"));
   form.append("book_id", book_id);
   form.append("name", name);
   form.append("content", content);
+  form.append("is_imp", is_imp);
   return axios.post("/mini/createNote", form).then(res => res.data);
 }

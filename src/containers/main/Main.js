@@ -55,10 +55,11 @@ export default class Main extends Component {
     this.setState({ currentSubjectid: id });
   };
   createNote = () => {
+    const now = Date.now();
     let initList = [
       {
-        id: "",
-        value: "新建笔记"
+        // ook_id: now,// 当前分类
+        name: "新建笔记"
       }
     ];
     this.setState({ newNote: true, classList: initList });

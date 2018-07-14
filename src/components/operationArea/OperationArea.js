@@ -95,7 +95,8 @@ export default class OperationArea extends Component {
     const { status } = await createNote({
       content: JSON.stringify(importantContent),
       name: `整合笔记-${Date.now()}`,
-      book_id: this.props.currentSubjectid //
+      book_id: this.props.currentSubjectid, //
+      is_imp: 1
     }); //book_id
     if (status == 1) {
       message.info("整合成功");
@@ -157,7 +158,7 @@ export default class OperationArea extends Component {
                     style={{ visibility: isIntegrating ? "visible" : "hidden" }}
                   />
                 </span>
-                {item.isKeyNote ? (
+                {item.is_imp == 1 ? (
                   <Icon type="star-o" className="star-icon" />
                 ) : (
                   <span className="star-icon" />
@@ -169,9 +170,7 @@ export default class OperationArea extends Component {
                       : "content"
                   }
                 >
-                  <Tooltip title={item.value || item.name}>
-                    {item.name.slice(0, 6)}
-                  </Tooltip>
+                  <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
                 </span>
                 {isRubbish ? (
                   <span>
@@ -182,7 +181,9 @@ export default class OperationArea extends Component {
                     <i className="iconfont icon-shanchu" />
                   </span>
                 )}
-                <span className="time">{formatTime(Date.now())}</span>
+                <span className="time">
+                  {formatTime(item.recent_time * 1000)}
+                </span>
               </div>
             </ContextMenuTrigger>
           ))}
