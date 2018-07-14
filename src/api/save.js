@@ -8,8 +8,15 @@ export function getListBook(openid) {
   });
 }
 
-export function getNoteList(categoryId) {
-  return axios.get("/api/mock/13512/getNoteList/" + categoryId).then(res => {
+export function getNoteList(is_rubbish, book_id, is_imp) {
+  const formData = new FormData();
+  formData.append("openid", localStorage.getItem("openid") || '1');
+  formData.append("is_rubbish", is_rubbish);
+  formData.append("book_id", book_id);
+  formData.append("is_imp", is_imp)
+
+  return axios.post("/mini/listNote", formData).then(res => {
+    console.log(res)
     return res.data.result;
   });
 }

@@ -1,36 +1,37 @@
 import React from "react";
 import "./firstSlide.less";
+import {TERM_KEY} from './constant'
+import { getNoteList } from "../../api/save";
 
 class FirstSlide extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classDir: props.classDir,
-      brushList: props.brushList,
+      term_list: props.term_list,
+      rubbish_list: [],
       showClass: true,
-      showCChild: [],
+      showCChild: [true],
       showBChild: [],
       curCParentIndex: 0,
       curCIndex: 0,
       curBParentIndex: "",
       curBIndex: "",
-      showDrush: false
+      showRubbish: false
     };
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      classDir: nextProps.classDir,
-      brushList: nextProps.brushList
+      term_list: nextProps.term_list
     });
   }
   componentDidMount() {
-    const { classDir, brushList } = this.state;
-    let initC = [];
+    const { term_list, rubbish_list } = this.state;
+    let initC = [true];
     let initB = [];
-    for (let i = 0; i < classDir.length; i++) {
+    for (let i = 0; i < term_list.length; i++) {
       initC.push(true);
     }
-    for (let i = 0; i < brushList.length; i++) {
+    for (let i = 0; i < rubbish_list.length; i++) {
       initB.push(false);
     }
     this.setState({
@@ -38,22 +39,14 @@ class FirstSlide extends React.Component {
       showBChild: initB
     });
   }
-  toggleShow(index, type) {
-    const { showCChild, showBChild } = this.state;
+  toggleShow(index) {
+    const { showCChild } = this.state;
     let arr;
-    if (type === "class") {
-      arr = showCChild;
-      arr[index] = !showCChild[index];
-      this.setState({
-        showCChild: arr
-      });
-    } else {
-      arr = showBChild;
-      arr[index] = !showBChild[index];
-      this.setState({
-        showBChild: arr
-      });
-    }
+    arr = showCChild;
+    arr[index] = !showCChild[index];
+    this.setState({
+      showCChild: arr
+    });
   }
   selectItem(i, index, data, type) {
     let curCIndex;
@@ -86,18 +79,28 @@ class FirstSlide extends React.Component {
     //新建笔记
     this.props.createNote();
   }
+  showRubbish = async () => {
+    const rubbishList = await getNoteList("1");
+    console.log(rubbishList)
+    this.setState({
+      showRubbish: true,
+      rubbish_list: rubbishList || []
+    })
+    this.props.showRubbish(rubbishList)
+  }
   render() {
     const {
-      classDir,
-      brushList,
+      term_list,
+      rubbish_list,
 
       showClass,
       showCChild,
       curCIndex,
       curCParentIndex,
-      showDrush,
+      showRubbish,
       curBParentIndex
     } = this.state;
+    console.log(showCChild)
     return (
       <div className="first-slide">
         <div className="new-note" onClick={this.createNote.bind(this)}>
@@ -117,13 +120,13 @@ class FirstSlide extends React.Component {
                 ].join(" ")}
               />
               <i className="iconfont icon-iconset0117 show-icon item-icon" />
-              <span className="item-title">课堂笔记</span>
+              <span className="item-title hide-text">课堂笔记</span>
             </div>
-            {classDir.map((item, index) => (
+            {term_list.map((item, index) => (
               <div className={showClass ? "show" : "hide"} key={index}>
                 <div
                   className="slide-item sub-item"
-                  onClick={this.toggleShow.bind(this, index, "class")}
+                  onClick={this.toggleShow.bind(this, index)}
                 >
                   <i
                     className={[
@@ -132,14 +135,14 @@ class FirstSlide extends React.Component {
                     ].join(" ")}
                   />
                   <i className="iconfont icon-wenjianjia show-icon item-icon" />
-                  <span className="item-title">{item.value}</span>
+                  <span className="item-title">{TERM_KEY[item.term - 1]}</span>
                 </div>
-                {item.childrens.map((data, i) => (
+                {item.children.map((data, i) => (
                   <div
                     className={[
                       "slide-item final-item",
-                      (curCParentIndex === index || showCChild[index]) ? "show" : "hide"
-                    ].join(" ")}
+                      (showCChild[index]) ? "show" : "hide"
+                    , "hide-text"].join(" ")}
                     onClick={this.selectItem.bind(this, i, index, data, false)}
                     key={i}
                   >
@@ -152,7 +155,7 @@ class FirstSlide extends React.Component {
                           : ""
                       ].join(" ")}
                     >
-                      {data.value}
+                      {data.name}
                     </span>
                   </div>
                 ))}
@@ -162,19 +165,19 @@ class FirstSlide extends React.Component {
           <div className="class-note">
             <div
               className="slide-item"
-              onClick={() => this.setState({ showDrush: !showDrush })}
+              onClick={this.showRubbish}
             >
               <i
                 className={[
                   "iconfont show-icon",
-                  showDrush ? "icon-shouqi" : "icon-zhankai"
+                  showRubbish ? "icon-shouqi" : "icon-zhankai"
                 ].join(" ")}
               />
               <i className="iconfont icon-shanchu show-icon item-icon" />
               <span className="item-title">回收站</span>
             </div>
-            {brushList.map((item, index) => (
-              <div className={showDrush ? "show" : "hide"} key={index}>
+            {rubbish_list.map((item, index) => (
+              <div className={showRubbish ? "show" : "hide"} key={index}>
                 <div
                   className="slide-item sub-item"
                   onClick={this.selectItem.bind(this, "", index, item, true)}

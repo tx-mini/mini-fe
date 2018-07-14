@@ -20,9 +20,9 @@ export default class OperationArea extends Component {
   };
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 处理整合选中相关的逻辑
-    const { classList } = nextProps;
+    const { dataList } = nextProps;
     if (!prevState.isIntegrating) {
-      const initialCheckedList = classList.reduce((obj, item) => {
+      const initialCheckedList = dataList.reduce((obj, item) => {
         obj[item.id] = true;
         return obj;
       }, {});
@@ -110,7 +110,7 @@ export default class OperationArea extends Component {
     this.setState({ radioValue: e.target.value });
   };
   render() {
-    const { category, subject_list, isBrush } = this.props;
+    const { category, dataList, isRubbish } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -124,9 +124,9 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category">{isBrush ? "回收站" : category}</div>
+          <div className="category">{isRubbish ? "回收站" : category}</div>
 
-          {subject_list.map(item => (
+          {dataList.map(item => (
             <ContextMenuTrigger id="xxxr">
               <div
                 className="item"
@@ -151,11 +151,11 @@ export default class OperationArea extends Component {
                     item.id === currentSelect ? "selected content" : "content"
                   }
                 >
-                  <Tooltip title={item.value || item.title}>
-                    {(item.value || item.title).slice(0, 6)}
+                  <Tooltip title={item.value || item.name}>
+                    {(item.value || item.name).slice(0, 6)}
                   </Tooltip>
                 </span>
-                {isBrush ? (
+                {isRubbish ? (
                   <span>
                     <i className="iconfont icon-shanchu icon-rollback" />
                   </span>
@@ -180,12 +180,12 @@ export default class OperationArea extends Component {
             onCancel={this.handleModalCancel}
           >
             <RadioGroup onChange={this.onRadioChange} value={radioValue}>
-              {subject_list.map(item => (
+              {dataList.map(item => (
                 <Radio value={item.value}>{item.value}</Radio>
               ))}
             </RadioGroup>
           </Modal>
-          {isBrush ? null : (
+          {isRubbish ? null : (
             <div className="operation">
               {isIntegrating ? (
                 <React.Fragment>
@@ -215,7 +215,7 @@ export default class OperationArea extends Component {
           initialContent={content}
           contentId={currentSelect}
           name={currentNoteName}
-          isBrush={isBrush}
+          isBrush={isRubbish}
         />
       </div>
     );
