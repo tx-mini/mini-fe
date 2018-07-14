@@ -1,11 +1,11 @@
 import axios from "axios";
 export function getListBook() {
   // 暂时是123
-  return axios
-    .get(`/mini/listBook/${window.localStorage.getItem("openid")}`)
-    .then(res => {
-      return res.data;
-    });
+  const formData = new FormData();
+  formData.append("openid", window.localStorage.getItem("openid"));
+  return axios.post(`/mini/listBook`, formData).then(res => {
+    return res.data;
+  });
 }
 
 export function getNoteList(is_rubbish, book_id, is_imp) {
@@ -48,7 +48,7 @@ export function getShare(note_id) {
 export function login(nick_name) {
   const form = new FormData();
   form.append("nick_name", nick_name);
-  return axios.post({ method: "POST", url: "/mini/login", data: form });
+  return axios.post({ url: "/mini/login", data: form });
 }
 
 export function createNote({ book_id, name, content }) {
@@ -57,5 +57,5 @@ export function createNote({ book_id, name, content }) {
   form.append("book_id", book_id);
   form.append("name", name);
   form.append("content", content);
-  return axios.post({ method: "POST", form }).then(res => res.data);
+  return axios.post("/mini/createNote", form).then(res => res.data);
 }

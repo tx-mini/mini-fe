@@ -14,7 +14,8 @@ export default class Main extends Component {
       category: "",
       newNote: false,
       isRubbish: false,
-      nick: ""
+      nick: "",
+      currentSubjectid: "" //当前选中的科目id
     };
   }
   setCategory = category => {
@@ -50,6 +51,9 @@ export default class Main extends Component {
       this.setState({ classList: noteList, isRubbish: type });
     }
   };
+  setCurrentSubjectid = id => {
+    this.setState({ currentSubjectid: id });
+  };
   createNote = () => {
     let initList = [
       {
@@ -71,6 +75,7 @@ export default class Main extends Component {
       classList,
       newNote,
       rubbish_list,
+      currentSubjectid,
       isRubbish
     } = this.state;
     return (
@@ -82,12 +87,14 @@ export default class Main extends Component {
           SelectItem={this.SelectItem}
           createNote={this.createNote}
           setCategory={this.setCategory}
+          setCurrentSubjectid={this.setCurrentSubjectid}
         />
         <OperationArea
           category={category}
           dataList={classList}
           newNote={newNote}
           isBrush={isRubbish}
+          currentSubjectid={currentSubjectid}
         />
       </div>
     );

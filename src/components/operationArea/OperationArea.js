@@ -9,7 +9,7 @@ import { filterSomeImportantnce } from "../editor/utils/index";
 const RadioGroup = Radio.Group;
 export default class OperationArea extends Component {
   state = {
-    currentSelect: 0,
+    currentSelect: 0, // 当前选中的book id
     isIntegrating: false,
     isCheckedAll: true,
     content: {},
@@ -91,9 +91,11 @@ export default class OperationArea extends Component {
     const trueList = Object.keys(checkedList).filter(item => checkedList[item]); // 当前选中的整合的id的数组
     // 查询真的内容
     const importantContent = await filterSomeImportantnce(trueList);
+
     const { status } = await createNote({
       content: JSON.stringify(importantContent),
-      name: `整合笔记-${Date.now()}`
+      name: `整合笔记-${Date.now()}`,
+      book_id: this.props.currentSubjectid //
     }); //book_id
     if (status == 1) {
       message.info("整合成功");
