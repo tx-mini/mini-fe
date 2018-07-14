@@ -2,7 +2,7 @@ import React from "react";
 import "./header.css";
 import logo from "../../assets/img/logo.png";
 
-const Header = ({ nick }) => {
+const Header = ({ nick, logout }) => {
   return (
     <div className="header-bar">
       <div className="logo">
@@ -11,7 +11,9 @@ const Header = ({ nick }) => {
       </div>
       <div className="logo">
         <div className="logo-title">{nick}</div>
-        <div className="logo-title exit">退出</div>
+        <div className="logo-title exit" onClick={logout}>
+          退出
+        </div>
       </div>
     </div>
   );

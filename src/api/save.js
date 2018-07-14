@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export function getCategories() {
-  return axios.get("/mock/13512/getCategories/" + 1).then(res => {
+  return axios.get("/mini/getCategories/" + 1).then(res => {
     return res.data.result;
   });
 }

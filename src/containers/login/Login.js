@@ -13,7 +13,7 @@ export default class Login extends Component {
     this.setState(pre => ({ photoVisible: !pre.photoVisible }));
   };
   jump = ({ nick }) => {
-    window.localStorage.setItem("nick", nick);
+    // 对后台使用nick换取openid
     message.info("登录成功...正在跳转");
     // login
     this.props.history.replace("/", { nick });

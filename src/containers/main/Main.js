@@ -34,6 +34,10 @@ export default class Main extends Component {
       nick: this.props.nick || this.props.location.state.nick
     });
   }
+  logout = () => {
+    // 退出登录
+    this.props.history.replace("/login");
+  };
   SelectItem = async (data, type) => {
     let noteList = [];
     if (!type) {
@@ -66,7 +70,7 @@ export default class Main extends Component {
     } = this.state;
     return (
       <div className="main">
-        <Header nick={nick} />
+        <Header nick={nick} logout={this.logout} />
         <FirstSlide
           brushList={brushList}
           classDir={classDir}
