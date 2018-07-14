@@ -13,7 +13,8 @@ export default class Main extends Component {
       classList: [],
       category: "",
       newNote: false,
-      isBrush: false
+      isBrush: false,
+      nick: ""
     };
   }
   setCategory = category => {
@@ -24,11 +25,13 @@ export default class Main extends Component {
     //获取目录数据
     const categories = await getCategories();
     const noteList = await getNoteList(categories.classDir[0].id);
+    console.log(nick);
     this.setState({
       classDir: categories.classDir,
       brushList: categories.brushList,
       classList: noteList,
-      category: categories.classDir[0].value
+      category: categories.classDir[0].value,
+      nick: this.props.nick || this.props.location.state.nick
     });
   }
   SelectItem = async (data, type) => {
@@ -58,11 +61,12 @@ export default class Main extends Component {
       classList,
       newNote,
       brushList,
-      isBrush
+      isBrush,
+      nick
     } = this.state;
     return (
       <div className="main">
-        <Header />
+        <Header nick={nick} />
         <FirstSlide
           brushList={brushList}
           classDir={classDir}
