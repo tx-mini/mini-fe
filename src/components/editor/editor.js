@@ -135,7 +135,8 @@ export default class Editor extends React.Component {
       onRawChange: this.handleRawChange,
       contentId,
       media: {
-        externalMedias: { image: true }
+        externalMedias: { image: true },
+        uploadFn: ({}) => {}
       },
       disabled: isBrush,
       imageControls: {

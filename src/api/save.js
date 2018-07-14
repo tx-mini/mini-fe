@@ -36,3 +36,7 @@ export function save(id) {
     data: form
   });
 }
+
+export function getShare(note_id) {
+  return axios.get(`/mini/share/${note_id}`).then(res => res.data);
+}

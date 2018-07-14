@@ -51,7 +51,7 @@ class App extends Component {
               }
             }}
           />
-          <Route component={Share} path="/share/:id" />
+          <Route component={Share} path="/share/:note_id" />
         </div>
       </HashRouter>
     );
