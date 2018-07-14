@@ -1,31 +1,32 @@
-@import url('../../assets/variable.less');
+@import url("../../assets/variable.less");
 .header-bar {
-    .flex;
-    background: @basic-color;
-    padding: 10px 30px;
-    justify-content: space-between;
-    align-items: center;
+  .flex;
+  background: @basic-color;
+  padding: 10px 30px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-    .flex;
-    align-items: center;
+  .flex;
+  align-items: center;
 }
 
 .logo-img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 
 .logo-title {
-    margin: 0 10px;
-    font-size: @font-size + 0.2;
+  margin: 0 10px;
+  font-size: @font-size + 0.2;
 }
 
 .exit {
-    font-size: @font-size - 0.2;
-    &:hover {
-        text-decoration: underline;
-    }
+  font-size: @font-size - 0.2;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 }

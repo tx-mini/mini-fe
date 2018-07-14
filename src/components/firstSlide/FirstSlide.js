@@ -5,8 +5,8 @@ class FirstSlide extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classDir: props.classDir,
-      brushList: props.brushList,
+      subject_list: props.subject_list,
+      rubbish_list: props.rubbish_list,
       showClass: true,
       showCChild: [],
       showBChild: [],
@@ -19,18 +19,18 @@ class FirstSlide extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      classDir: nextProps.classDir,
-      brushList: nextProps.brushList
+      subject_list: nextProps.subject_list,
+      rubbish_list: nextProps.rubbish_list
     });
   }
   componentDidMount() {
-    const { classDir, brushList } = this.state;
+    const { subject_list, rubbish_list } = this.state;
     let initC = [];
     let initB = [];
-    for (let i = 0; i < classDir.length; i++) {
+    for (let i = 0; i < subject_list.length; i++) {
       initC.push(true);
     }
-    for (let i = 0; i < brushList.length; i++) {
+    for (let i = 0; i < rubbish_list.length; i++) {
       initB.push(false);
     }
     this.setState({
@@ -88,8 +88,8 @@ class FirstSlide extends React.Component {
   }
   render() {
     const {
-      classDir,
-      brushList,
+      subject_list,
+      rubbish_list,
 
       showClass,
       showCChild,
@@ -119,7 +119,7 @@ class FirstSlide extends React.Component {
               <i className="iconfont icon-iconset0117 show-icon item-icon" />
               <span className="item-title">课堂笔记</span>
             </div>
-            {classDir.map((item, index) => (
+            {subject_list.map((item, index) => (
               <div className={showClass ? "show" : "hide"} key={index}>
                 <div
                   className="slide-item sub-item"
@@ -173,7 +173,7 @@ class FirstSlide extends React.Component {
               <i className="iconfont icon-shanchu show-icon item-icon" />
               <span className="item-title">回收站</span>
             </div>
-            {brushList.map((item, index) => (
+            {rubbish_list.map((item, index) => (
               <div className={showDrush ? "show" : "hide"} key={index}>
                 <div
                   className="slide-item sub-item"

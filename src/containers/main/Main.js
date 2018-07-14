@@ -2,17 +2,19 @@ import React, { Component } from "react";
 import Header from "../../components/header/Header";
 import FirstSlide from "../../components/firstSlide/FirstSlide";
 import OperationArea from "../../components/operationArea/OperationArea";
-import { getCategories, getNoteList } from "../../api/save";
+import { getListBook, getNoteList } from "../../api/save";
+
 export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      classDir: [],
-      brushList: [],
+      subject_list: [],
+      rubbish_list: [],
       classList: [],
       category: "",
       newNote: false,
-      isBrush: false
+      isBrush: false,
+      nick: ""
     };
   }
   setCategory = category => {
@@ -21,15 +23,22 @@ export default class Main extends Component {
   };
   async componentDidMount() {
     //获取目录数据
-    const categories = await getCategories();
-    const noteList = await getNoteList(categories.classDir[0].id);
+
+    // 这里改了。。。。。
+    const listBook = await getListBook();
+    console.log(listBook)
+    //  const noteList = await getNoteList(listBook.classDir[0].id);
+    // console.log(nick);
     this.setState({
-      classDir: categories.classDir,
-      brushList: categories.brushList,
-      classList: noteList,
-      category: categories.classDir[0].value
+      subject_list: listBook.subject_list || [],
+      rubbish_list: listBook.rubbish_list || [],
+      nick: this.props.nick || this.props.location.state.nick
     });
   }
+  logout = () => {
+    // 退出登录
+    this.props.history.replace("/login");
+  };
   SelectItem = async (data, type) => {
     let noteList = [];
     if (!type) {
@@ -37,8 +46,8 @@ export default class Main extends Component {
     } else {
       noteList.push(data);
     }
-    console.log(data)
-    console.log(noteList)
+    console.log(data);
+    console.log(noteList);
     this.setState({ classList: noteList, isBrush: type });
   };
   createNote = () => {
@@ -52,29 +61,30 @@ export default class Main extends Component {
   };
   render() {
     const {
-      classDir,
+      subject_list,
       category,
       classList,
       newNote,
-      brushList,
-      isBrush
+      rubbish_list,
+      isBrush,
+      nick
     } = this.state;
     return (
       <div className="main">
-        <Header />
+        <Header nick={nick} logout={this.logout} />
         <FirstSlide
-          brushList={brushList}
-          classDir={classDir}
+          rubbish_list={rubbish_list}
+          subject_list={subject_list}
           SelectItem={this.SelectItem}
           createNote={this.createNote}
           setCategory={this.setCategory}
         />
-        <OperationArea
+        {/* <OperationArea
           category={category}
           classList={classList}
           newNote={newNote}
           isBrush={isBrush}
-        />
+        /> */}
       </div>
     );
   }

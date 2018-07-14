@@ -2358,7 +2358,7 @@ draft-convert@^2.1.2:
     immutable "~3.7.4"
     invariant "^2.2.1"
 
-draft-js@^0.10.0, draft-js@~0.10.0:
+draft-js@^0.10.0, draft-js@^0.10.5, draft-js@~0.10.0:
   version "0.10.5"
   resolved "http://registry.npm.taobao.org/draft-js/download/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   dependencies:
@@ -6508,6 +6508,13 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
 react-contenteditable@^2.1.0:
   version "2.1.0"
   resolved "http://registry.npm.taobao.org/react-contenteditable/download/react-contenteditable-2.1.0.tgz#943f1fb0c8d059f400b80d10f1632f24905406a6"
+
+react-contextmenu@^2.9.2:
+  version "2.9.2"
+  resolved "http://registry.npm.taobao.org/react-contextmenu/download/react-contextmenu-2.9.2.tgz#7076075f09e4cad023a1252da347d9e6782d003a"
+  dependencies:
+    classnames "^2.2.5"
+    object-assign "^4.1.0"
 
 react-dev-utils@^5.0.1:
   version "5.0.1"

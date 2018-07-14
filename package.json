@@ -2,7 +2,6 @@
   "name": "mini-fe",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://yapi.demo.qunar.com/",
   "dependencies": {
     "antd": "^3.6.5",
     "autoprefixer": "7.1.6",
@@ -20,6 +19,7 @@
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
     "draft-convert": "^2.1.2",
+    "draft-js": "^0.10.5",
     "draftjs-utils": "^0.9.4",
     "eslint": "4.10.0",
     "eslint-config-react-app": "^2.1.0",
@@ -44,6 +44,7 @@
     "raf": "3.4.0",
     "react": "^16.4.1",
     "react-contenteditable": "^2.1.0",
+    "react-contextmenu": "^2.9.2",
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.4.1",
     "react-router": "^4.3.1",
@@ -60,7 +61,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "jest": "jest --coverage"
   },
   "jest": {
     "collectCoverageFrom": [
