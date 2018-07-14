@@ -6,8 +6,13 @@ import { BrowserRouter, Route, Redirect, HashRouter } from "react-router-dom";
 class App extends Component {
   render() {
     // 请求后台检测是否登录
+    const openid = window.localStorage.getItem("openid");
+    if (openid) {
+      //
+    }
     const isLogin = true,
       nick = "nick";
+
     return (
       <HashRouter>
         <div>

@@ -36,6 +36,7 @@ export default class Main extends Component {
   }
   logout = () => {
     // 退出登录
+    window.localStorage.removeItem("openid");
     this.props.history.replace("/login");
   };
   SelectItem = async (data, type) => {
