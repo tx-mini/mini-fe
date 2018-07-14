@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import Login from "./containers/login/Login";
 import Main from "./containers/main/Main";
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import Share from "./containers/share/Share";
+import { BrowserRouter, Route, Redirect, HashRouter } from "react-router-dom";
 class App extends Component {
   render() {
     // 请求后台检测是否登录
     const isLogin = true,
       nick = "nick";
     return (
-      <BrowserRouter>
+      <HashRouter>
         <div>
           {/* main页判断当前是否登录，未登录 */}
           <Route
@@ -45,8 +46,9 @@ class App extends Component {
               }
             }}
           />
+          <Route component={Share} path="/share/:id" />
         </div>
-      </BrowserRouter>
+      </HashRouter>
     );
   }
 }

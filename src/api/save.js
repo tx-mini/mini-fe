@@ -1,8 +1,9 @@
 import axios from "axios";
 
-export function getCategories() {
-  return axios.get("/mini/getCategories/" + 1).then(res => {
-    return res.data.result;
+export function getListBook(openid) {
+  // 暂时是123
+  return axios.get(`/mini/listBook/123`).then(res => {
+    return res.data;
   });
 }
 

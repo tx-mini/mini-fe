@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import "./operationArea.less";
-import { Button, Modal, Checkbox, Icon, message, Tooltip } from "antd";
+import { Button, Modal, Checkbox, Icon, message, Tooltip, Radio } from "antd";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import Editor from "../editor/Editor";
 import { formatTime } from "./util";
 import { getNoteContent, removeNote } from "../../api/save";
+
+const RadioGroup = Radio.Group;
 export default class OperationArea extends Component {
   state = {
     currentSelect: 0,
@@ -11,7 +14,9 @@ export default class OperationArea extends Component {
     isCheckedAll: true,
     content: {},
     currentNoteName: "", // 当前选中的笔记征文题目
-    checkedList: {} // 当前被选中的
+    checkedList: {}, // 当前被选中的
+    modalVisible: false,
+    radioValue: ""
   };
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 处理整合选中相关的逻辑
@@ -55,7 +60,14 @@ export default class OperationArea extends Component {
       });
     }
   };
-
+  handleModalOk = () => {
+    // 发送移动的笔记数据到后台
+    this.setState({ modalVisible: false });
+  };
+  handleModalCancel = () => {
+    // 取消
+    this.setState({ modalVisible: false });
+  };
   checkAll = e => {
     const isAllChecked = e.target.checked;
     // console.log(isAllChecked, this.state.checkedList);
@@ -86,65 +98,93 @@ export default class OperationArea extends Component {
       }
     }));
   };
+  handleRightClick = (e, data) => {
+    // 相应右键点击出来的菜单的选择
+    this.setState({ modalVisible: true });
+    console.log(data);
+  };
   stopPropagation = e => {
     e.stopPropagation();
   };
+  onRadioChange = e => {
+    this.setState({ radioValue: e.target.value });
+  };
   render() {
-    const { category, classList, isBrush } = this.props;
+    const { category, subject_list, isBrush } = this.props;
     const {
       currentSelect,
       isIntegrating,
       isCheckedAll,
       checkedList,
       content,
-      currentNoteName
+      currentNoteName,
+      modalVisible,
+      radioValue
     } = this.state;
     return (
       <div className="operation-container">
         <div className="left-container">
           <div className="category">{isBrush ? "回收站" : category}</div>
 
-          {classList.map(item => (
-            <div
-              className="item"
-              key={item.id}
-              onClick={this.select({ id: item.id, title: item.title })}
-            >
-              {/* todo checkbox受控 */}
-              <span onClick={this.stopPropagation}>
-                <Checkbox
-                  onChange={this.handleCheckBox(item.id)}
-                  checked={!!checkedList[item.id]}
-                  style={{ visibility: isIntegrating ? "visible" : "hidden" }}
-                />
-              </span>
-              {item.isKeyNote ? (
-                <Icon type="star-o" className="star-icon" />
-              ) : (
-                <span className="star-icon" />
-              )}
-              <span
-                className={
-                  item.id === currentSelect ? "selected content" : "content"
-                }
+          {subject_list.map(item => (
+            <ContextMenuTrigger id="xxxr">
+              <div
+                className="item"
+                key={item.id}
+                onClick={this.select({ id: item.id, title: item.title })}
               >
-                <Tooltip title={item.value || item.title}>
-                  {(item.value || item.title).slice(0, 6)}
-                </Tooltip>
-              </span>
-              {isBrush ? (
-                <span>
-                  <i className="iconfont icon-shanchu icon-rollback" />
+                {/* todo checkbox受控 */}
+                <span onClick={this.stopPropagation}>
+                  <Checkbox
+                    onChange={this.handleCheckBox(item.id)}
+                    checked={!!checkedList[item.id]}
+                    style={{ visibility: isIntegrating ? "visible" : "hidden" }}
+                  />
                 </span>
-              ) : (
-                <span onClick={this.delete(item.id)}>
-                  <i className="iconfont icon-shanchu" />
+                {item.isKeyNote ? (
+                  <Icon type="star-o" className="star-icon" />
+                ) : (
+                  <span className="star-icon" />
+                )}
+                <span
+                  className={
+                    item.id === currentSelect ? "selected content" : "content"
+                  }
+                >
+                  <Tooltip title={item.value || item.title}>
+                    {(item.value || item.title).slice(0, 6)}
+                  </Tooltip>
                 </span>
-              )}
-              <span className="time">{formatTime(Date.now())}</span>
-            </div>
+                {isBrush ? (
+                  <span>
+                    <i className="iconfont icon-shanchu icon-rollback" />
+                  </span>
+                ) : (
+                  <span onClick={this.delete(item.id)}>
+                    <i className="iconfont icon-shanchu" />
+                  </span>
+                )}
+                <span className="time">{formatTime(Date.now())}</span>
+              </div>
+            </ContextMenuTrigger>
           ))}
-
+          <ContextMenu id="some">
+            <MenuItem data={{ foo: "bar" }} onClick={this.handleRightClick}>
+              移动到
+            </MenuItem>
+          </ContextMenu>
+          <Modal
+            title="移动到"
+            visible={modalVisible}
+            onOk={this.handleModalOk}
+            onCancel={this.handleModalCancel}
+          >
+            <RadioGroup onChange={this.onRadioChange} value={radioValue}>
+              {subject_list.map(item => (
+                <Radio value={item.value}>{item.value}</Radio>
+              ))}
+            </RadioGroup>
+          </Modal>
           {isBrush ? null : (
             <div className="operation">
               {isIntegrating ? (
