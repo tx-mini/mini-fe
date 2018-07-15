@@ -7,6 +7,12 @@ import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 import ContentEditable from "react-contenteditable";
 import { modNote, getNoteContent, createNote } from "../../api/save";
+import COS from "cos-js-sdk-v5";
+import { SecretId, SecretKey, Bucket, Region } from "../../config";
+const cos = new COS({
+  SecretId,
+  SecretKey
+});
 message.config({
   duration: 1.5
 });
@@ -163,7 +169,23 @@ export default class Editor extends React.Component {
       contentId,
       media: {
         externalMedias: { image: true },
-        uploadFn: ({}) => {}
+        uploadFn: d => {
+          const { file, success } = d;
+          console.log(d);
+          cos.sliceUploadFile(
+            {
+              Bucket: Bucket,
+              Region: Region,
+              Key: file.name,
+              Body: file
+            },
+            function(err, data) {
+              console.log(err, data);
+              //  success(data.location);
+              success(d);
+            }
+          );
+        }
       },
       disabled: isRubbish,
       imageControls: {
