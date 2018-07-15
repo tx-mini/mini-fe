@@ -26,11 +26,15 @@ export default class Main extends Component {
 
     // 这里改了。。。。。
     const listBook = await getListBook();
-    console.log(listBook);
-    //  const noteList = await getNoteList(listBook.classDir[0].id);
-    // console.log(nick);
+    const [noteStarList, noteCostomList] = await Promise.all([
+      getNoteList("0", listBook.term_list[0].children[0].book_id, "1"),
+      getNoteList("0", listBook.term_list[0].children[0].book_id, "0")
+    ]);
+    let noteList = [...noteStarList, ...noteCostomList];
     this.setState({
-      term_list: listBook.term_list || []
+      term_list: listBook.term_list || [],
+      classList: noteList,
+      category: listBook.term_list[0].children[0].name
     });
   }
   logout = () => {

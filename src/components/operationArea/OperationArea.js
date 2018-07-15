@@ -236,7 +236,7 @@ export default class OperationArea extends Component {
           initialContent={content}
           contentId={currentSelect}
           name={currentNoteName}
-          isBrush={isRubbish}
+          isRubbish={isRubbish}
         />
       </div>
     );

@@ -7,7 +7,7 @@ const Header = ({ logout }) => {
     <div className="header-bar">
       <div className="logo">
         <img
-          src={window.localStorage.getItem("logo_url")}
+          src={window.localStorage.getItem("logo_url") || logo}
           className="logo-img"
           alt="logo"
         />
