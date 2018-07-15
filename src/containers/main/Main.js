@@ -102,6 +102,21 @@ export default class Main extends Component {
   setNewNote = bool => {
     this.setState({ newNote: bool });
   };
+  createSuccess = async () => {
+    console.log("sjsjjs")
+    console.log(this.state.currentSubjectid)
+    let noteList = [];
+    const [noteStarList, noteCostomList] = await Promise.all([
+      getNoteList("0", this.state.currentSubjectid, "1"),
+      getNoteList("0", this.state.currentSubjectid, "0")
+    ]);
+
+    noteList = [...noteStarList, ...noteCostomList];
+    console.log(noteList)
+    this.setState({
+      classList: noteList
+    })
+  }
   render() {
     const {
       term_list,
@@ -133,6 +148,7 @@ export default class Main extends Component {
           type={type}
           index={index}
           currentSubjectid={currentSubjectid}
+          createSuccess={this.createSuccess}
         />
       </div>
     );

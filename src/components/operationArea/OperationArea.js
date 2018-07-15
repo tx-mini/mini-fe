@@ -8,7 +8,8 @@ import {
   getNoteContent,
   createNote,
   modNote,
-  deleteFinally
+  deleteFinally,
+  getNoteList
 } from "../../api/save";
 import { filterSomeImportantnce } from "../editor/utils/index";
 const RadioGroup = Radio.Group;
@@ -193,6 +194,10 @@ export default class OperationArea extends Component {
   cancalInterate = () => {
     this.setState({ isIntegrating: false });
   };
+  createSuccess = async() => {
+    console.log("success")
+    this.props.createSuccess()
+  }
   handleIntegrate = async () => {
     const { checkedList } = this.state;
     const trueList = Object.keys(checkedList).filter(item => checkedList[item]); // 当前选中的整合的id的数组
@@ -383,6 +388,7 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
+          createSuccess={this.createSuccess}
           initialContent={content || (newdatalist[0] && newdatalist[0].content)}
           contentId={
             currentSelect || (newdatalist[0] && newdatalist[0].note_id)

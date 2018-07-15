@@ -48,6 +48,7 @@ export default class Editor extends React.Component {
         is_rubbish: 0
       });
       message.info("新建成功");
+      this.props.createSuccess()
       console.log("新建", tempName, this.editorInstance.getRawContent());
       // 获取笔记本内容
     }
