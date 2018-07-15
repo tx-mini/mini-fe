@@ -219,7 +219,7 @@ class FirstSlide extends React.Component {
                   showOther ? "icon-shouqi" : "icon-zhankai"
                 ].join(" ")}
               />
-              <i className="iconfont icon-shanchu show-icon item-icon" />
+              <i className="iconfont icon-iconset0117 show-icon item-icon" />
               <span className="item-title">其他笔记</span>
             </div>
             {other_list.map((item, index) => (

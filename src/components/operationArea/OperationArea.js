@@ -48,6 +48,32 @@ export default class OperationArea extends Component {
       }
     });
   };
+  rollback = item => async () => {
+    console.log(item)
+    // const {dataList} = this.state;
+    const result = await modNote({
+      book_id: item.book_ref,
+      is_bool: 1,
+      note_id: item.note_id,
+      name: item.name,
+      content: item.content,
+      is_imp: item.is_imp
+    });
+    console.log(result)
+    message.info("放回成功");
+    // let newList = dataList;
+    // let index;
+    // //找到当前item在dataList中的下标，更新list
+    // for(let i = 0; i < dataList.length; i++){
+    //   if(dataList[i].note_id === item.note_id){
+    //     index = i;
+    //   }
+    // }
+    // newList.splice(index, 1)
+    // this.setState({
+    //   dataList: newList
+    // })
+  }
   async componentDidMount(){
     console.log(this.props.dataList)
     if(this.props.dataList[0]){
@@ -204,7 +230,7 @@ export default class OperationArea extends Component {
                   <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
                 </span>
                 {type === "rabbish" ? (
-                  <span>
+                  <span onClick={this.rollback(item)}>
                     <i className="iconfont icon-shanchu icon-rollback" />
                   </span>
                 ) : (
