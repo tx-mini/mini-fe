@@ -30,6 +30,7 @@ export default class Main extends Component {
     // console.log(listBook);
     let noteList = [];
     if (
+      listBook &&
       listBook.term_list &&
       listBook.term_list[0] &&
       listBook.term_list[0].children[0] &&
@@ -44,9 +45,9 @@ export default class Main extends Component {
 
     // console.log(nick);
     this.setState({
-      term_list: listBook.term_list || [],
+      term_list: (listBook && listBook.term_list) || [],
       classList: noteList || [],
-      category: listBook.term_list[0].children[0].name
+      category: listBook && listBook.term_list[0].children[0].name
     });
   }
   logout = () => {
