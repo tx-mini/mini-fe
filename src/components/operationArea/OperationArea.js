@@ -139,10 +139,10 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category">{isRubbish ? "回收站" : category}</div>
+          <div className="category" title={isRubbish ? "回收站" : category}>{isRubbish ? "回收站" : category}</div>
 
           {dataList.map(item => (
-            <ContextMenuTrigger id="xxxr" key={item.note_id}>
+            <ContextMenuTrigger id="some" key={item.note_id}>
               <div
                 className="item"
                 onClick={this.select({

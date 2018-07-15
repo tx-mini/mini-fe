@@ -14,6 +14,9 @@
   font-size: 1.6rem;
   font-weight: bold;
   line-height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .operation-container .left-container .item {
   display: flex;
