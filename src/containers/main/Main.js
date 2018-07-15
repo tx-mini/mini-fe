@@ -14,6 +14,7 @@ export default class Main extends Component {
       category: "",
       newNote: false,
       isRubbish: false,
+      index: 0,
       nick: "",
       currentSubjectid: "" //当前选中的科目id
     };
@@ -47,7 +48,7 @@ export default class Main extends Component {
     window.localStorage.removeItem("nick_name");
     this.props.history.push("/login");
   };
-  SelectItem = async (data, type) => {
+  SelectItem = async (data, type, index) => {
     let noteList = [];
     if (!type) {
       const [noteStarList, noteCostomList] = await Promise.all([
@@ -57,7 +58,7 @@ export default class Main extends Component {
 
       noteList = [...noteStarList, ...noteCostomList];
 
-      this.setState({ classList: noteList, isRubbish: type });
+      this.setState({ classList: noteList, isRubbish: type, index: index });
     }
   };
   setCurrentSubjectid = id => {
@@ -86,7 +87,7 @@ export default class Main extends Component {
       category,
       classList,
       newNote,
-      rubbish_list,
+      index,
       currentSubjectid,
       isRubbish
     } = this.state;
@@ -103,10 +104,12 @@ export default class Main extends Component {
           setCurrentSubjectid={this.setCurrentSubjectid}
         />
         <OperationArea
+          term_list={term_list}
           category={category}
           dataList={classList}
           newNote={newNote}
           isRubbish={isRubbish}
+          index={index}
           currentSubjectid={currentSubjectid}
         />
       </div>

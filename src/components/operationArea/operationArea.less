@@ -68,5 +68,28 @@
     .operation {
       padding: 10px;
     }
+    .react-contextmenu--visible{
+      background: @slide-color;
+      border: 1px solid @slide-color;
+      padding: 8px;
+      position: relative;
+      border-radius: 5px;
+      &:before{
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent transparent @slide-color transparent;
+        top: -21px;
+      }
+    }
+    .react-contextmenu-item:hover{
+      font-weight: bold;
+    }
+    .ant-radio-wrapper{
+      display: block !important;
+    }
   }
 }

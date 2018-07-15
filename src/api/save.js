@@ -2,7 +2,10 @@ import axios from "axios";
 export function getListBook() {
   // 暂时是123
   const formData = new FormData();
-  formData.append("openid", window.localStorage.getItem("openid") || '83C38B2ADFA6400A6B18F09539FA29D3');
+  formData.append(
+    "openid",
+    window.localStorage.getItem("openid") || "83C38B2ADFA6400A6B18F09539FA29D3"
+  );
   return axios.post(`/mini/listBook`, formData).then(res => {
     return res.data;
   });
@@ -10,7 +13,10 @@ export function getListBook() {
 
 export function getNoteList(is_rubbish, book_id, is_imp) {
   const formData = new FormData();
-  formData.append("openid", localStorage.getItem("openid") || "83C38B2ADFA6400A6B18F09539FA29D3");
+  formData.append(
+    "openid",
+    localStorage.getItem("openid") || "83C38B2ADFA6400A6B18F09539FA29D3"
+  );
   formData.append("is_rubbish", is_rubbish);
   formData.append("book_id", book_id);
   formData.append("is_imp", is_imp);
@@ -29,16 +35,6 @@ export function getNoteContent(note_id) {
 
 export function removeNote(id) {
   return axios.get(`/api/mock/13512/removeNote/${id}`).then(res => res.data);
-}
-
-export function save(id) {
-  const form = new FormData();
-  form.append("a", "b");
-  return axios({
-    method: "post",
-    url: "http://192.168.191.2/note/index.php/mini/createNote",
-    data: form
-  });
 }
 
 export function getShare(note_id) {
