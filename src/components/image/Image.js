@@ -207,7 +207,7 @@ class Image extends React.Component {
 
     const result = await recognize(blob);
     onData({
-      result: result.map(item => item.itemstring),
+      result: (result && result.map(item => item.itemstring)) || [],
       selectArea,
       key
     });

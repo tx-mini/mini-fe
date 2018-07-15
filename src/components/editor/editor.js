@@ -219,7 +219,7 @@ export default class Editor extends React.Component {
         {
           type: "button",
           text: "标为重点",
-          html: '<span style="color:red;">标为重点</span>',
+          html: '<span style="color:#79A9FC;">标为重点</span>',
           hoverTitle: "标为重点",
           className: "preview-button",
           onClick: () => this.mark()
@@ -227,7 +227,7 @@ export default class Editor extends React.Component {
         {
           type: "button",
           text: "取消重点",
-          html: '<span style="color:red;">取消重点</span>',
+          html: '<span style="color:#79A9FC;">取消重点</span>',
           hoverTitle: "取消重点",
           className: "preview-button",
           onClick: () => this.cancleMark()
@@ -244,7 +244,7 @@ export default class Editor extends React.Component {
           ) : (
             <ContentEditable
               className="name"
-              html={tempName} // innerHTML of the editable div
+              html={tempName || ""} // innerHTML of the editable div
               disabled={false} // use true to disable edition
               onChange={this.handleTempNameChange} // handle innerHTML change
             />

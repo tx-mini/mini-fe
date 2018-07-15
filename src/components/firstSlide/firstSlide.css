@@ -13,24 +13,23 @@
 }
 .new-note {
   padding: 10px;
-  background: #949494;
+  height: 50px;
+  line-height: 35px;
+  background: #79A9FC;
   color: #fff;
   font-size: 1.6rem;
 }
 .new-note:hover {
-  background: #666;
+  background: #5792f7;
 }
 .add-icon {
   margin-right: 10px;
-}
-.slide-content {
-  padding: 10px;
 }
 .class-note {
   margin-bottom: 5px;
 }
 .slide-item {
-  padding: 5px 0;
+  padding: 10px;
   display: flex;
   display: -webkit-flex;
   align-items: flex-start;
@@ -52,7 +51,7 @@
   white-space: nowrap;
 }
 .sub-item {
-  margin-left: 15%;
+  padding-left: 15%;
 }
 .final-item {
   padding-left: 28%;
@@ -62,6 +61,8 @@
 }
 .active {
   font-weight: bold;
+  background: #79A9FC;
+  color: white;
 }
 .show {
   display: inline-block;

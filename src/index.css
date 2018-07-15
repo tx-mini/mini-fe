@@ -7,3 +7,7 @@ body {
 html{
   font-size: 62.5%;
 }
+.ant-btn-primary{
+  background: #79A9FC !important;
+  border-color: #79A9FC !important;
+}
