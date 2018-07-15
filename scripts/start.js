@@ -82,7 +82,7 @@ choosePort(HOST, DEFAULT_PORT)
     const devServer = new WebpackDevServer(compiler, {
       proxy: {
         "/mini": {
-          target: "http://192.168.191.2/note/index.php"
+          target: "http://193.112.176.92/note/index.php"
         }
       }
     });

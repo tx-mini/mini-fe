@@ -11,11 +11,13 @@ http://192.168.191.2/note/index.php/mini/getNote/222
 
 新建笔记
 
-updateNoteContent 接口相关
+涉及到更新相关的 updateNoteContent 接口相关
 
 回收站恢复/永久删除
 
 笔记保存
+
+笔记移动
 
 oss
 
