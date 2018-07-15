@@ -33,6 +33,11 @@ export function getNoteContent(note_id) {
   return axios.post(`/mini/getNote`, formData).then(res => res.data);
 }
 
+export function deleteFinally(note_id) {
+  let openid = window.localStorage.getItem("openid");
+  return axios.get(`/mini/rmNote/${openid}/${note_id}`).then(res => res.data);
+}
+
 export function removeNote(id) {
   return axios.get(`/api/mock/13512/removeNote/${id}`).then(res => res.data);
 }

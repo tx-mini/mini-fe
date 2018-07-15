@@ -44,7 +44,8 @@ export default class Editor extends React.Component {
         book_id: currentSubjectid,
         name: tempName,
         content: JSON.stringify(this.editorInstance.getRawContent()),
-        is_imp: 0
+        is_imp: 0,
+        is_rubbish: 0
       });
       message.info("新建成功");
       console.log("新建", tempName, this.editorInstance.getRawContent());

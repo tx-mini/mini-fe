@@ -2,6 +2,7 @@ import React from "react";
 import "./firstSlide.less";
 import { TERM_KEY } from "./constant";
 import { getNoteList } from "../../api/save";
+import { Tooltip } from "antd";
 
 class FirstSlide extends React.Component {
   constructor(props) {
@@ -66,15 +67,14 @@ class FirstSlide extends React.Component {
       curBParentIndex = "";
       curOIndex = "";
       curOParentIndex = "";
-    } else if(type === "rabbish") {
+    } else if (type === "rabbish") {
       curCIndex = "";
       curCParentIndex = "";
       curBIndex = i;
       curBParentIndex = index;
       curOIndex = "";
       curOParentIndex = "";
-    }
-    else {
+    } else {
       curCIndex = "";
       curCParentIndex = "";
       curBIndex = "";
@@ -82,7 +82,7 @@ class FirstSlide extends React.Component {
       curOIndex = i;
       curOParentIndex = index;
     }
-    console.log(data.is_rubbish);
+    console.log(111); //
     this.props.setCategory(data.name);
     // console.log(this.props.term_list,curBParentIndex,);
     this.props.setCurrentSubjectid(
@@ -99,7 +99,7 @@ class FirstSlide extends React.Component {
     });
     this.props.setNewNote(false);
     //传递选中的data
-    this.props.SelectItem(data, type, index);
+    this.props.selectItem(data, type, index);
   }
   createNote() {
     //新建笔记
@@ -113,13 +113,13 @@ class FirstSlide extends React.Component {
         showRubbish: true,
         rubbish_list: rubbishList || []
       });
-      this.props.showDataList(rubbishList);
+      this.props.showDataList(rubbishList, "rabbish");
     } else {
       this.setState({
         showRubbish: false
       });
     }
-  }
+  };
   showOther = async () => {
     if (!this.state.showOther) {
       const otherList = await getNoteList("0", "-1", "0");
@@ -128,7 +128,7 @@ class FirstSlide extends React.Component {
         showOther: true,
         other_list: otherList || []
       });
-      this.props.showDataList(otherList);
+      this.props.showDataList(otherList, "other");
     } else {
       this.setState({
         showOther: false
@@ -149,7 +149,6 @@ class FirstSlide extends React.Component {
       curBParentIndex,
       curOParentIndex
     } = this.state;
-    //  console.log(showCChild);
     return (
       <div className="first-slide">
         <div className="new-note" onClick={this.createNote.bind(this)}>
@@ -184,9 +183,12 @@ class FirstSlide extends React.Component {
                     ].join(" ")}
                   />
                   <i className="iconfont icon-wenjianjia show-icon item-icon" />
-                  <span className="item-title" title={TERM_KEY[item.term - 1]}>
-                    {TERM_KEY[item.term - 1]}
-                  </span>
+
+                  <Tooltip title={TERM_KEY[item.term - 1]}>
+                    <span className="item-title">
+                      {TERM_KEY[item.term - 1]}
+                    </span>
+                  </Tooltip>
                 </div>
                 {item.children.map((data, i) => (
                   <div
@@ -199,17 +201,18 @@ class FirstSlide extends React.Component {
                     key={i}
                   >
                     <i className="iconfont icon-wenben show-icon item-icon" />
-                    <span
-                      title={data.name}
-                      className={[
-                        "item-title",
-                        curCIndex === i && curCParentIndex === index
-                          ? "active"
-                          : ""
-                      ].join(" ")}
-                    >
-                      {data.name}
-                    </span>
+                    <Tooltip title={data.name}>
+                      <span
+                        className={[
+                          "item-title",
+                          curCIndex === i && curCParentIndex === index
+                            ? "active"
+                            : ""
+                        ].join(" ")}
+                      >
+                        {data.name}
+                      </span>
+                    </Tooltip>
                   </div>
                 ))}
               </div>
@@ -223,7 +226,7 @@ class FirstSlide extends React.Component {
                   showOther ? "icon-shouqi" : "icon-zhankai"
                 ].join(" ")}
               />
-              <i className="iconfont icon-shanchu show-icon item-icon" />
+              <i className="iconfont icon-iconset0117 show-icon item-icon" />
               <span className="item-title">其他笔记</span>
             </div>
             {other_list.map((item, index) => (
@@ -233,14 +236,16 @@ class FirstSlide extends React.Component {
                   onClick={this.selectItem.bind(this, "", index, item, "other")}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
-                  <span
-                    className={[
-                      "item-title",
-                      curOParentIndex === index ? "active" : ""
-                    ].join(" ")}
-                  >
-                    {item.name}
-                  </span>
+                  <Tooltip title={item.name}>
+                    <span
+                      className={[
+                        "item-title",
+                        curOParentIndex === index ? "active" : ""
+                      ].join(" ")}
+                    >
+                      {item.name}
+                    </span>
+                  </Tooltip>
                 </div>
               </div>
             ))}
@@ -260,17 +265,25 @@ class FirstSlide extends React.Component {
               <div className={showRubbish ? "show" : "hide"} key={index}>
                 <div
                   className="slide-item sub-item"
-                  onClick={this.selectItem.bind(this, "", index, item, "rabbish")}
+                  onClick={this.selectItem.bind(
+                    this,
+                    "",
+                    index,
+                    item,
+                    "rabbish"
+                  )}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
-                  <span
-                    className={[
-                      "item-title",
-                      curBParentIndex === index ? "active" : ""
-                    ].join(" ")}
-                  >
-                    {item.name}
-                  </span>
+                  <Tooltip title={item.name}>
+                    <span
+                      className={[
+                        "item-title",
+                        curBParentIndex === index ? "active" : ""
+                      ].join(" ")}
+                    >
+                      {item.name}
+                    </span>
+                  </Tooltip>
                 </div>
               </div>
             ))}

@@ -4,7 +4,12 @@ import { Button, Modal, Checkbox, Icon, message, Tooltip, Radio } from "antd";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import Editor from "../editor/Editor";
 import { formatTime } from "./util";
-import { getNoteContent, createNote, modNote } from "../../api/save";
+import {
+  getNoteContent,
+  createNote,
+  modNote,
+  deleteFinally
+} from "../../api/save";
 import { filterSomeImportantnce } from "../editor/utils/index";
 const RadioGroup = Radio.Group;
 export default class OperationArea extends Component {
@@ -16,7 +21,8 @@ export default class OperationArea extends Component {
     currentNoteName: "", // 当前选中的笔记征文题目
     checkedList: {}, // 当前被选中的
     modalVisible: false,
-    radioValue: ""
+    radioValue: "",
+    dataList: []
   };
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 处理整合选中相关的逻辑
@@ -35,7 +41,8 @@ export default class OperationArea extends Component {
     }
   };
 
-  delete = note_id => e => {
+  delete = note_id => () => {
+    const { dataList } = this.props;
     Modal.confirm({
       content: "是否决定删除此条笔记",
 
@@ -45,7 +52,74 @@ export default class OperationArea extends Component {
         await modNote({ ...result, is_rubbish: 1 });
         // 刷新下状态
         message.info("删除笔记成功");
+        setTimeout(() => {
+          let newList = dataList;
+          let index;
+          //找到当前item在dataList中的下标，更新list
+          for (let i = 0; i < dataList.length; i++) {
+            if (dataList[i].note_id === note_id) {
+              index = i;
+            }
+          }
+          newList.splice(index, 1);
+          this.setState({
+            dataList: newList
+          });
+        });
       }
+    });
+  };
+  deleteFinally = note_id => () => {
+    const { dataList } = this.props;
+    Modal.confirm({
+      content: "是否决定彻底删除此条笔记",
+
+      onOk: async () => {
+        await deleteFinally(note_id);
+        // 刷新下状态
+        message.info("删除笔记成功");
+        setTimeout(() => {
+          let newList = dataList;
+          let index;
+          //找到当前item在dataList中的下标，更新list
+          for (let i = 0; i < dataList.length; i++) {
+            if (dataList[i].note_id === note_id) {
+              index = i;
+            }
+          }
+          newList.splice(index, 1);
+          this.setState({
+            dataList: newList
+          });
+        });
+      }
+    });
+  };
+  rollback = item => async () => {
+    console.log(item);
+    const { dataList } = this.props;
+    console.log(dataList);
+    const result = await modNote({
+      book_id: item.book_ref,
+      is_bool: 1,
+      note_id: item.note_id,
+      name: item.name,
+      content: item.content,
+      is_imp: item.is_imp
+    });
+    console.log(result);
+    message.info("放回成功");
+    let newList = dataList || [];
+    let index;
+    //找到当前item在dataList中的下标，更新list
+    for (let i = 0; i < dataList.length; i++) {
+      if (dataList[i].note_id === item.note_id) {
+        index = i;
+      }
+    }
+    newList.splice(index, 1);
+    this.setState({
+      dataList: newList
     });
   };
   async componentDidMount() {
@@ -78,6 +152,7 @@ export default class OperationArea extends Component {
   };
   handleModalOk = async () => {
     // 发送移动的笔记数据到后台
+    console.log();
     const { dataList } = this.props;
     const { currentSelect } = this.state;
     const result = await modNote({
@@ -145,10 +220,9 @@ export default class OperationArea extends Component {
       }
     }));
   };
-  handleRightClick = (e, data) => {
+  handleRightClick = () => {
     // 相应右键点击出来的菜单的选择
     this.setState({ modalVisible: true });
-    console.log(data, e.target.key);
   };
   stopPropagation = e => {
     e.stopPropagation();
@@ -161,7 +235,6 @@ export default class OperationArea extends Component {
     const {
       category,
       dataList,
-      isRubbish,
       term_list,
       index,
       newNote,
@@ -178,11 +251,12 @@ export default class OperationArea extends Component {
       modalVisible,
       radioValue
     } = this.state;
+    console.log(dataList);
+    const newdatalist = dataList.filter(item => item.is_rubbish == 0);
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div
-            className="category"
+          <Tooltip
             title={
               type === "rabbish"
                 ? "回收站"
@@ -191,18 +265,23 @@ export default class OperationArea extends Component {
                   : "其他笔记"
             }
           >
-            {type === "rabbish"
-              ? "回收站"
-              : type === "term"
-                ? category
-                : "其他笔记"}
-          </div>
-
-          {dataList.map(item => (
-            <ContextMenuTrigger id="some" key={item.note_id}>
+            <div className="category">
+              {type === "rabbish"
+                ? "回收站"
+                : type === "term"
+                  ? category
+                  : "其他笔记"}
+            </div>
+          </Tooltip>
+          {newdatalist.map((item, index) => (
+            <ContextMenuTrigger id="some" key={item.note_id || ""}>
               <div
                 className="item"
-                style={item.is_rubbish == 1 ? { display: "none" } : {}}
+                style={
+                  type === "term" && item.is_rubbish == 1
+                    ? { display: "none" }
+                    : {}
+                }
                 onClick={this.select({
                   note_id: item.note_id,
                   name: item.name
@@ -231,9 +310,18 @@ export default class OperationArea extends Component {
                   <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
                 </span>
                 {type === "rabbish" ? (
-                  <span>
-                    <i className="iconfont icon-shanchu icon-rollback" />
-                  </span>
+                  <div>
+                    <span onClick={this.rollback(item)}>
+                      <Tooltip title="放回原处">
+                        <i className="iconfont icon-shanchu icon-rollback" />
+                      </Tooltip>
+                    </span>
+                    <span onClick={this.deleteFinally(item.note_id)}>
+                      <Tooltip title="彻底删除">
+                        <i className="iconfont icon-shanchu" />
+                      </Tooltip>
+                    </span>
+                  </div>
                 ) : (
                   <span onClick={this.delete(item.note_id)}>
                     <i className="iconfont icon-shanchu" />
@@ -265,7 +353,7 @@ export default class OperationArea extends Component {
                 ))}
             </RadioGroup>
           </Modal>
-          {isRubbish || newNote ? null : (
+          {type === "rabbish" || newNote ? null : (
             <div className="operation">
               {isIntegrating ? (
                 <React.Fragment>
@@ -292,10 +380,12 @@ export default class OperationArea extends Component {
           )}
         </div>
         <Editor
-          initialContent={content}
-          contentId={currentSelect}
-          name={currentNoteName}
-          isRubbish={isRubbish}
+          initialContent={content || (newdatalist[0] && newdatalist[0].content)}
+          contentId={
+            currentSelect || (newdatalist[0] && newdatalist[0].note_id)
+          }
+          name={currentNoteName || (newdatalist[0] && newdatalist[0].name)}
+          isRubbish={type === "rabbish"}
           newNote={newNote}
           currentSubjectid={currentSubjectid}
           type={type}

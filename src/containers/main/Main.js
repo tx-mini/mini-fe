@@ -57,7 +57,7 @@ export default class Main extends Component {
     window.localStorage.removeItem("nick_name");
     this.props.history.push("/login");
   };
-  SelectItem = async (data, type, index) => {
+  selectItem = async (data, type, index) => {
     console.log(data, type);
     let noteList = [];
     if (type === "term") {
@@ -68,13 +68,11 @@ export default class Main extends Component {
 
       noteList = [...noteStarList, ...noteCostomList];
 
-      this.setState({ classList: noteList, isRubbish: type, index: index });
+      this.setState({ classList: noteList, type: type, index: index });
     } else {
       this.setState({
-        classList: noteList,
         type: type,
-        index: index,
-        isRubbish: type
+        index: index
       });
     }
   };
@@ -94,9 +92,11 @@ export default class Main extends Component {
     ];
     this.setState({ newNote: true, classList: initList });
   };
-  showDataList = dataList => {
+  showDataList = (dataList, type) => {
+    console.log(dataList, type)
     this.setState({
-      classList: dataList || []
+      classList: dataList || [],
+      type: type
     });
   };
   setNewNote = bool => {
@@ -119,7 +119,7 @@ export default class Main extends Component {
           history={this.props.history}
           showDataList={this.showDataList}
           term_list={term_list}
-          SelectItem={this.SelectItem}
+          selectItem={this.selectItem}
           createNote={this.createNote}
           setCategory={this.setCategory}
           setCurrentSubjectid={this.setCurrentSubjectid}

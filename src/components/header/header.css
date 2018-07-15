@@ -1,8 +1,8 @@
-@import url('//at.alicdn.com/t/font_737695_b4agkvayxwl.css');
+@import url('//at.alicdn.com/t/font_737695_zeedmo3fl9.css');
 .header-bar {
   display: flex;
   display: -webkit-flex;
-  background: #D7D7D7;
+  background: #a3c3f1;
   padding: 10px 30px;
   justify-content: space-between;
   align-items: center;
@@ -20,9 +20,11 @@
 .logo-title {
   margin: 0 10px;
   font-size: 1.6rem;
+  color: white;
 }
 .exit {
   font-size: 1.2rem;
+  cursor: pointer;
 }
 .exit:hover {
   text-decoration: underline;
