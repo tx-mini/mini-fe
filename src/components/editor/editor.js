@@ -24,6 +24,7 @@ export default class Editor extends React.Component {
     await modNote({
       ...result,
       name: tempName,
+      is_bool: 1,
       content: JSON.stringify(this.editorInstance.getRawContent())
     });
     message.info("保存成功");

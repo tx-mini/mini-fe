@@ -2,7 +2,7 @@ import axios from "axios";
 export function getListBook() {
   // 暂时是123
   const formData = new FormData();
-  formData.append("openid", window.localStorage.getItem("openid"));
+  formData.append("openid", window.localStorage.getItem("openid") || '83C38B2ADFA6400A6B18F09539FA29D3');
   return axios.post(`/mini/listBook`, formData).then(res => {
     return res.data;
   });
@@ -10,7 +10,7 @@ export function getListBook() {
 
 export function getNoteList(is_rubbish, book_id, is_imp) {
   const formData = new FormData();
-  formData.append("openid", localStorage.getItem("openid") || "1");
+  formData.append("openid", localStorage.getItem("openid") || "83C38B2ADFA6400A6B18F09539FA29D3");
   formData.append("is_rubbish", is_rubbish);
   formData.append("book_id", book_id);
   formData.append("is_imp", is_imp);

@@ -1,4 +1,4 @@
-@import url('//at.alicdn.com/t/font_737695_b4agkvayxwl.css');
+@import url('//at.alicdn.com/t/font_737695_zeedmo3fl9.css');
 .operation-container {
   display: flex;
 }
@@ -9,25 +9,36 @@
 .operation-container .left-container .category {
   background-color: #efefef;
   width: 210px;
-  height: 50px;
+  height: 60px;
   text-align: center;
   font-size: 1.6rem;
   font-weight: bold;
-  line-height: 50px;
+  line-height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .operation-container .left-container .item {
   display: flex;
   display: -webkit-flex;
   justify-content: space-between;
   width: 210px;
-  height: 50px;
+  height: 60px;
+  position: relative;
   align-items: center;
   padding: 10px;
-  line-height: 50px;
+  line-height: 60px;
   cursor: pointer;
 }
 .operation-container .left-container .item .icon-shanchu {
   visibility: hidden;
+}
+.operation-container .left-container .item .time {
+  position: absolute;
+  top: 20px;
+  left: 50px;
+  height: 10px;
+  font-size: 12px;
 }
 .operation-container .left-container .item .star-icon {
   width: 20px;
@@ -51,7 +62,7 @@
 .operation-container .left-container .content {
   display: inline-block;
   white-space: nowrap;
-  width: 85px;
+  width: 132px;
 }
 .operation-container .left-container .operation {
   padding: 10px;

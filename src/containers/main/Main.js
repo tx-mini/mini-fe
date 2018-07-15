@@ -27,10 +27,16 @@ export default class Main extends Component {
     // 这里改了。。。。。
     const listBook = await getListBook();
     // console.log(listBook);
-    //  const noteList = await getNoteList(listBook.classDir[0].id);
+    let noteList = [];
+    if (listBook.classDir && listBook.classDir[0] && listBook.classDir[0].id) {
+      noteList = await getNoteList(listBook.classDir[0].id);
+    }
+
     // console.log(nick);
     this.setState({
-      term_list: listBook.term_list || []
+      term_list: listBook.term_list || [],
+      classList: noteList || [],
+      category: listBook.term_list[0].children[0].name
     });
   }
   logout = () => {
@@ -58,6 +64,8 @@ export default class Main extends Component {
     this.setState({ currentSubjectid: id });
   };
   createNote = () => {
+    // 新建笔记
+
     const now = Date.now();
     let initList = [
       {
@@ -98,7 +106,7 @@ export default class Main extends Component {
           category={category}
           dataList={classList}
           newNote={newNote}
-          isBrush={isRubbish}
+          isRubbish={isRubbish}
           currentSubjectid={currentSubjectid}
         />
       </div>
