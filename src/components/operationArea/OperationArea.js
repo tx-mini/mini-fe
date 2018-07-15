@@ -61,8 +61,9 @@ export default class OperationArea extends Component {
       });
     }
   };
-  handleModalOk = () => {
+  handleModalOk = (e) => {
     // 发送移动的笔记数据到后台
+    console.log(this.state.radioValue)
     this.setState({ modalVisible: false });
   };
   handleModalCancel = () => {
@@ -125,7 +126,7 @@ export default class OperationArea extends Component {
     this.setState({ radioValue: e.target.value });
   };
   render() {
-    const { category, dataList, isRubbish } = this.props;
+    const { category, dataList, isRubbish, term_list, index } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -199,8 +200,8 @@ export default class OperationArea extends Component {
             onCancel={this.handleModalCancel}
           >
             <RadioGroup onChange={this.onRadioChange} value={radioValue}>
-              {dataList.map(item => (
-                <Radio value={item.name} key={item.note_id}>
+              {term_list[index] && (term_list[index].children).map(item => (
+                <Radio value={item.book_id} key={item.book_id} style={{display: "block"}}>
                   {item.name}
                 </Radio>
               ))}

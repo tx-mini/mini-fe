@@ -77,7 +77,7 @@ class FirstSlide extends React.Component {
       curBParentIndex: curBParentIndex
     });
     //传递选中的data
-    this.props.SelectItem(data, type);
+    this.props.SelectItem(data, type, index);
   }
   createNote() {
     //新建笔记
