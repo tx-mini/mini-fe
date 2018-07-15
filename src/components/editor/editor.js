@@ -6,7 +6,13 @@ import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 import ContentEditable from "react-contenteditable";
-import { modNote, getNoteContent } from "../../api/save";
+import { modNote, getNoteContent, createNote } from "../../api/save";
+import COS from "cos-js-sdk-v5";
+import { SecretId, SecretKey, Bucket, Region } from "../../config";
+const cos = new COS({
+  SecretId,
+  SecretKey
+});
 message.config({
   duration: 1.5
 });
@@ -17,17 +23,34 @@ export default class Editor extends React.Component {
     tempName: ""
   };
   save = async () => {
-    // 调用 更新/添加 笔记接口
-    const { contentId: note_id } = this.props;
+    // 调用 更新/添加 笔记接,
+
+    // 判断是添加还是更新
+    const { contentId: note_id, newNote, currentSubjectid } = this.props;
     const { tempName } = this.state;
-    const result = await getNoteContent(note_id);
-    await modNote({
-      ...result,
-      name: tempName,
-      is_bool: 1,
-      content: JSON.stringify(this.editorInstance.getRawContent())
-    });
-    message.info("保存成功");
+    console.log(newNote);
+    if (!newNote) {
+      // 保存的
+      const result = await getNoteContent(note_id);
+      await modNote({
+        ...result,
+        name: tempName,
+        is_bool: 1,
+        content: JSON.stringify(this.editorInstance.getRawContent())
+      });
+      message.info("保存成功");
+    } else {
+      await createNote({
+        book_id: currentSubjectid,
+        name: tempName,
+        content: JSON.stringify(this.editorInstance.getRawContent()),
+        is_imp: 0
+      });
+      message.info("新建成功");
+      console.log("新建", tempName, this.editorInstance.getRawContent());
+      // 获取笔记本内容
+    }
+
     //xxx();
     // const { contentId } = this.props;
     // const { tempName } = this.state;
@@ -43,6 +66,7 @@ export default class Editor extends React.Component {
     clearInterval(this.timer);
   };
   componentWillReceiveProps = nextProps => {
+    console.log(nextProps.contentId, this.props.contentId);
     if (nextProps.contentId !== this.props.contentId) {
       // 笔记切换了更新定时器
       this.setState({ tempName: nextProps.name });
@@ -145,7 +169,23 @@ export default class Editor extends React.Component {
       contentId,
       media: {
         externalMedias: { image: true },
-        uploadFn: ({}) => {}
+        uploadFn: d => {
+          const { file, success } = d;
+          console.log(d);
+          cos.sliceUploadFile(
+            {
+              Bucket: Bucket,
+              Region: Region,
+              Key: file.name,
+              Body: file
+            },
+            function(err, data) {
+              console.log(err, data);
+              //  success(data.location);
+              success(d);
+            }
+          );
+        }
       },
       disabled: type === "rabbish",
       imageControls: {

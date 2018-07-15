@@ -29,7 +29,12 @@ export default class Main extends Component {
     const listBook = await getListBook();
     // console.log(listBook);
     let noteList = [];
-    if (listBook.term_list && listBook.term_list[0] && listBook.term_list[0].children[0] && listBook.term_list[0].children[0].book_id) {
+    if (
+      listBook.term_list &&
+      listBook.term_list[0] &&
+      listBook.term_list[0].children[0] &&
+      listBook.term_list[0].children[0].book_id
+    ) {
       const [noteStarList, noteCostomList] = await Promise.all([
         getNoteList("0", listBook.term_list[0].children[0].book_id, "1"),
         getNoteList("0", listBook.term_list[0].children[0].book_id, "0")
@@ -51,7 +56,8 @@ export default class Main extends Component {
     window.localStorage.removeItem("nick_name");
     this.props.history.push("/login");
   };
-  SelectItem = async (data, type, index) => {
+  selectItem = async (data, type, index) => {
+    console.log(data, type);
     let noteList = [];
     if (type === "term") {
       const [noteStarList, noteCostomList] = await Promise.all([
@@ -62,9 +68,11 @@ export default class Main extends Component {
       noteList = [...noteStarList, ...noteCostomList];
 
       this.setState({ classList: noteList, type: type, index: index });
-    }
-    else{
-      this.setState({ type: type, index: index });
+    } else {
+      this.setState({
+        type: type,
+        index: index
+      });
     }
   };
   setCurrentSubjectid = id => {
@@ -77,16 +85,22 @@ export default class Main extends Component {
     let initList = [
       {
         // ook_id: now,// 当前分类
-        name: "新建笔记"
+        name: "新建笔记",
+        recent_time: Date.now() / 1000
       }
     ];
     this.setState({ newNote: true, classList: initList });
   };
-  showDataList = dataList => {
+  showDataList = (dataList, type) => {
+    console.log(dataList, type)
     this.setState({
-      classList: dataList || []
+      classList: dataList || [],
+      type: type
     });
-  }
+  };
+  setNewNote = bool => {
+    this.setState({ newNote: bool });
+  };
   render() {
     const {
       term_list,
@@ -104,10 +118,11 @@ export default class Main extends Component {
           history={this.props.history}
           showDataList={this.showDataList}
           term_list={term_list}
-          SelectItem={this.SelectItem}
+          selectItem={this.selectItem}
           createNote={this.createNote}
           setCategory={this.setCategory}
           setCurrentSubjectid={this.setCurrentSubjectid}
+          setNewNote={this.setNewNote}
         />
         <OperationArea
           term_list={term_list}

@@ -61,8 +61,8 @@ export function modNote(content) {
   const form = new FormData();
   form.append("openid", window.localStorage.getItem("openid"));
   for (let [key, value] of Object.entries(content)) {
-    if(key === "book_ref"){
-      key = "book_id"
+    if (key === "book_ref") {
+      key = "book_id";
     }
     form.append(key, value);
   }

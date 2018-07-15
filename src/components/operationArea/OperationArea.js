@@ -16,7 +16,8 @@ export default class OperationArea extends Component {
     currentNoteName: "", // 当前选中的笔记征文题目
     checkedList: {}, // 当前被选中的
     modalVisible: false,
-    radioValue: ""
+    radioValue: "",
+    dataList: []
   };
   static getDerivedStateFromProps = (nextProps, prevState) => {
     // 处理整合选中相关的逻辑
@@ -35,7 +36,8 @@ export default class OperationArea extends Component {
     }
   };
 
-  delete = note_id => e => {
+  delete = (note_id) => () => {
+    const {dataList} = this.props;
     Modal.confirm({
       content: "是否决定删除此条笔记",
 
@@ -45,12 +47,27 @@ export default class OperationArea extends Component {
         await modNote({ ...result, is_rubbish: 1 });
         // 刷新下状态
         message.info("删除笔记成功");
+        setTimeout(() => {
+          let newList = dataList;
+          let index;
+          //找到当前item在dataList中的下标，更新list
+          for(let i = 0; i < dataList.length; i++){
+            if(dataList[i].note_id === note_id){
+              index = i;
+            }
+          }
+          newList.splice(index, 1)
+          this.setState({
+            dataList: newList
+          })
+        })
       }
     });
   };
   rollback = item => async () => {
     console.log(item)
-    // const {dataList} = this.state;
+    const {dataList} = this.props;
+    console.log(dataList)
     const result = await modNote({
       book_id: item.book_ref,
       is_bool: 1,
@@ -61,18 +78,18 @@ export default class OperationArea extends Component {
     });
     console.log(result)
     message.info("放回成功");
-    // let newList = dataList;
-    // let index;
-    // //找到当前item在dataList中的下标，更新list
-    // for(let i = 0; i < dataList.length; i++){
-    //   if(dataList[i].note_id === item.note_id){
-    //     index = i;
-    //   }
-    // }
-    // newList.splice(index, 1)
-    // this.setState({
-    //   dataList: newList
-    // })
+    let newList = dataList || [];
+    let index;
+    //找到当前item在dataList中的下标，更新list
+    for(let i = 0; i < dataList.length; i++){
+      if(dataList[i].note_id === item.note_id){
+        index = i;
+      }
+    }
+    newList.splice(index, 1)
+    this.setState({
+      dataList: newList
+    })
   }
   async componentDidMount(){
     console.log(this.props.dataList)
@@ -88,6 +105,7 @@ export default class OperationArea extends Component {
     }
   }
   select = ({ note_id, name }) => async e => {
+    console.log(note_id, name); ////////////
     if (note_id !== this.state.note_id) {
       const result = await getNoteContent(note_id);
       //   console.log(JSON.parse(content));
@@ -97,12 +115,15 @@ export default class OperationArea extends Component {
         content: JSON.parse(result.content),
         currentNoteName: name
       });
+    } else {
+      this.setState({ currentNoteName: name, currentSelect: Math.random() });
     }
   };
-  handleModalOk = async() => {
+  handleModalOk = async () => {
     // 发送移动的笔记数据到后台
-    const {dataList} = this.props;
-    const {currentSelect} = this.state;
+    console.log()
+    const { dataList } = this.props;
+    const { currentSelect } = this.state;
     const result = await modNote({
       book_id: this.state.radioValue,
       is_bool: 0,
@@ -111,11 +132,11 @@ export default class OperationArea extends Component {
       content: dataList[currentSelect].content,
       is_imp: dataList[currentSelect].is_imp
     });
-    console.log(result)
+    console.log(result);
     message.info("移动成功");
-    let newList = dataList
-    newList.splice(currentSelect, 1)
-    this.setState({ 
+    let newList = dataList;
+    newList.splice(currentSelect, 1);
+    this.setState({
       modalVisible: false,
       dataList: newList
     });
@@ -168,10 +189,9 @@ export default class OperationArea extends Component {
       }
     }));
   };
-  handleRightClick = (e, data) => {
+  handleRightClick = () => {
     // 相应右键点击出来的菜单的选择
     this.setState({ modalVisible: true });
-    console.log(data);
   };
   stopPropagation = e => {
     e.stopPropagation();
@@ -179,8 +199,17 @@ export default class OperationArea extends Component {
   onRadioChange = e => {
     this.setState({ radioValue: e.target.value });
   };
+
   render() {
-    const { category, dataList, type, term_list, index } = this.props;
+    const {
+      category,
+      dataList,
+      term_list,
+      index,
+      newNote,
+      currentSubjectid,
+      type
+    } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -191,17 +220,32 @@ export default class OperationArea extends Component {
       modalVisible,
       radioValue
     } = this.state;
+    console.log(dataList)
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category" title={type === "rabbish" ? "回收站" : (type === "term"? category: "其他笔记")}>
-            {type === "rabbish" ? "回收站" : (type === "term"? category: "其他笔记")}
+          <div
+            className="category"
+            title={
+              type === "rabbish"
+                ? "回收站"
+                : (type === "term"
+                  ? category
+                  : "其他笔记")
+            }
+          >
+            {type === "rabbish"
+              ? "回收站"
+              : (type === "term"
+                ? category
+                : "其他笔记")}
           </div>
 
-          {dataList.map(item => (
-            <ContextMenuTrigger id="some" key={item.note_id}>
+          {dataList.map((item, index) => (
+            <ContextMenuTrigger id="some" key={item.note_id || ""}>
               <div
                 className="item"
+                style={(type === "term" && item.is_rubbish == 1) ? { display: "none" } : {}}
                 onClick={this.select({
                   note_id: item.note_id,
                   name: item.name
@@ -234,7 +278,7 @@ export default class OperationArea extends Component {
                     <i className="iconfont icon-shanchu icon-rollback" />
                   </span>
                 ) : (
-                  <span onClick={this.delete(item.note_id)}>
+                  <span onClick={this.delete(item.note_id, index)}>
                     <i className="iconfont icon-shanchu" />
                   </span>
                 )}
@@ -256,14 +300,19 @@ export default class OperationArea extends Component {
             onCancel={this.handleModalCancel}
           >
             <RadioGroup onChange={this.onRadioChange} value={radioValue}>
-              {term_list[index] && (term_list[index].children).map(item => (
-                <Radio value={item.book_id} key={item.book_id} style={{display: "block"}}>
-                  {item.name}
-                </Radio>
-              ))}
+              {term_list[index] &&
+                term_list[index].children.map(item => (
+                  <Radio
+                    value={item.book_id}
+                    key={item.book_id}
+                    style={{ display: "block" }}
+                  >
+                    {item.name}
+                  </Radio>
+                ))}
             </RadioGroup>
           </Modal>
-          {type === "rabbish" ? null : (
+          {type === "rabbish" || newNote ? null : (
             <div className="operation">
               {isIntegrating ? (
                 <React.Fragment>
@@ -293,6 +342,9 @@ export default class OperationArea extends Component {
           initialContent={content}
           contentId={currentSelect}
           name={currentNoteName}
+          isRubbish={type === "rabbish"}
+          newNote={newNote}
+          currentSubjectid={currentSubjectid}
           type={type}
         />
       </div>

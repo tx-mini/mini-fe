@@ -82,7 +82,7 @@ class FirstSlide extends React.Component {
       curOIndex = i;
       curOParentIndex = index;
     }
-
+    console.log(data.is_rubbish);
     this.props.setCategory(data.name);
     // console.log(this.props.term_list,curBParentIndex,);
     this.props.setCurrentSubjectid(
@@ -97,8 +97,9 @@ class FirstSlide extends React.Component {
       curOIndex: curOIndex,
       curOParentIndex: curOParentIndex
     });
+    this.props.setNewNote(false);
     //传递选中的data
-    this.props.SelectItem(data, type, index);
+    this.props.selectItem(data, type, index);
   }
   createNote() {
     //新建笔记
@@ -112,7 +113,7 @@ class FirstSlide extends React.Component {
         showRubbish: true,
         rubbish_list: rubbishList || []
       });
-      this.props.showDataList(rubbishList);
+      this.props.showDataList(rubbishList, "rabbish");
     } else {
       this.setState({
         showRubbish: false
@@ -127,7 +128,7 @@ class FirstSlide extends React.Component {
         showOther: true,
         other_list: otherList || []
       });
-      this.props.showDataList(otherList);
+      this.props.showDataList(otherList, "other");
     } else {
       this.setState({
         showOther: false
@@ -148,7 +149,6 @@ class FirstSlide extends React.Component {
       curBParentIndex,
       curOParentIndex
     } = this.state;
-    //  console.log(showCChild);
     return (
       <div className="first-slide">
         <div className="new-note" onClick={this.createNote.bind(this)}>
@@ -183,7 +183,9 @@ class FirstSlide extends React.Component {
                     ].join(" ")}
                   />
                   <i className="iconfont icon-wenjianjia show-icon item-icon" />
-                  <span className="item-title" title={TERM_KEY[item.term - 1]}>{TERM_KEY[item.term - 1]}</span>
+                  <span className="item-title" title={TERM_KEY[item.term - 1]}>
+                    {TERM_KEY[item.term - 1]}
+                  </span>
                 </div>
                 {item.children.map((data, i) => (
                   <div
@@ -196,7 +198,8 @@ class FirstSlide extends React.Component {
                     key={i}
                   >
                     <i className="iconfont icon-wenben show-icon item-icon" />
-                    <span title={data.name}
+                    <span
+                      title={data.name}
                       className={[
                         "item-title",
                         curCIndex === i && curCParentIndex === index
