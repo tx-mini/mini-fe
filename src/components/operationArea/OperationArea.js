@@ -49,6 +49,7 @@ export default class OperationArea extends Component {
     });
   };
   select = ({ note_id, name }) => async e => {
+    console.log(note_id, name); ////////////
     if (note_id !== this.state.note_id) {
       const result = await getNoteContent(note_id);
       //   console.log(JSON.parse(content));
@@ -58,11 +59,13 @@ export default class OperationArea extends Component {
         content: JSON.parse(result.content),
         currentNoteName: name
       });
+    } else {
+      this.setState({ currentNoteName: name, currentSelect: Math.random() });
     }
   };
-  handleModalOk = (e) => {
+  handleModalOk = e => {
     // 发送移动的笔记数据到后台
-    console.log(this.state.radioValue)
+    console.log(this.state.radioValue);
     this.setState({ modalVisible: false });
   };
   handleModalCancel = () => {
@@ -124,8 +127,17 @@ export default class OperationArea extends Component {
   onRadioChange = e => {
     this.setState({ radioValue: e.target.value });
   };
+
   render() {
-    const { category, dataList, isRubbish, term_list, index } = this.props;
+    const {
+      category,
+      dataList,
+      isRubbish,
+      term_list,
+      index,
+      newNote,
+      currentSubjectid
+    } = this.props;
     const {
       currentSelect,
       isIntegrating,
@@ -201,14 +213,19 @@ export default class OperationArea extends Component {
             onCancel={this.handleModalCancel}
           >
             <RadioGroup onChange={this.onRadioChange} value={radioValue}>
-              {term_list[index] && (term_list[index].children).map(item => (
-                <Radio value={item.book_id} key={item.book_id} style={{display: "block"}}>
-                  {item.name}
-                </Radio>
-              ))}
+              {term_list[index] &&
+                term_list[index].children.map(item => (
+                  <Radio
+                    value={item.book_id}
+                    key={item.book_id}
+                    style={{ display: "block" }}
+                  >
+                    {item.name}
+                  </Radio>
+                ))}
             </RadioGroup>
           </Modal>
-          {isRubbish ? null : (
+          {isRubbish || newNote ? null : (
             <div className="operation">
               {isIntegrating ? (
                 <React.Fragment>
@@ -239,6 +256,8 @@ export default class OperationArea extends Component {
           contentId={currentSelect}
           name={currentNoteName}
           isRubbish={isRubbish}
+          newNote={newNote}
+          currentSubjectid={currentSubjectid}
         />
       </div>
     );

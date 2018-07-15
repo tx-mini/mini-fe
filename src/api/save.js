@@ -60,6 +60,9 @@ export function createNote({ book_id, name, content, is_imp = 0 }) {
 export function modNote(content) {
   const form = new FormData();
   for (let [key, value] of Object.entries(content)) {
+    if (key === "book_ref") {
+      key = "book_id";
+    }
     form.append(key, value);
   }
   return axios.post("/mini/modNote", form).then(res => res.data);

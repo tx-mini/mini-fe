@@ -71,7 +71,8 @@ export default class Main extends Component {
     let initList = [
       {
         // ook_id: now,// 当前分类
-        name: "新建笔记"
+        name: "新建笔记",
+        recent_time: Date.now() / 1000
       }
     ];
     this.setState({ newNote: true, classList: initList });
@@ -80,6 +81,9 @@ export default class Main extends Component {
     this.setState({
       classList: rubbishList || []
     });
+  };
+  setNewNote = bool => {
+    this.setState({ newNote: bool });
   };
   render() {
     const {
@@ -102,6 +106,7 @@ export default class Main extends Component {
           createNote={this.createNote}
           setCategory={this.setCategory}
           setCurrentSubjectid={this.setCurrentSubjectid}
+          setNewNote={this.setNewNote}
         />
         <OperationArea
           term_list={term_list}

@@ -77,6 +77,7 @@ class FirstSlide extends React.Component {
       curBIndex: curBIndex,
       curBParentIndex: curBParentIndex
     });
+    this.props.setNewNote(false);
     //传递选中的data
     this.props.SelectItem(data, type, index);
   }
@@ -146,7 +147,9 @@ class FirstSlide extends React.Component {
                     ].join(" ")}
                   />
                   <i className="iconfont icon-wenjianjia show-icon item-icon" />
-                  <span className="item-title" title={TERM_KEY[item.term - 1]}>{TERM_KEY[item.term - 1]}</span>
+                  <span className="item-title" title={TERM_KEY[item.term - 1]}>
+                    {TERM_KEY[item.term - 1]}
+                  </span>
                 </div>
                 {item.children.map((data, i) => (
                   <div
@@ -159,7 +162,8 @@ class FirstSlide extends React.Component {
                     key={i}
                   >
                     <i className="iconfont icon-wenben show-icon item-icon" />
-                    <span title={data.name}
+                    <span
+                      title={data.name}
                       className={[
                         "item-title",
                         curCIndex === i && curCParentIndex === index
