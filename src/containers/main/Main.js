@@ -29,8 +29,12 @@ export default class Main extends Component {
     const listBook = await getListBook();
     // console.log(listBook);
     let noteList = [];
-    if (listBook.classDir && listBook.classDir[0] && listBook.classDir[0].id) {
-      noteList = await getNoteList(listBook.classDir[0].id);
+    if (listBook.term_list && listBook.term_list[0] && listBook.term_list[0].children[0] && listBook.term_list[0].children[0].book_id) {
+      const [noteStarList, noteCostomList] = await Promise.all([
+        getNoteList("0", listBook.term_list[0].children[0].book_id, "1"),
+        getNoteList("0", listBook.term_list[0].children[0].book_id, "0")
+      ]);
+      noteList = [...noteStarList, ...noteCostomList];
     }
 
     // console.log(nick);
@@ -42,7 +46,6 @@ export default class Main extends Component {
   }
   logout = () => {
     // 退出登录
-    console.log(123);
     window.localStorage.removeItem("openid");
     window.localStorage.removeItem("logo_url");
     window.localStorage.removeItem("nick_name");

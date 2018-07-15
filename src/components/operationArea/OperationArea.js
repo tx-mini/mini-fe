@@ -60,9 +60,14 @@ export default class OperationArea extends Component {
       });
     }
   };
-  handleModalOk = (e) => {
+  handleModalOk = async() => {
     // 发送移动的笔记数据到后台
     console.log(this.state.radioValue)
+    await modNote({
+      book_id: this.state.radioValue,
+      is_bool: 0,
+    });
+    message.info("移动成功");
     this.setState({ modalVisible: false });
   };
   handleModalCancel = () => {
