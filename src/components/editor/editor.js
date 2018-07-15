@@ -113,8 +113,10 @@ export default class Editor extends React.Component {
       .set(opt)
       .save();
   };
-  imgFn = img => {
+  imgFn = (img, key) => {
     // 挂载图片
+    console.log(key, 222222222);
+    this.currentKey = key;
     this.setState({ imgSrc: img.src });
   };
   handleImageClose = () => {
@@ -125,13 +127,14 @@ export default class Editor extends React.Component {
     // 将识别结果插入到图片的后面
     // results是数组，为识别的结果 每一项是字符串
     // 将识别出来的结果插入到富文本图片节点的后面
-    //console.log(results);
+    console.log(results);
     const content = this.editorInstance.getRawContent();
     console.log(this.editorInstance.getRawContent());
     const newContent = JSON.parse(JSON.stringify(content));
-
+    console.log(newContent, this.currentKey);
     for (let i = 0; i < newContent.blocks.length; i++) {
-      if (newContent.blocks[i] === this.currentKey) {
+      if (newContent.blocks[i].key === this.currentKey) {
+        console.log(1111);
         const oldBefore = newContent.blocks.slice(0, i + 1);
         const oldNext = newContent.blocks.slice(i + 1);
         const insert = [];
@@ -156,6 +159,7 @@ export default class Editor extends React.Component {
     }
 
     this.editorInstance.setContent(newContent, "raw");
+    message.info("识别成功");
   };
   render = () => {
     const { initialContent, name, contentId, type } = this.props;
@@ -267,6 +271,7 @@ export default class Editor extends React.Component {
             src={imgSrc}
             key={imgSrc}
             onImageClose={this.handleImageClose}
+            onData={this.insertRecognizeResult}
           />
         ) : null}
       </div>

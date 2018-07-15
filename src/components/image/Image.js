@@ -180,8 +180,9 @@ class Image extends React.Component {
     const { src, onData, key } = this.props;
     const selectArea = { ...this.selectArea };
     const img = document.createElement("img");
+    img.crossOrigin = "Anonymous";
     img.src = src;
-    img.origin = "Anonymous";
+
     await new Promise(resolve => {
       img.onload = () => {
         resolve();

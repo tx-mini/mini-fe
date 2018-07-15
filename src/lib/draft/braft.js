@@ -1818,7 +1818,7 @@ exports.default = {
     remove: false,
     custom: {
       fn: function fn(img, key) {
-        console.log(img, key);
+        console.log(img, key, "ssss");
       }
     }
   },
@@ -5839,7 +5839,37 @@ var Image = function (_React$Component) {
       tempWidth: null,
       tempHeight: null
     }, _this.custom = function () {
-      _this.props.imageControls.custom.fn(_this.imageElement, _this.props.block._map._root.entries[0][1]);
+      console.log(_this.props.block, _this.props.block._map._root.entries[0][1]);
+      // this.props.block._map._root.entries
+      var key = void 0;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = _this.props.block._map._root.entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var k = _step.value;
+
+          if (k[0] === "key") {
+            key = k[1];
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      _this.props.imageControls.custom.fn(_this.imageElement, key);
     }, _this.handleDragStart = function (event) {
 
       window.__BRAFT_DRAGING__IMAGE__ = {

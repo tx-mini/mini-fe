@@ -148,7 +148,7 @@ export default class OperationArea extends Component {
   handleRightClick = (e, data) => {
     // 相应右键点击出来的菜单的选择
     this.setState({ modalVisible: true });
-    console.log(data);
+    console.log(data, e.target.key);
   };
   stopPropagation = e => {
     e.stopPropagation();
@@ -245,11 +245,7 @@ export default class OperationArea extends Component {
               </div>
             </ContextMenuTrigger>
           ))}
-          <ContextMenu id="some">
-            <MenuItem data={{ foo: "bar" }} onClick={this.handleRightClick}>
-              移动到
-            </MenuItem>
-          </ContextMenu>
+
           <Modal
             title="移动到"
             visible={modalVisible}
