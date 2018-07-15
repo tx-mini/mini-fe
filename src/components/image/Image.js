@@ -55,12 +55,12 @@ class Image extends React.Component {
     canvas.width = width;
   };
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     if (e.keyCode === 27) {
       const { onImageClose } = this.props;
       onImageClose();
-    };
-  }
+    }
+  };
 
   handleMouseDown = e => {
     const { canvas } = this;
@@ -181,6 +181,7 @@ class Image extends React.Component {
     const selectArea = { ...this.selectArea };
     const img = document.createElement("img");
     img.src = src;
+    img.origin = "Anonymous";
     await new Promise(resolve => {
       img.onload = () => {
         resolve();
