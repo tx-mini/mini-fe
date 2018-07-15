@@ -4,7 +4,7 @@ import { Button, Modal, Checkbox, Icon, message, Tooltip, Radio } from "antd";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import Editor from "../editor/Editor";
 import { formatTime } from "./util";
-import { getNoteContent, createNote, modNote } from "../../api/save";
+import { getNoteContent, createNote, modNote, deleteFinally } from "../../api/save";
 import { filterSomeImportantnce } from "../editor/utils/index";
 const RadioGroup = Radio.Group;
 export default class OperationArea extends Component {
@@ -45,6 +45,32 @@ export default class OperationArea extends Component {
         console.log(note_id);
         const result = await getNoteContent(note_id);
         await modNote({ ...result, is_rubbish: 1 });
+        // 刷新下状态
+        message.info("删除笔记成功");
+        setTimeout(() => {
+          let newList = dataList;
+          let index;
+          //找到当前item在dataList中的下标，更新list
+          for(let i = 0; i < dataList.length; i++){
+            if(dataList[i].note_id === note_id){
+              index = i;
+            }
+          }
+          newList.splice(index, 1)
+          this.setState({
+            dataList: newList
+          })
+        })
+      }
+    });
+  };
+  deleteFinally = (note_id) => () => {
+    const {dataList} = this.props;
+    Modal.confirm({
+      content: "是否决定彻底删除此条笔记",
+
+      onOk: async () => {
+        await deleteFinally(note_id);
         // 刷新下状态
         message.info("删除笔记成功");
         setTimeout(() => {
@@ -224,23 +250,23 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div
-            className="category"
-            title={
-              type === "rabbish"
-                ? "回收站"
-                : (type === "term"
-                  ? category
-                  : "其他笔记")
-            }
-          >
-            {type === "rabbish"
+          <Tooltip title={
+            type === "rabbish"
               ? "回收站"
               : (type === "term"
                 ? category
-                : "其他笔记")}
-          </div>
-
+                : "其他笔记")
+          }>
+            <div
+              className="category"
+            >
+              {type === "rabbish"
+                ? "回收站"
+                : (type === "term"
+                  ? category
+                  : "其他笔记")}
+            </div>
+          </Tooltip>
           {dataList.map((item, index) => (
             <ContextMenuTrigger id="some" key={item.note_id || ""}>
               <div
@@ -274,11 +300,16 @@ export default class OperationArea extends Component {
                   <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
                 </span>
                 {type === "rabbish" ? (
-                  <span onClick={this.rollback(item)}>
-                    <i className="iconfont icon-shanchu icon-rollback" />
-                  </span>
+                  <div>
+                    <span onClick={this.rollback(item)}>
+                      <Tooltip title="放回原处"><i className="iconfont icon-shanchu icon-rollback" /></Tooltip>
+                    </span>
+                    <span onClick={this.deleteFinally(item.note_id)}>
+                      <Tooltip title="彻底删除"><i className="iconfont icon-shanchu" /></Tooltip>
+                    </span>
+                  </div>
                 ) : (
-                  <span onClick={this.delete(item.note_id, index)}>
+                  <span onClick={this.delete(item.note_id)}>
                     <i className="iconfont icon-shanchu" />
                   </span>
                 )}

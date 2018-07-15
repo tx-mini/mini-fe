@@ -2,21 +2,24 @@
 .operation-container {
   @width: 210px;
   @height: 60px;
-  @bgcolor: #efefef;
+  @bgcolor: #79A9FC;
+  @hover-color: #C2D6F3;
   @hover: red;
   display: flex;
   .left-container {
     display: flex;
     flex-direction: column;
+    border-right: 1px solid @border-color;
     .category {
       background-color: @bgcolor;
       width: @width;
       height: @height;
       text-align: center;
-      font-size: @font-size + 0.2;
+      font-size: @font-size;
       font-weight: bold;
       line-height: @height;
       .hideText;
+      color: white;
     }
     .item {
       .flex;
@@ -43,8 +46,9 @@
         width: 20px;
       }
       &:hover {
-        background-color: @bgcolor;
+        background-color: @hover-color;
         font-weight: bold;
+        color: white;
         // color: @hover;
         .icon-shanchu {
           visibility: visible;

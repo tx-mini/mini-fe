@@ -2,6 +2,7 @@ import React from "react";
 import "./firstSlide.less";
 import { TERM_KEY } from "./constant";
 import { getNoteList } from "../../api/save";
+import {Tooltip} from 'antd';
 
 class FirstSlide extends React.Component {
   constructor(props) {
@@ -183,9 +184,12 @@ class FirstSlide extends React.Component {
                     ].join(" ")}
                   />
                   <i className="iconfont icon-wenjianjia show-icon item-icon" />
-                  <span className="item-title" title={TERM_KEY[item.term - 1]}>
-                    {TERM_KEY[item.term - 1]}
-                  </span>
+                  
+                  <Tooltip title={TERM_KEY[item.term - 1]}>
+                    <span className="item-title">
+                      {TERM_KEY[item.term - 1]}
+                    </span>
+                  </Tooltip>
                 </div>
                 {item.children.map((data, i) => (
                   <div
@@ -198,17 +202,18 @@ class FirstSlide extends React.Component {
                     key={i}
                   >
                     <i className="iconfont icon-wenben show-icon item-icon" />
-                    <span
-                      title={data.name}
-                      className={[
-                        "item-title",
-                        curCIndex === i && curCParentIndex === index
-                          ? "active"
-                          : ""
-                      ].join(" ")}
-                    >
-                      {data.name}
-                    </span>
+                    <Tooltip title={data.name}>
+                      <span
+                        className={[
+                          "item-title",
+                          curCIndex === i && curCParentIndex === index
+                            ? "active"
+                            : ""
+                        ].join(" ")}
+                      >
+                        {data.name}
+                      </span>
+                    </Tooltip>
                   </div>
                 ))}
               </div>
@@ -232,14 +237,16 @@ class FirstSlide extends React.Component {
                   onClick={this.selectItem.bind(this, "", index, item, "other")}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
-                  <span
-                    className={[
-                      "item-title",
-                      curOParentIndex === index ? "active" : ""
-                    ].join(" ")}
-                  >
-                    {item.name}
-                  </span>
+                  <Tooltip title={item.name}>
+                    <span
+                      className={[
+                        "item-title",
+                        curOParentIndex === index ? "active" : ""
+                      ].join(" ")}
+                    >
+                      {item.name}
+                    </span>
+                  </Tooltip>
                 </div>
               </div>
             ))}
@@ -262,14 +269,16 @@ class FirstSlide extends React.Component {
                   onClick={this.selectItem.bind(this, "", index, item, "rabbish")}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
-                  <span
-                    className={[
-                      "item-title",
-                      curBParentIndex === index ? "active" : ""
-                    ].join(" ")}
-                  >
-                    {item.name}
-                  </span>
+                  <Tooltip title={item.name}>
+                    <span
+                      className={[
+                        "item-title",
+                        curBParentIndex === index ? "active" : ""
+                      ].join(" ")}
+                    >
+                      {item.name}
+                    </span>
+                  </Tooltip>
                 </div>
               </div>
             ))}
