@@ -4,7 +4,7 @@ import { Button, Modal, Checkbox, Icon, message, Tooltip, Radio } from "antd";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import Editor from "../editor/Editor";
 import { formatTime } from "./util";
-import { getNoteContent, removeNote, createNote } from "../../api/save";
+import { getNoteContent, createNote, modNote } from "../../api/save";
 import { filterSomeImportantnce } from "../editor/utils/index";
 const RadioGroup = Radio.Group;
 export default class OperationArea extends Component {
@@ -40,12 +40,11 @@ export default class OperationArea extends Component {
       content: "是否决定删除此条笔记",
 
       onOk: async () => {
-        const { code, result } = removeNote(note_id);
-        if (code === 0) {
-          message.info("删除笔记成功");
-        } else {
-          message.info(result.message);
-        }
+        console.log(note_id);
+        const result = await getNoteContent(note_id);
+        await modNote({ ...result, is_rubbish: 1 });
+        // 刷新下状态
+        message.info("删除笔记成功");
       }
     });
   };
@@ -140,7 +139,9 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category" title={isRubbish ? "回收站" : category}>{isRubbish ? "回收站" : category}</div>
+          <div className="category" title={isRubbish ? "回收站" : category}>
+            {isRubbish ? "回收站" : category}
+          </div>
 
           {dataList.map(item => (
             <ContextMenuTrigger id="some" key={item.note_id}>

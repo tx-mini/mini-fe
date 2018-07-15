@@ -27,21 +27,26 @@ export default class Main extends Component {
 
     // 这里改了。。。。。
     const listBook = await getListBook();
-    const [noteStarList, noteCostomList] = await Promise.all([
-      getNoteList("0", listBook.term_list[0].children[0].book_id, "1"),
-      getNoteList("0", listBook.term_list[0].children[0].book_id, "0")
-    ]);
-    let noteList = [...noteStarList, ...noteCostomList];
+    // console.log(listBook);
+    let noteList = [];
+    if (listBook.classDir && listBook.classDir[0] && listBook.classDir[0].id) {
+      noteList = await getNoteList(listBook.classDir[0].id);
+    }
+
+    // console.log(nick);
     this.setState({
       term_list: listBook.term_list || [],
-      classList: noteList,
+      classList: noteList || [],
       category: listBook.term_list[0].children[0].name
     });
   }
   logout = () => {
     // 退出登录
+    console.log(123);
     window.localStorage.removeItem("openid");
-    this.props.history.replace("/login");
+    window.localStorage.removeItem("logo_url");
+    window.localStorage.removeItem("nick_name");
+    this.props.history.push("/login");
   };
   SelectItem = async (data, type, index) => {
     let noteList = [];
@@ -60,6 +65,8 @@ export default class Main extends Component {
     this.setState({ currentSubjectid: id });
   };
   createNote = () => {
+    // 新建笔记
+
     const now = Date.now();
     let initList = [
       {
@@ -88,6 +95,7 @@ export default class Main extends Component {
       <div className="main">
         <Header logout={this.logout} />
         <FirstSlide
+          history={this.props.history}
           showRubbish={this.showRubbish}
           term_list={term_list}
           SelectItem={this.SelectItem}

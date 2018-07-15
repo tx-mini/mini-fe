@@ -68,7 +68,8 @@ class FirstSlide extends React.Component {
     this.props.setCategory(data.name);
     // console.log(this.props.term_list,curBParentIndex,);
     this.props.setCurrentSubjectid(
-      this.props.term_list[curCParentIndex].children[curCIndex].book_id
+      this.props.term_list[curCParentIndex] &&
+        this.props.term_list[curCParentIndex].children[curCIndex].book_id
     );
     this.setState({
       curCIndex: curCIndex,

@@ -2,21 +2,23 @@ import React, { Component } from "react";
 import Login from "./containers/login/Login";
 import Main from "./containers/main/Main";
 import Share from "./containers/share/Share";
-import { BrowserRouter, Route, Redirect, HashRouter } from "react-router-dom";
+import { createHashHistory } from "history";
+import { Router } from "react-router";
+import { Route, Redirect, HashRouter } from "react-router-dom";
+const history = createHashHistory();
 class App extends Component {
   render() {
-    const openid = window.localStorage.getItem("openid");
-    const isLogin = true;
-
     return (
-      <HashRouter>
+      <Router history={history}>
         <div>
           <Route
             exact
             path="/"
             render={props => {
+              const openid = window.localStorage.getItem("openid");
+              const isLogin = openid;
               if (isLogin) {
-                return <Main />;
+                return <Main history={history} />;
               } else {
                 return (
                   <Redirect
@@ -31,6 +33,8 @@ class App extends Component {
           <Route
             path="/login"
             render={props => {
+              const openid = window.localStorage.getItem("openid");
+              const isLogin = openid;
               if (isLogin) {
                 return (
                   <Redirect
@@ -40,13 +44,13 @@ class App extends Component {
                   />
                 );
               } else {
-                return <Login />;
+                return <Login history={history} />;
               }
             }}
           />
           <Route component={Share} path="/share/:note_id" />
         </div>
-      </HashRouter>
+      </Router>
     );
   }
 }
