@@ -64,7 +64,7 @@ class FirstSlide extends React.Component {
       curBIndex = i;
       curBParentIndex = index;
     }
-
+    console.log(data.is_rubbish);
     this.props.setCategory(data.name);
     // console.log(this.props.term_list,curBParentIndex,);
     this.props.setCurrentSubjectid(

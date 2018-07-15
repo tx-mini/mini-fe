@@ -63,9 +63,14 @@ export default class OperationArea extends Component {
       this.setState({ currentNoteName: name, currentSelect: Math.random() });
     }
   };
-  handleModalOk = e => {
+  handleModalOk = async () => {
     // 发送移动的笔记数据到后台
     console.log(this.state.radioValue);
+    await modNote({
+      book_id: this.state.radioValue,
+      is_bool: 0
+    });
+    message.info("移动成功");
     this.setState({ modalVisible: false });
   };
   handleModalCancel = () => {
@@ -159,6 +164,7 @@ export default class OperationArea extends Component {
             <ContextMenuTrigger id="some" key={item.note_id}>
               <div
                 className="item"
+                style={item.is_rubbish == 1 ? { display: "none" } : {}}
                 onClick={this.select({
                   note_id: item.note_id,
                   name: item.name
