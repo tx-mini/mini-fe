@@ -60,3 +60,11 @@ export function createNote({ book_id, name, content, is_imp = 0 }) {
   form.append("is_imp", is_imp);
   return axios.post("/mini/createNote", form).then(res => res.data);
 }
+
+export function modNote(content) {
+  const form = new FormData();
+  for (let [key, value] of Object.entries(content)) {
+    form.append(key, value);
+  }
+  return axios.post("/mini/modNote", form).then(res => res.data);
+}

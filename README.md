@@ -22,3 +22,7 @@ http://192.168.191.2/note/index.php/mini/getNote/222
 oss
 
 编辑器图片上传到 oss 换取 src
+
+bug
+
+修改了笔记保存之后再查就查不到了 bookref 变 nullle1

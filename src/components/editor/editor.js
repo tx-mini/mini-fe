@@ -6,7 +6,7 @@ import Image from "../image/Image.js";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 import ContentEditable from "react-contenteditable";
-
+import { modNote, getNoteContent } from "../../api/save";
 message.config({
   duration: 1.5
 });
@@ -16,8 +16,17 @@ export default class Editor extends React.Component {
     imgSrc: "",
     tempName: ""
   };
-  save = () => {
+  save = async () => {
     // 调用 更新/添加 笔记接口
+    const { contentId: note_id } = this.props;
+    const { tempName } = this.state;
+    const result = await getNoteContent(note_id);
+    await modNote({
+      ...result,
+      name: tempName,
+      content: JSON.stringify(this.editorInstance.getRawContent())
+    });
+    message.info("保存成功");
     //xxx();
     // const { contentId } = this.props;
     // const { tempName } = this.state;

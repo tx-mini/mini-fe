@@ -26,7 +26,7 @@ export default class Main extends Component {
 
     // 这里改了。。。。。
     const listBook = await getListBook();
-    console.log(listBook);
+    // console.log(listBook);
     //  const noteList = await getNoteList(listBook.classDir[0].id);
     // console.log(nick);
     this.setState({
@@ -35,8 +35,9 @@ export default class Main extends Component {
   }
   logout = () => {
     // 退出登录
+    console.log(123);
     window.localStorage.removeItem("openid");
-    this.props.history.replace("/login");
+    this.props.history.push("/login");
   };
   SelectItem = async (data, type) => {
     let noteList = [];
@@ -83,6 +84,7 @@ export default class Main extends Component {
       <div className="main">
         <Header logout={this.logout} />
         <FirstSlide
+          history={this.props.history}
           showRubbish={this.showRubbish}
           term_list={term_list}
           SelectItem={this.SelectItem}
