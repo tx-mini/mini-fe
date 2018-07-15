@@ -196,7 +196,10 @@ class FirstSlide extends React.Component {
                     className={[
                       "slide-item final-item",
                       showCChild[index] ? "show" : "hide",
-                      "hide-text"
+                      "hide-text",
+                      curCIndex === i && curCParentIndex === index
+                        ? "active"
+                        : "" 
                     ].join(" ")}
                     onClick={this.selectItem.bind(this, i, index, data, "term")}
                     key={i}
@@ -205,11 +208,7 @@ class FirstSlide extends React.Component {
                     <Tooltip title={data.name}>
                       <span
                         className={[
-                          "item-title",
-                          curCIndex === i && curCParentIndex === index
-                            ? "active"
-                            : ""
-                        ].join(" ")}
+                          "item-title"].join(" ")}
                       >
                         {data.name}
                       </span>
@@ -233,16 +232,14 @@ class FirstSlide extends React.Component {
             {other_list.map((item, index) => (
               <div className={showOther ? "show" : "hide"} key={index}>
                 <div
-                  className="slide-item sub-item"
+                  className={["slide-item sub-item", curOParentIndex === index ? "active" : ""].join(" ")}
                   onClick={this.selectItem.bind(this, "", index, item, "other")}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
                   <Tooltip title={item.name}>
                     <span
                       className={[
-                        "item-title",
-                        curOParentIndex === index ? "active" : ""
-                      ].join(" ")}
+                        "item-title"].join(" ")}
                     >
                       {item.name}
                     </span>
@@ -265,15 +262,17 @@ class FirstSlide extends React.Component {
             {rubbish_list.map((item, index) => (
               <div className={showRubbish ? "show" : "hide"} key={index}>
                 <div
-                  className="slide-item sub-item"
+                  className={[
+                    "slide-item sub-item",
+                    curBParentIndex === index ? "active" : ""
+                  ].join(" ")}
                   onClick={this.selectItem.bind(this, "", index, item, "rabbish")}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
                   <Tooltip title={item.name}>
                     <span
                       className={[
-                        "item-title",
-                        curBParentIndex === index ? "active" : ""
+                        "item-title"
                       ].join(" ")}
                     >
                       {item.name}

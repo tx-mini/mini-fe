@@ -10,11 +10,11 @@
 .operation-container .left-container .category {
   background-color: #79A9FC;
   width: 210px;
-  height: 60px;
+  height: 50px;
   text-align: center;
   font-size: 1.4rem;
   font-weight: bold;
-  line-height: 60px;
+  line-height: 50px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -25,18 +25,15 @@
   display: -webkit-flex;
   justify-content: space-between;
   width: 210px;
-  height: 60px;
   position: relative;
   align-items: center;
   padding: 10px;
-  line-height: 60px;
   cursor: pointer;
 }
 .operation-container .left-container .item .icon-shanchu {
   visibility: hidden;
 }
 .operation-container .left-container .item .time {
-  position: absolute;
   top: 20px;
   left: 50px;
   height: 10px;
@@ -69,6 +66,7 @@
 }
 .operation-container .left-container .operation {
   padding: 10px;
+  margin-top: 10px;
 }
 .operation-container .left-container .react-contextmenu--visible {
   background: #eee;

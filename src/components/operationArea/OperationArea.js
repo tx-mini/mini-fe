@@ -290,15 +290,21 @@ export default class OperationArea extends Component {
                 ) : (
                   <span className="star-icon" />
                 )}
-                <span
-                  className={
-                    item.note_id === currentSelect
-                      ? "selected content"
-                      : "content"
-                  }
-                >
-                  <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
-                </span>
+                <div>
+                  <span
+                    className={
+                      item.note_id === currentSelect
+                        ? "selected content"
+                        : "content"
+                    }
+                  >
+                    <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
+                  </span>
+
+                  <span className="time">
+                    {formatTime(item.recent_time * 1000)}
+                  </span>
+                </div>
                 {type === "rabbish" ? (
                   <div>
                     <span onClick={this.rollback(item)}>
@@ -313,9 +319,6 @@ export default class OperationArea extends Component {
                     <i className="iconfont icon-shanchu" />
                   </span>
                 )}
-                <span className="time">
-                  {formatTime(item.recent_time * 1000)}
-                </span>
               </div>
             </ContextMenuTrigger>
           ))}
