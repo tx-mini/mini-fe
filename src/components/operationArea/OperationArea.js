@@ -48,6 +48,19 @@ export default class OperationArea extends Component {
       }
     });
   };
+  async componentDidMount() {
+    console.log(this.props.dataList);
+    if (this.props.dataList[0]) {
+      const result = await getNoteContent(this.props.dataList[0].note_id);
+      //   console.log(JSON.parse(content));
+      //  console.log(content);
+      this.setState({
+        currentSelect: this.props.dataList[0].note_id,
+        content: JSON.parse(result.content),
+        currentNoteName: this.props.dataList[0].name
+      });
+    }
+  }
   select = ({ note_id, name }) => async e => {
     console.log(note_id, name); ////////////
     if (note_id !== this.state.note_id) {
@@ -65,13 +78,24 @@ export default class OperationArea extends Component {
   };
   handleModalOk = async () => {
     // 发送移动的笔记数据到后台
-    console.log(this.state.radioValue);
-    await modNote({
+    const { dataList } = this.props;
+    const { currentSelect } = this.state;
+    const result = await modNote({
       book_id: this.state.radioValue,
-      is_bool: 0
+      is_bool: 0,
+      note_id: dataList[currentSelect].note_id,
+      name: dataList[currentSelect].name,
+      content: dataList[currentSelect].content,
+      is_imp: dataList[currentSelect].is_imp
     });
+    console.log(result);
     message.info("移动成功");
-    this.setState({ modalVisible: false });
+    let newList = dataList;
+    newList.splice(currentSelect, 1);
+    this.setState({
+      modalVisible: false,
+      dataList: newList
+    });
   };
   handleModalCancel = () => {
     // 取消
@@ -141,7 +165,8 @@ export default class OperationArea extends Component {
       term_list,
       index,
       newNote,
-      currentSubjectid
+      currentSubjectid,
+      type
     } = this.props;
     const {
       currentSelect,
@@ -156,8 +181,21 @@ export default class OperationArea extends Component {
     return (
       <div className="operation-container">
         <div className="left-container">
-          <div className="category" title={isRubbish ? "回收站" : category}>
-            {isRubbish ? "回收站" : category}
+          <div
+            className="category"
+            title={
+              type === "rabbish"
+                ? "回收站"
+                : type === "term"
+                  ? category
+                  : "其他笔记"
+            }
+          >
+            {type === "rabbish"
+              ? "回收站"
+              : type === "term"
+                ? category
+                : "其他笔记"}
           </div>
 
           {dataList.map(item => (
@@ -192,7 +230,7 @@ export default class OperationArea extends Component {
                 >
                   <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
                 </span>
-                {isRubbish ? (
+                {type === "rabbish" ? (
                   <span>
                     <i className="iconfont icon-shanchu icon-rollback" />
                   </span>
@@ -264,6 +302,7 @@ export default class OperationArea extends Component {
           isRubbish={isRubbish}
           newNote={newNote}
           currentSubjectid={currentSubjectid}
+          type={type}
         />
       </div>
     );

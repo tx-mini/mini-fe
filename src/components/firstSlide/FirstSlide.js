@@ -8,6 +8,7 @@ class FirstSlide extends React.Component {
     super(props);
     this.state = {
       term_list: props.term_list,
+      other_list: [],
       rubbish_list: [],
       showClass: true,
       showCChild: [true],
@@ -16,7 +17,10 @@ class FirstSlide extends React.Component {
       curCIndex: 0,
       curBParentIndex: "",
       curBIndex: "",
-      showRubbish: false
+      curOParentIndex: "",
+      curOIndex: "",
+      showRubbish: false,
+      showOther: false
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -53,16 +57,30 @@ class FirstSlide extends React.Component {
     let curCParentIndex;
     let curBIndex;
     let curBParentIndex;
-    if (!type) {
+    let curOParentIndex;
+    let curOIndex;
+    if (type === "term") {
       curCIndex = i;
       curCParentIndex = index;
       curBIndex = "";
       curBParentIndex = "";
-    } else {
+      curOIndex = "";
+      curOParentIndex = "";
+    } else if(type === "rabbish") {
       curCIndex = "";
       curCParentIndex = "";
       curBIndex = i;
       curBParentIndex = index;
+      curOIndex = "";
+      curOParentIndex = "";
+    }
+    else {
+      curCIndex = "";
+      curCParentIndex = "";
+      curBIndex = "";
+      curBParentIndex = "";
+      curOIndex = i;
+      curOParentIndex = index;
     }
     console.log(data.is_rubbish);
     this.props.setCategory(data.name);
@@ -75,7 +93,9 @@ class FirstSlide extends React.Component {
       curCIndex: curCIndex,
       curCParentIndex: curCParentIndex,
       curBIndex: curBIndex,
-      curBParentIndex: curBParentIndex
+      curBParentIndex: curBParentIndex,
+      curOIndex: curOIndex,
+      curOParentIndex: curOParentIndex
     });
     this.props.setNewNote(false);
     //传递选中的data
@@ -93,10 +113,25 @@ class FirstSlide extends React.Component {
         showRubbish: true,
         rubbish_list: rubbishList || []
       });
-      this.props.showRubbish(rubbishList);
+      this.props.showDataList(rubbishList);
     } else {
       this.setState({
         showRubbish: false
+      });
+    }
+  }
+  showOther = async () => {
+    if (!this.state.showOther) {
+      const otherList = await getNoteList("0", "-1", "0");
+      console.log(otherList);
+      this.setState({
+        showOther: true,
+        other_list: otherList || []
+      });
+      this.props.showDataList(otherList);
+    } else {
+      this.setState({
+        showOther: false
       });
     }
   };
@@ -104,13 +139,15 @@ class FirstSlide extends React.Component {
     const {
       term_list,
       rubbish_list,
-
+      other_list,
       showClass,
       showCChild,
       curCIndex,
       curCParentIndex,
       showRubbish,
-      curBParentIndex
+      showOther,
+      curBParentIndex,
+      curOParentIndex
     } = this.state;
     //  console.log(showCChild);
     return (
@@ -158,7 +195,7 @@ class FirstSlide extends React.Component {
                       showCChild[index] ? "show" : "hide",
                       "hide-text"
                     ].join(" ")}
-                    onClick={this.selectItem.bind(this, i, index, data, false)}
+                    onClick={this.selectItem.bind(this, i, index, data, "term")}
                     key={i}
                   >
                     <i className="iconfont icon-wenben show-icon item-icon" />
@@ -179,6 +216,36 @@ class FirstSlide extends React.Component {
             ))}
           </div>
           <div className="class-note">
+            <div className="slide-item" onClick={this.showOther}>
+              <i
+                className={[
+                  "iconfont show-icon",
+                  showOther ? "icon-shouqi" : "icon-zhankai"
+                ].join(" ")}
+              />
+              <i className="iconfont icon-shanchu show-icon item-icon" />
+              <span className="item-title">其他笔记</span>
+            </div>
+            {other_list.map((item, index) => (
+              <div className={showOther ? "show" : "hide"} key={index}>
+                <div
+                  className="slide-item sub-item"
+                  onClick={this.selectItem.bind(this, "", index, item, "other")}
+                >
+                  <i className="iconfont icon-wenben show-icon item-icon" />
+                  <span
+                    className={[
+                      "item-title",
+                      curOParentIndex === index ? "active" : ""
+                    ].join(" ")}
+                  >
+                    {item.name}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="class-note">
             <div className="slide-item" onClick={this.showRubbish}>
               <i
                 className={[
@@ -193,7 +260,7 @@ class FirstSlide extends React.Component {
               <div className={showRubbish ? "show" : "hide"} key={index}>
                 <div
                   className="slide-item sub-item"
-                  onClick={this.selectItem.bind(this, "", index, item, true)}
+                  onClick={this.selectItem.bind(this, "", index, item, "rabbish")}
                 >
                   <i className="iconfont icon-wenben show-icon item-icon" />
                   <span

@@ -158,7 +158,7 @@ export default class Editor extends React.Component {
     this.editorInstance.setContent(newContent, "raw");
   };
   render = () => {
-    const { initialContent, name, contentId, isRubbish } = this.props;
+    const { initialContent, name, contentId, type } = this.props;
 
     const editorProps = {
       height: 500,
@@ -187,7 +187,7 @@ export default class Editor extends React.Component {
           );
         }
       },
-      disabled: isRubbish,
+      disabled: type === "rabbish",
       imageControls: {
         floatLeft: false,
         floatRight: false,
@@ -233,7 +233,7 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          {isRubbish ? (
+          {type === "rabbish" ? (
             <span className="name">{name}</span>
           ) : (
             <ContentEditable
@@ -244,7 +244,7 @@ export default class Editor extends React.Component {
             />
           )}
 
-          {isRubbish ? null : (
+          {type === "rabbish" ? null : (
             <div>
               <Button
                 type="primary"

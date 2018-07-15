@@ -13,7 +13,7 @@ export default class Main extends Component {
       classList: [],
       category: "",
       newNote: false,
-      isRubbish: false,
+      type: "term",
       index: 0,
       nick: "",
       currentSubjectid: "" //当前选中的科目id
@@ -59,7 +59,7 @@ export default class Main extends Component {
   SelectItem = async (data, type, index) => {
     console.log(data, type);
     let noteList = [];
-    if (!type) {
+    if (type === "term") {
       const [noteStarList, noteCostomList] = await Promise.all([
         getNoteList("0", data.book_id, "1"),
         getNoteList("0", data.book_id, "0")
@@ -69,7 +69,12 @@ export default class Main extends Component {
 
       this.setState({ classList: noteList, isRubbish: type, index: index });
     } else {
-      this.setState({ isRubbish: type });
+      this.setState({
+        classList: noteList,
+        type: type,
+        index: index,
+        isRubbish: type
+      });
     }
   };
   setCurrentSubjectid = id => {
@@ -88,9 +93,9 @@ export default class Main extends Component {
     ];
     this.setState({ newNote: true, classList: initList });
   };
-  showRubbish = rubbishList => {
+  showDataList = dataList => {
     this.setState({
-      classList: rubbishList || []
+      classList: dataList || []
     });
   };
   setNewNote = bool => {
@@ -104,14 +109,14 @@ export default class Main extends Component {
       newNote,
       index,
       currentSubjectid,
-      isRubbish
+      type
     } = this.state;
     return (
       <div className="main">
         <Header logout={this.logout} />
         <FirstSlide
           history={this.props.history}
-          showRubbish={this.showRubbish}
+          showDataList={this.showDataList}
           term_list={term_list}
           SelectItem={this.SelectItem}
           createNote={this.createNote}
@@ -124,7 +129,7 @@ export default class Main extends Component {
           category={category}
           dataList={classList}
           newNote={newNote}
-          isRubbish={isRubbish}
+          type={type}
           index={index}
           currentSubjectid={currentSubjectid}
         />
