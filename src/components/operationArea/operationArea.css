@@ -67,3 +67,23 @@
 .operation-container .left-container .operation {
   padding: 10px;
 }
+.operation-container .left-container .react-contextmenu--visible {
+  background: #eee;
+  border: 1px solid #eee;
+  padding: 8px;
+  position: relative;
+  border-radius: 5px;
+}
+.operation-container .left-container .react-contextmenu--visible:before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #eee transparent;
+  top: -21px;
+}
+.operation-container .left-container .react-contextmenu-item:hover {
+  font-weight: bold;
+}
