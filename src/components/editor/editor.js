@@ -180,9 +180,10 @@ export default class Editor extends React.Component {
               Body: file
             },
             function(err, data) {
-              console.log(err, data);
+              // console.log(err, data);
               //  success(data.location);
-              success(d);
+              // console.log(data);
+              success({ url: "http://" + data.Location });
             }
           );
         }
