@@ -48,7 +48,7 @@ export function getShare(note_id) {
 export function login(nick_name) {
   const form = new FormData();
   form.append("nick_name", nick_name);
-  return axios.post({ url: "/mini/login", data: form });
+  return axios.post("/mini/login", form).then(res => res.data);
 }
 
 export function createNote({ book_id, name, content, is_imp = 0 }) {

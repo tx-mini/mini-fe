@@ -37,6 +37,8 @@ export default class Main extends Component {
     // 退出登录
     console.log(123);
     window.localStorage.removeItem("openid");
+    window.localStorage.removeItem("logo_url");
+    window.localStorage.removeItem("nick_name");
     this.props.history.push("/login");
   };
   SelectItem = async (data, type) => {
