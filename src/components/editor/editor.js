@@ -124,7 +124,7 @@ export default class Editor extends React.Component {
     this.editorInstance.setContent(newContent, "raw");
   };
   render = () => {
-    const { initialContent, name, contentId, isBrush } = this.props;
+    const { initialContent, name, contentId, isRubbish } = this.props;
 
     const editorProps = {
       height: 500,
@@ -137,7 +137,7 @@ export default class Editor extends React.Component {
         externalMedias: { image: true },
         uploadFn: ({}) => {}
       },
-      disabled: isBrush,
+      disabled: isRubbish,
       imageControls: {
         floatLeft: false,
         floatRight: false,
@@ -183,7 +183,7 @@ export default class Editor extends React.Component {
     return (
       <div className="editor-container">
         <div className="header">
-          {isBrush ? (
+          {isRubbish ? (
             <span className="name">{name}</span>
           ) : (
             <ContentEditable
@@ -194,7 +194,7 @@ export default class Editor extends React.Component {
             />
           )}
 
-          {isBrush ? null : (
+          {isRubbish ? null : (
             <div>
               <Button
                 type="primary"
