@@ -14,7 +14,7 @@ export default class Share extends Component {
       height: 0,
       contentFormat: "raw",
       initialContent,
-      contentId: Math.random(),
+      contentId: initialContent.length > 0 ? initialContent : Math.random(),
       disabled: true
     };
 
@@ -26,8 +26,10 @@ export default class Share extends Component {
     );
   }
   componentDidMount = async () => {
+    console.log(1111);
     const note_id = this.props.match.params.note_id;
     const { content, name } = await getShare(note_id);
+    console.log(JSON.parse(content), note_id);
     this.setState({
       initialContent: JSON.parse(content),
       contentId: note_id,

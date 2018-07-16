@@ -142,9 +142,23 @@ export default class OperationArea extends Component {
       const result = await getNoteContent(note_id);
       //   console.log(JSON.parse(content));
       //  console.log(content);
+      let t = {
+        data: {},
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        type: "unstyled",
+        key: Math.random()
+          .toString(36)
+          .slice(2, 7),
+        text: ""
+      };
+      try {
+        t = JSON.parse(result.content);
+      } catch (e) {}
       this.setState({
         currentSelect: note_id,
-        content: JSON.parse(result.content),
+        content: t,
         currentNoteName: name
       });
     } else {
@@ -194,10 +208,10 @@ export default class OperationArea extends Component {
   cancalInterate = () => {
     this.setState({ isIntegrating: false });
   };
-  createSuccess = async() => {
-    console.log("success")
-    this.props.createSuccess()
-  }
+  createSuccess = async () => {
+    console.log("success");
+    this.props.createSuccess();
+  };
   handleIntegrate = async () => {
     const { checkedList } = this.state;
     const trueList = Object.keys(checkedList).filter(item => checkedList[item]); // 当前选中的整合的id的数组

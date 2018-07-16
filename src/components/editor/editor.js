@@ -49,7 +49,7 @@ export default class Editor extends React.Component {
       });
 
       message.info("新建成功");
-      this.props.createSuccess()
+      this.props.createSuccess();
       this.editorInstance.clear();
       this.setState({ tempName: "" });
       console.log("新建", tempName, this.editorInstance.getRawContent());
@@ -123,6 +123,7 @@ export default class Editor extends React.Component {
     console.log(key, 222222222);
     this.currentKey = key;
     this.setState({ imgSrc: img.src });
+    message.info("选择区域开始识别");
   };
   handleImageClose = () => {
     // 卸载图片

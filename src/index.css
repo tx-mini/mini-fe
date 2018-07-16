@@ -4,10 +4,10 @@ body {
   height: 100%;
   font-family: sans-serif;
 }
-html{
+html {
   font-size: 62.5%;
 }
-.ant-btn-primary{
-  background: #79A9FC !important;
-  border-color: #79A9FC !important;
+.ant-btn-primary {
+  background: #79a9fc !important;
+  border-color: #79a9fc !important;
 }

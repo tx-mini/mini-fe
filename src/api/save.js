@@ -1,4 +1,8 @@
 import axios from "axios";
+
+if (process.env.NODE_ENV === "production") {
+  axios.defaults.baseURL = "http://193.112.176.92/note/index.php";
+}
 export function getListBook() {
   // 暂时是123
   const formData = new FormData();
@@ -39,7 +43,7 @@ export function deleteFinally(note_id) {
 }
 
 export function removeNote(id) {
-  return axios.get(`/api/mock/13512/removeNote/${id}`).then(res => res.data);
+  return axios.get(`/removeNote/${id}`).then(res => res.data);
 }
 
 export function getShare(note_id) {
@@ -68,8 +72,11 @@ export function modNote(content) {
   for (let [key, value] of Object.entries(content)) {
     if (key === "book_ref") {
       key = "book_id";
+      form.append(key, value);
+    } else if (key === "openid") {
+    } else {
+      form.append(key, value);
     }
-    form.append(key, value);
   }
   return axios.post("/mini/modNote", form).then(res => res.data);
 }

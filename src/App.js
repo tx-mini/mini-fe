@@ -4,6 +4,7 @@ import Main from "./containers/main/Main";
 import Share from "./containers/share/Share";
 import { createHashHistory } from "history";
 import { Router } from "react-router";
+import "../node_modules/antd/dist/antd.css";
 import { Route, Redirect, HashRouter } from "react-router-dom";
 const history = createHashHistory();
 class App extends Component {
