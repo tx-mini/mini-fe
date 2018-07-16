@@ -271,7 +271,14 @@ export default class OperationArea extends Component {
       radioValue
     } = this.state;
     console.log(dataList);
-    const newdatalist = dataList.filter(item => item.is_rubbish == 0);
+    let newdatalist;
+    if (type === "term") {
+      newdatalist = dataList.filter(
+        item => type === "term" && item.is_rubbish == 0
+      );
+    } else {
+      newdatalist = dataList;
+    }
     return (
       <div className="operation-container">
         <div className="left-container">
@@ -327,7 +334,9 @@ export default class OperationArea extends Component {
                         : "content"
                     }
                   >
-                    <Tooltip title={item.name}>{item.name.slice(0, 6)}</Tooltip>
+                    <Tooltip title={item.name}>
+                      <span className="xxx">{item.name}</span>
+                    </Tooltip>
                   </span>
 
                   <span className="time">

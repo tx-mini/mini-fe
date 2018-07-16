@@ -26,7 +26,8 @@ export default class Main extends Component {
     //获取目录数据
 
     // 这里改了。。。。。
-    const listBook = await getListBook();
+    let listBook = await getListBook();
+    // listBook = listBook.reverse();
     // console.log(listBook);
     let noteList = [];
     if (
@@ -45,7 +46,7 @@ export default class Main extends Component {
 
     // console.log(nick);
     this.setState({
-      term_list: (listBook && listBook.term_list) || [],
+      term_list: (listBook && listBook.term_list.reverse()) || [],
       classList: noteList || [],
       category: listBook && listBook.term_list[0].children[0].name
     });
@@ -93,7 +94,7 @@ export default class Main extends Component {
     this.setState({ newNote: true, classList: initList });
   };
   showDataList = (dataList, type) => {
-    console.log(dataList, type)
+    console.log(dataList, type);
     this.setState({
       classList: dataList || [],
       type: type
@@ -103,8 +104,8 @@ export default class Main extends Component {
     this.setState({ newNote: bool });
   };
   createSuccess = async () => {
-    console.log("sjsjjs")
-    console.log(this.state.currentSubjectid)
+    console.log("sjsjjs");
+    console.log(this.state.currentSubjectid);
     let noteList = [];
     const [noteStarList, noteCostomList] = await Promise.all([
       getNoteList("0", this.state.currentSubjectid, "1"),
@@ -112,11 +113,11 @@ export default class Main extends Component {
     ]);
 
     noteList = [...noteStarList, ...noteCostomList];
-    console.log(noteList)
+    console.log(noteList);
     this.setState({
       classList: noteList
-    })
-  }
+    });
+  };
   render() {
     const {
       term_list,

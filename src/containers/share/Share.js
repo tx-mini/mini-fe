@@ -14,8 +14,8 @@ export default class Share extends Component {
       height: 0,
       contentFormat: "raw",
       initialContent,
-      contentId: initialContent.length > 0 ? initialContent : Math.random(),
-      disabled: true
+      contentId: initialContent.length > 0 ? initialContent : Math.random()
+      // disabled: true
     };
 
     return (

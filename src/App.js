@@ -8,6 +8,10 @@ import "../node_modules/antd/dist/antd.css";
 import { Route, Redirect, HashRouter } from "react-router-dom";
 const history = createHashHistory();
 class App extends Component {
+  componentDidMount = () => {
+    document.title = "企鹅笔记";
+  };
+
   render() {
     return (
       <Router history={history}>
